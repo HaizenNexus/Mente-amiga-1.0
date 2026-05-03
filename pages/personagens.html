@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mente Amiga — Personagens 🦸</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    .page-hero { padding:90px 2rem 3rem;background:var(--bg-secondary);text-align:center; }
+    .chars-tabs { display:flex;justify-content:center;gap:1rem;margin:0 0 2.5rem;flex-wrap:wrap; }
+    .char-tab-btn {
+      padding:12px 28px;border-radius:999px;border:2px solid var(--border);
+      background:var(--bg-primary);color:var(--text-secondary);
+      font-family:var(--font-main);font-weight:700;font-size:0.95rem;cursor:pointer;
+      transition:all 0.3s ease;
+    }
+    .char-tab-btn.active-kids  { background:linear-gradient(135deg,#FFD600,#FF8C42);color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(255,140,66,0.4); }
+    .char-tab-btn.active-teen  { background:var(--grad-teen);color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(74,144,217,0.4); }
+    .char-tab-btn.active-herois { background:linear-gradient(135deg,#4CAF50,#2BB5A0);color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(76,175,80,0.4); }
+
+    .chars-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:900px;margin:0 auto; }
+    .char-card {
+      border-radius:var(--r-xl);
+      padding:2rem 1.5rem;
+      text-align:center;
+      border:2px solid var(--border);
+      background:var(--grad-card);
+      cursor:pointer;
+      transition:all var(--t-slow);
+      position:relative;
+      overflow:hidden;
+    }
+    .char-card:hover { transform:translateY(-8px) scale(1.02);box-shadow:var(--shadow-xl);border-color:var(--c-purple); }
+    .char-card.selected { border-color:var(--c-blue);box-shadow:0 0 0 4px rgba(74,144,217,0.2); }
+    .char-card.selected::after { content:'✓ Selecionado';position:absolute;top:12px;right:12px;background:var(--c-blue);color:#fff;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:999px; }
+
+    .char-avatar-wrap {
+      width:100px;height:100px;margin:0 auto 1rem;
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:3.5rem;
+      position:relative;
+    }
+    .char-avatar-img { width:100%;height:100%;object-fit:contain;border-radius:50%; }
+    .char-badge { display:inline-block;padding:4px 14px;border-radius:999px;font-size:0.75rem;font-weight:700;margin-bottom:0.75rem; }
+    .cb-kids   { background:var(--c-orange-light);color:#B05B00; }
+    .cb-teen   { background:var(--c-blue-light);color:#185FA5; }
+    .cb-herois { background:var(--c-green-light);color:#27500A; }
+    .char-name { font-family:var(--font-display);font-size:1.15rem;font-weight:800;margin-bottom:0.5rem; }
+    .char-desc { font-size:0.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem; }
+    .char-power { display:flex;flex-wrap:wrap;gap:4px;justify-content:center; }
+    .char-power-tag { font-size:0.7rem;padding:3px 10px;border-radius:999px;background:var(--bg-tertiary);color:var(--text-muted);font-weight:600; }
+    .char-select-btn {
+      width:100%;margin-top:1rem;padding:10px;border-radius:999px;border:none;
+      font-family:var(--font-main);font-size:0.875rem;font-weight:700;cursor:pointer;
+      background:var(--grad-hero);color:#fff;transition:all 0.2s;
+    }
+    .char-select-btn:hover { transform:scale(1.04);box-shadow:var(--shadow-md); }
+
+    .panel { display:none; }
+    .panel.active { display:block; }
+
+    @media(max-width:768px) { .chars-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:480px) { .chars-grid { grid-template-columns:1fr 1fr;gap:0.75rem; }
+      .char-card { padding:1.25rem 0.75rem; }
+      .char-avatar-wrap { width:70px;height:70px;font-size:2.5rem; }
+      .char-name { font-size:0.95rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <a class="nav-logo" href="../index.html"><span style="font-size:2rem;line-height:1">🧠</span><span class="nav-logo-text">Mente Amiga</span></a>
+  <div class="nav-actions">
+    <button class="btn-theme" id="btn-theme">🌙</button>
+    <button onclick="history.back()" class="btn btn-ghost btn-sm">← Voltar</button>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div style="font-size:3.5rem;margin-bottom:0.5rem">🦸</div>
+  <h1 style="font-family:var(--font-display);margin-bottom:0.75rem">Escolha seu <span class="text-gradient">Personagem</span></h1>
+  <p style="color:var(--text-secondary);max-width:480px;margin:0 auto 2rem">Selecione o personagem que vai te acompanhar em toda a aventura!</p>
+
+  <div class="chars-tabs">
+    <button class="char-tab-btn active-kids" onclick="showPanel('crianca',this)">🧒 Crianças</button>
+    <button class="char-tab-btn" onclick="showPanel('adolescente',this)">💙 Adolescentes</button>
+    <button class="char-tab-btn" onclick="showPanel('heroi',this)">💚 Heróis</button>
+  </div>
+</div>
+
+<main style="padding:0 1.5rem 4rem;max-width:1000px;margin:0 auto">
+
+  <!-- Crianças (usa mesmos personagens adolescentes pois são teen/kids) -->
+  <div class="panel active" id="panel-crianca">
+    <div class="chars-grid">
+      <!-- Prof. Conceição -->
+      <div class="char-card" data-id="prof_conceicao" onclick="selectChar('prof_conceicao',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-teal-light),var(--c-blue-light))">👩‍🏫</div>
+        <span class="char-badge cb-kids">Professora</span>
+        <h3 class="char-name">Prof. Conceição</h3>
+        <p class="char-desc">Professora carinhosa e sábia. Sempre disposta a ensinar e apoiar com amor!</p>
+        <div class="char-power"><span class="char-power-tag">Sabedoria</span><span class="char-power-tag">Cuidado</span><span class="char-power-tag">Ensino</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <!-- Ingrid -->
+      <div class="char-card" data-id="ingrid" onclick="selectChar('ingrid',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-green-light),#D0EDD1)">👧</div>
+        <span class="char-badge cb-kids">Estilosa</span>
+        <h3 class="char-name">Ingrid</h3>
+        <p class="char-desc">Descolada e criativa, adora explorar coisas novas e tem um estilo único!</p>
+        <div class="char-power"><span class="char-power-tag">Criatividade</span><span class="char-power-tag">Estilo</span><span class="char-power-tag">Alegria</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <!-- Tryannaxx -->
+      <div class="char-card" data-id="tryannaxx" onclick="selectChar('tryannaxx',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-pink-light),#F8C9E8)">👓</div>
+        <span class="char-badge cb-kids">Inteligente</span>
+        <h3 class="char-name">Tryannaxx</h3>
+        <p class="char-desc">Curiosa e inteligente, sempre com óculos e uma ideia genial na manga!</p>
+        <div class="char-power"><span class="char-power-tag">Inteligência</span><span class="char-power-tag">Curiosidade</span><span class="char-power-tag">Inovação</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adolescentes -->
+  <div class="panel" id="panel-adolescente">
+    <div class="chars-grid">
+      <div class="char-card" data-id="geovania" onclick="selectChar('geovania',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-blue-light),var(--c-purple-light))">🖤</div>
+        <span class="char-badge cb-teen">Determinada</span>
+        <h3 class="char-name">Geovania</h3>
+        <p class="char-desc">Focada e determinada, com estilo streetwear e uma postura que inspira todos.</p>
+        <div class="char-power"><span class="char-power-tag">Foco</span><span class="char-power-tag">Determinação</span><span class="char-power-tag">Street Style</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="heitozin" onclick="selectChar('heitozin',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,#E8E8E8,#D0D0D0)">🎒</div>
+        <span class="char-badge cb-teen">Aventureiro</span>
+        <h3 class="char-name">Heitozin</h3>
+        <p class="char-desc">Garoto aventureiro e corajoso que enfrenta qualquer desafio com coragem!</p>
+        <div class="char-power"><span class="char-power-tag">Coragem</span><span class="char-power-tag">Aventura</span><span class="char-power-tag">Tático</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="henrique" onclick="selectChar('henrique',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-orange-light),#FFE0C0)">🎧</div>
+        <span class="char-badge cb-teen">Confiante</span>
+        <h3 class="char-name">Henrique</h3>
+        <p class="char-desc">Descolado e confiante, sempre de fone no pescoço e um sorriso no rosto.</p>
+        <div class="char-power"><span class="char-power-tag">Confiança</span><span class="char-power-tag">Cool</span><span class="char-power-tag">Música</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="ingrid" onclick="selectChar('ingrid',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-green-light),var(--c-teal-light))">👧</div>
+        <span class="char-badge cb-teen">Estilosa</span>
+        <h3 class="char-name">Ingrid</h3>
+        <p class="char-desc">Com jeans e bolsa marrom, Ingrid arrasa com seu estilo único e personalidade forte.</p>
+        <div class="char-power"><span class="char-power-tag">Estilo</span><span class="char-power-tag">Criatividade</span><span class="char-power-tag">Liderança</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="tryannaxx" onclick="selectChar('tryannaxx',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-pink-light),#FFDDF0)">👓</div>
+        <span class="char-badge cb-teen">Gênio</span>
+        <h3 class="char-name">Tryannaxx</h3>
+        <p class="char-desc">Com óculos e cachinhos, é a mais inteligente e criativa da turma!</p>
+        <div class="char-power"><span class="char-power-tag">Gênio</span><span class="char-power-tag">Tecnologia</span><span class="char-power-tag">Inovação</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heróis -->
+  <div class="panel" id="panel-heroi">
+    <div class="chars-grid">
+      <div class="char-card" data-id="codigo_fantasma" onclick="selectChar('codigo_fantasma',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,#1A1A2E,#2D2D4E)">🥷</div>
+        <span class="char-badge cb-herois">Tecnologia</span>
+        <h3 class="char-name">Código Fantasma</h3>
+        <p class="char-desc">Herói tech com armadura cibernética. Mestre em estratégia e tecnologia avançada!</p>
+        <div class="char-power"><span class="char-power-tag">Hacking</span><span class="char-power-tag">Estratégia</span><span class="char-power-tag">Invisibilidade</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="vibora_noturna" onclick="selectChar('vibora_noturna',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-green-light),var(--c-teal-light))">🐍</div>
+        <span class="char-badge cb-herois">Feitiçaria</span>
+        <h3 class="char-name">Víbora Noturna</h3>
+        <p class="char-desc">Feiticeira da natureza com poderes de cura e controle da flora e fauna!</p>
+        <div class="char-power"><span class="char-power-tag">Magia Verde</span><span class="char-power-tag">Cura</span><span class="char-power-tag">Natureza</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="feiticeira_escalate" onclick="selectChar('feiticeira_escalate',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-pink-light),#F8C9E8)">🔮</div>
+        <span class="char-badge cb-herois">Proteção</span>
+        <h3 class="char-name">Feiticeira Escalate</h3>
+        <p class="char-desc">Guerreira com armadura rosa mágica. Protetora dos fracos e símbolo de coragem!</p>
+        <div class="char-power"><span class="char-power-tag">Escudo</span><span class="char-power-tag">Magia Rosa</span><span class="char-power-tag">Força</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="lamina_fantasma" onclick="selectChar('lamina_fantasma',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,#1A1A1A,#2D2D2D)">⚔️</div>
+        <span class="char-badge cb-herois">Combate</span>
+        <h3 class="char-name">Lâmina Fantasma</h3>
+        <p class="char-desc">Guerreiro veloz com armadura sombria e lâmina de energia. Rápido como o vento!</p>
+        <div class="char-power"><span class="char-power-tag">Velocidade</span><span class="char-power-tag">Combate</span><span class="char-power-tag">Sombras</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="dama_da_luz" onclick="selectChar('dama_da_luz',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,#1A1A1A,#2A1A1A)">🗡️</div>
+        <span class="char-badge cb-herois">Ninja</span>
+        <h3 class="char-name">Dama da Luz</h3>
+        <p class="char-desc">Ninja elegante com espada luminosa. Precisa, silenciosa e devastadora!</p>
+        <div class="char-power"><span class="char-power-tag">Precisão</span><span class="char-power-tag">Ninja</span><span class="char-power-tag">Luz</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+      <div class="char-card" data-id="aurora_da_luz" onclick="selectChar('aurora_da_luz',this)">
+        <div class="char-avatar-wrap" style="background:linear-gradient(135deg,var(--c-green-light),var(--c-yellow-light))">✨</div>
+        <span class="char-badge cb-herois">Energia</span>
+        <h3 class="char-name">Aurora da Luz</h3>
+        <p class="char-desc">Super-heroína poderosa com capa verde e energia luminosa. A mais forte da equipe!</p>
+        <div class="char-power"><span class="char-power-tag">Energia Luz</span><span class="char-power-tag">Voo</span><span class="char-power-tag">Poder Supremo</span></div>
+        <button class="char-select-btn">Escolher</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner após seleção -->
+  <div id="selected-banner" style="display:none;margin-top:2rem;padding:1.5rem;background:var(--c-teal-light);border:2px solid var(--c-teal);border-radius:var(--r-lg);text-align:center">
+    <div style="font-size:2rem;margin-bottom:0.5rem">🎉</div>
+    <h3 style="font-family:var(--font-display);margin-bottom:0.5rem">Personagem selecionado!</h3>
+    <p id="selected-msg" style="color:var(--text-secondary);margin-bottom:1rem">Incrível escolha!</p>
+    <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
+      <a href="dashboard-crianca.html" class="btn btn-kids btn-sm">🧒 Jogar como Criança</a>
+      <a href="dashboard-adolescente.html" class="btn btn-teen btn-sm">🧑 Jogar como Adolescente</a>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="footer-bottom" style="max-width:1000px;margin:0 auto;padding:1.5rem 0 0">
+    <p class="footer-copy">© Direitos autorais — <strong>CEO Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
+    <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
+  </div>
+</footer>
+
+<div class="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+const panels = ['crianca','adolescente','heroi'];
+const tabBtns = document.querySelectorAll('.char-tab-btn');
+const tabClasses = ['active-kids','active-teen','active-herois'];
+
+function showPanel(id, btn) {
+  panels.forEach(p => { document.getElementById('panel-' + p).classList.remove('active'); });
+  tabBtns.forEach((b,i) => { b.classList.remove(tabClasses[i]); });
+  document.getElementById('panel-' + id).classList.add('active');
+  const idx = panels.indexOf(id);
+  btn.classList.add(tabClasses[idx]);
+}
+
+function selectChar(id, card) {
+  document.querySelectorAll('.char-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  const name = card.querySelector('.char-name').textContent;
+  const data = JSON.parse(localStorage.getItem('ma-progress') || '{}');
+  data.character = id;
+  localStorage.setItem('ma-progress', JSON.stringify(data));
+
+  document.getElementById('selected-banner').style.display = 'block';
+  document.getElementById('selected-msg').textContent = `Você escolheu ${name}! Agora é hora de jogar!`;
+  window.scrollTo({ top: document.getElementById('selected-banner').offsetTop - 80, behavior: 'smooth' });
+  window.MA?.Toast?.show(`${name} selecionado(a)! ✨`, 'success');
+  window.MA?.Victory?.show(`Bem-vindo(a), ${name}! A aventura começa agora! 🚀`);
+}
+
+// Marcar personagem já selecionado
+document.addEventListener('DOMContentLoaded', () => {
+  const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
+  if (prog.character) {
+    document.querySelector(`[data-id="${prog.character}"]`)?.classList.add('selected');
+  }
+});
+</script>
+</body>
+</html>

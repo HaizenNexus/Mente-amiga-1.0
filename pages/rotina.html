@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rotina📆</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0a14;--bg2:#0f0f20;--bg3:#14142a;--bg4:#1a1a35;
+  --neon-green:#00ff88;--neon-blue:#00c8ff;--neon-purple:#b44fff;
+  --neon-pink:#ff4fa3;--neon-yellow:#ffe066;
+  --text:#e8e8ff;--text2:#9090cc;--border:#2a2a50;
+  --card:#141428;--card2:#1c1c38;
+  --radius:16px;--radius-sm:10px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
+body{display:flex;justify-content:center;padding:0 0 60px;}
+#app{width:100%;max-width:480px;padding:0;}
+
+/* HEADER */
+.header{padding:24px 20px 16px;text-align:center;}
+.header-logo{font-size:12px;color:var(--text2);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;}
+.header-title{font-size:26px;font-weight:900;background:linear-gradient(90deg,var(--neon-green),var(--neon-blue),var(--neon-purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.header-subtitle{font-size:13px;color:var(--text2);margin-top:4px;min-height:20px;transition:all .3s;}
+
+/* GLOW DECORATION */
+.header::before{content:'';display:block;width:200px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--neon-purple),var(--neon-blue),transparent);
+  margin:0 auto 16px;border-radius:2px;}
+
+/* MODE TOGGLE */
+.mode-toggle{display:flex;background:var(--bg3);border-radius:50px;
+  border:1.5px solid var(--border);padding:4px;margin:0 20px 20px;gap:4px;}
+.mode-btn{flex:1;padding:11px 8px;border-radius:40px;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .3s;
+  background:transparent;color:var(--text2);}
+.mode-btn.active-child{background:var(--neon-green);color:#0a0a14;
+  box-shadow:0 0 20px rgba(0,255,136,.5);}
+.mode-btn.active-parent{background:var(--neon-purple);color:#fff;
+  box-shadow:0 0 20px rgba(180,79,255,.5);}
+
+/* DATE BAR */
+.date-bar{margin:0 20px 20px;background:var(--bg3);border-radius:var(--radius-sm);
+  border:1px solid var(--border);padding:10px 16px;display:flex;
+  align-items:center;justify-content:space-between;}
+.date-text{font-size:12px;color:var(--text2);}
+.date-day{font-size:14px;font-weight:800;color:var(--neon-blue);}
+
+/* MOOD BAR */
+.mood-bar{margin:0 20px 16px;display:flex;gap:8px;justify-content:center;}
+.mood-item{flex:1;background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:12px;padding:10px 8px;font-size:11px;font-weight:700;
+  color:var(--text2);text-align:center;}
+.mood-item span{display:block;font-size:22px;margin-bottom:3px;}
+.mood-item.highlight{border-color:var(--neon-yellow);color:var(--neon-yellow);
+  background:rgba(255,224,102,.08);}
+.mood-item.green{border-color:var(--neon-green);color:var(--neon-green);
+  background:rgba(0,255,136,.08);}
+.mood-item.blue{border-color:var(--neon-blue);color:var(--neon-blue);
+  background:rgba(0,200,255,.08);}
+
+/* PROGRESS SECTION */
+.progress-section{margin:0 20px 20px;background:var(--card);
+  border-radius:var(--radius);border:1px solid var(--border);padding:16px 18px;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.progress-label{font-size:14px;font-weight:700;color:var(--text);}
+.progress-count{font-size:13px;font-weight:700;color:var(--neon-green);}
+.progress-bar-bg{background:var(--bg3);border-radius:40px;height:14px;
+  overflow:hidden;border:1px solid var(--border);}
+.progress-bar-fill{height:100%;border-radius:40px;
+  background:linear-gradient(90deg,var(--neon-green),var(--neon-blue));
+  transition:width .7s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 10px rgba(0,255,136,.5);}
+.progress-msg{font-size:12px;color:var(--text2);margin-top:9px;
+  text-align:center;font-style:italic;}
+
+/* TASKS SECTION */
+.tasks-section{margin:0 20px;}
+.tasks-title{font-size:11px;font-weight:800;color:var(--text2);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding:0 4px;}
+.task-card{background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius);margin-bottom:12px;overflow:hidden;
+  transition:all .3s;animation:fadeIn .35s ease both;}
+.task-card:hover{border-color:#3a3a70;}
+.task-card.done{border-color:#1a3328;background:#0c1a14;opacity:.8;}
+.task-card.done .task-name{text-decoration:line-through;color:var(--text2);}
+.task-inner{display:flex;align-items:center;gap:12px;padding:15px 15px;}
+.task-icon{width:46px;height:46px;border-radius:12px;display:flex;
+  align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
+  background:var(--bg3);border:1px solid var(--border);}
+.task-icon.done-icon{background:#0b1e13;border-color:#1a3328;}
+.task-info{flex:1;min-width:0;}
+.task-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;
+  transition:all .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.task-time{font-size:12px;color:var(--neon-blue);font-weight:600;}
+.task-period{font-size:11px;color:var(--text2);margin-left:6px;}
+.task-status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;
+  margin-top:5px;display:inline-block;}
+.task-status.pending{background:rgba(255,224,102,.1);color:var(--neon-yellow);
+  border:1px solid rgba(255,224,102,.2);}
+.task-status.completed{background:rgba(0,255,136,.1);color:var(--neon-green);
+  border:1px solid rgba(0,255,136,.2);}
+
+/* CHECK BUTTON */
+.task-check-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--border);
+  background:var(--bg3);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:18px;transition:all .25s;flex-shrink:0;
+  color:var(--text2);}
+.task-check-btn:hover{border-color:var(--neon-green);
+  background:rgba(0,255,136,.12);transform:scale(1.12);}
+.task-check-btn.checked{background:var(--neon-green);border-color:var(--neon-green);
+  color:#0a0a14;box-shadow:0 0 16px rgba(0,255,136,.65);font-size:20px;}
+
+/* PARENT TASK ACTIONS */
+.task-actions{display:flex;gap:8px;padding:0 15px 13px;}
+.task-edit-btn,.task-del-btn{flex:1;padding:8px;border-radius:8px;border:none;
+  cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
+  transition:all .2s;}
+.task-edit-btn{background:rgba(0,200,255,.1);color:var(--neon-blue);
+  border:1px solid rgba(0,200,255,.2);}
+.task-edit-btn:hover{background:rgba(0,200,255,.22);}
+.task-del-btn{background:rgba(255,79,163,.1);color:var(--neon-pink);
+  border:1px solid rgba(255,79,163,.2);}
+.task-del-btn:hover{background:rgba(255,79,163,.22);}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:44px 20px;color:var(--text2);}
+.empty-icon{font-size:52px;margin-bottom:14px;}
+.empty-text{font-size:15px;font-weight:700;color:var(--text);}
+.empty-sub{font-size:13px;margin-top:6px;}
+
+/* ADD TASK FORM */
+.add-section{margin:0 20px 0;background:var(--card);
+  border:1.5px solid var(--neon-purple);border-radius:var(--radius);
+  padding:20px;box-shadow:0 0 24px rgba(180,79,255,.18);}
+.add-title{font-size:14px;font-weight:800;color:var(--neon-purple);
+  margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.form-row{margin-bottom:13px;}
+.form-label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;
+  display:block;letter-spacing:.5px;text-transform:uppercase;}
+.form-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:10px;padding:11px 13px;color:var(--text);
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;
+  outline:none;transition:border .2s;}
+.form-input:focus{border-color:var(--neon-purple);
+  box-shadow:0 0 14px rgba(180,79,255,.22);}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.emoji-picker{display:flex;gap:7px;flex-wrap:wrap;}
+.emoji-opt{width:38px;height:38px;border-radius:10px;background:var(--bg3);
+  border:1.5px solid var(--border);cursor:pointer;font-size:20px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.emoji-opt.selected{border-color:var(--neon-purple);
+  background:rgba(180,79,255,.18);box-shadow:0 0 10px rgba(180,79,255,.35);}
+.emoji-opt:hover{transform:scale(1.2);}
+.add-btn{width:100%;padding:14px;border-radius:var(--radius-sm);border:none;
+  cursor:pointer;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;
+  background:linear-gradient(90deg,var(--neon-purple),var(--neon-blue));
+  color:#fff;margin-top:6px;transition:all .25s;
+  box-shadow:0 0 20px rgba(180,79,255,.38);}
+.add-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(180,79,255,.55);}
+.add-btn:active{transform:scale(.97);}
+.cancel-edit-btn{width:100%;padding:10px;border-radius:var(--radius-sm);border:none;
+  cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+  background:transparent;color:var(--text2);border:1px solid var(--border);
+  margin-top:6px;transition:all .2s;}
+.cancel-edit-btn:hover{background:var(--bg3);color:var(--text);}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(120px);
+  background:var(--card2);border:1.5px solid var(--neon-green);
+  border-radius:var(--radius);padding:14px 22px;font-size:14px;font-weight:700;
+  color:var(--text);z-index:9999;transition:transform .4s cubic-bezier(.4,0,.2,1);
+  max-width:340px;width:90%;text-align:center;
+  box-shadow:0 0 24px rgba(0,255,136,.3);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.parent-toast{border-color:var(--neon-purple);
+  box-shadow:0 0 24px rgba(180,79,255,.3);}
+
+/* ACTIVITY LOG */
+.activity-section{margin:20px 20px 0;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+.activity-title{font-size:12px;font-weight:800;color:var(--neon-purple);
+  margin-bottom:12px;letter-spacing:.5px;text-transform:uppercase;}
+.activity-item{font-size:12px;color:var(--text2);padding:7px 0;
+  border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:9px;}
+.activity-item:last-child{border-bottom:none;padding-bottom:0;}
+.activity-dot{width:8px;height:8px;border-radius:50%;background:var(--neon-green);
+  flex-shrink:0;margin-top:3px;}
+
+/* SECTION DIVIDER */
+.section-divider{margin:20px 20px 0;display:flex;align-items:center;gap:10px;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-label{font-size:10px;color:var(--text2);font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.55}}
+.pulse{animation:shimmer 2.5s infinite;}
+.pop-anim{animation:pop .4s ease both;}
+
+select.form-input option{background:var(--bg3);color:var(--text);}
+
+/* SCROLL */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* INPUT DATE COLORS */
+input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.4);}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">✦ Mente Amiga</div>
+    <div class="header-title">Minha Rotina</div>
+    <div class="header-subtitle" id="header-sub">Hoje vai ser incrível! 🌟</div>
+  </div>
+
+  <!-- MODE TOGGLE -->
+  <div class="mode-toggle">
+    <button class="mode-btn active-child" id="btn-child" onclick="setMode('child')">👦 Modo Criança</button>
+    <button class="mode-btn" id="btn-parent" onclick="setMode('parent')">👨‍👩‍👧 Modo Pais</button>
+  </div>
+
+  <!-- DATE BAR -->
+  <div class="date-bar">
+    <span class="date-text">📅 Hoje</span>
+    <span class="date-day" id="date-display">—</span>
+  </div>
+
+  <!-- ===== CHILD VIEW ===== -->
+  <div id="child-view">
+    <div class="mood-bar">
+      <div class="mood-item highlight"><span>☀️</span>Hoje</div>
+      <div class="mood-item green"><span id="m-done">0</span>feitas</div>
+      <div class="mood-item blue"><span id="m-left">0</span>faltam</div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">⚡ Progresso do dia</span>
+        <span class="progress-count" id="prog-text">0 / 0</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-msg pulse" id="prog-msg">Vamos começar sua rotina! 🚀</div>
+    </div>
+
+    <div class="tasks-section">
+      <div class="tasks-title">📋 Tarefas de hoje</div>
+      <div id="child-task-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== PARENT VIEW ===== -->
+  <div id="parent-view" style="display:none">
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">📊 Visão geral dos pais</span>
+        <span class="progress-count" id="parent-prog-text">0 / 0</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="parent-prog-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-msg" id="parent-prog-msg">Acompanhe a rotina do seu filho 💜</div>
+    </div>
+
+    <!-- ADD FORM -->
+    <div class="add-section" id="add-section">
+      <div class="add-title">✨ <span id="form-title">Criar nova tarefa</span></div>
+
+      <div class="form-row">
+        <label class="form-label">Ícone da tarefa</label>
+        <div class="emoji-picker" id="emoji-picker">
+          <div class="emoji-opt selected" data-e="🦷" onclick="selectEmoji(this)">🦷</div>
+          <div class="emoji-opt" data-e="🚿" onclick="selectEmoji(this)">🚿</div>
+          <div class="emoji-opt" data-e="🛁" onclick="selectEmoji(this)">🛁</div>
+          <div class="emoji-opt" data-e="👕" onclick="selectEmoji(this)">👕</div>
+          <div class="emoji-opt" data-e="🍳" onclick="selectEmoji(this)">🍳</div>
+          <div class="emoji-opt" data-e="🥗" onclick="selectEmoji(this)">🥗</div>
+          <div class="emoji-opt" data-e="📚" onclick="selectEmoji(this)">📚</div>
+          <div class="emoji-opt" data-e="🎒" onclick="selectEmoji(this)">🎒</div>
+          <div class="emoji-opt" data-e="🏃" onclick="selectEmoji(this)">🏃</div>
+          <div class="emoji-opt" data-e="💊" onclick="selectEmoji(this)">💊</div>
+          <div class="emoji-opt" data-e="😴" onclick="selectEmoji(this)">😴</div>
+          <div class="emoji-opt" data-e="🎮" onclick="selectEmoji(this)">🎮</div>
+          <div class="emoji-opt" data-e="🧘" onclick="selectEmoji(this)">🧘</div>
+          <div class="emoji-opt" data-e="🧹" onclick="selectEmoji(this)">🧹</div>
+          <div class="emoji-opt" data-e="✏️" onclick="selectEmoji(this)">✏️</div>
+          <div class="emoji-opt" data-e="🎨" onclick="selectEmoji(this)">🎨</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Nome da tarefa</label>
+        <input class="form-input" id="task-name" placeholder="Ex: Escovar os dentes" maxlength="45" />
+      </div>
+
+      <div class="form-row form-row-2">
+        <div>
+          <label class="form-label">Horário</label>
+          <input class="form-input" type="time" id="task-time" value="07:00" />
+        </div>
+        <div>
+          <label class="form-label">Período</label>
+          <select class="form-input" id="task-period">
+            <option value="🌅 Manhã">🌅 Manhã</option>
+            <option value="☀️ Tarde">☀️ Tarde</option>
+            <option value="🌙 Noite">🌙 Noite</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="add-btn" id="add-btn" onclick="addOrUpdateTask()">+ Adicionar tarefa</button>
+      <button class="cancel-edit-btn" id="cancel-btn" style="display:none" onclick="cancelEdit()">✕ Cancelar edição</button>
+    </div>
+
+    <!-- TASKS LIST (PARENT) -->
+    <div class="section-divider" style="margin-top:20px;">
+      <div class="divider-line"></div>
+      <div class="divider-label">📋 Tarefas criadas</div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="tasks-section" style="margin-top:14px;">
+      <div id="parent-task-list"></div>
+    </div>
+
+    <!-- ACTIVITY LOG -->
+    <div class="activity-section" id="activity-section" style="display:none">
+      <div class="activity-title">🔔 Atividade recente</div>
+      <div id="activity-log"></div>
+    </div>
+
+  </div><!-- end parent-view -->
+
+</div><!-- end app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================
+   STATE
+============================ */
+let mode = 'child';
+let tasks = [];
+let activityLog = [];
+let selectedEmoji = '🦷';
+let editingId = null;
+
+const STORAGE_TASKS = 'mente_amiga_tasks_v3';
+const STORAGE_LOG   = 'mente_amiga_log_v3';
+
+/* ============================
+   PERSISTENCE
+============================ */
+function loadData() {
+  try {
+    const t = localStorage.getItem(STORAGE_TASKS);
+    if (t) tasks = JSON.parse(t);
+    const l = localStorage.getItem(STORAGE_LOG);
+    if (l) activityLog = JSON.parse(l);
+  } catch(e) {}
+
+  if (!tasks.length) {
+    tasks = [
+      {id:1, name:'Escovar os dentes',       time:'07:00', period:'🌅 Manhã', emoji:'🦷', done:false},
+      {id:2, name:'Tomar banho',              time:'07:20', period:'🌅 Manhã', emoji:'🚿', done:false},
+      {id:3, name:'Se vestir',                time:'07:35', period:'🌅 Manhã', emoji:'👕', done:false},
+      {id:4, name:'Tomar café da manhã',      time:'07:50', period:'🌅 Manhã', emoji:'🍳', done:false},
+      {id:5, name:'Pegar a mochila',          time:'08:05', period:'🌅 Manhã', emoji:'🎒', done:false},
+      {id:6, name:'Almoçar',                  time:'12:00', period:'☀️ Tarde', emoji:'🥗', done:false},
+      {id:7, name:'Hora de dormir',           time:'21:00', period:'🌙 Noite', emoji:'😴', done:false},
+    ];
+    save();
+  }
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
+    localStorage.setItem(STORAGE_LOG,   JSON.stringify(activityLog.slice(-30)));
+  } catch(e) {}
+}
+
+/* ============================
+   MODE
+============================ */
+function setMode(m) {
+  mode = m;
+  document.getElementById('child-view').style.display  = m === 'child'  ? 'block' : 'none';
+  document.getElementById('parent-view').style.display = m === 'parent' ? 'block' : 'none';
+  document.getElementById('btn-child').className  = 'mode-btn' + (m === 'child'  ? ' active-child'  : '');
+  document.getElementById('btn-parent').className = 'mode-btn' + (m === 'parent' ? ' active-parent' : '');
+  document.getElementById('header-sub').textContent = m === 'child'
+    ? 'Hoje vai ser incrível! 🌟'
+    : 'Gerencie a rotina com carinho 💜';
+  render();
+}
+
+/* ============================
+   HELPERS
+============================ */
+function getSorted() {
+  return [...tasks].sort((a,b) => a.time.localeCompare(b.time));
+}
+
+function getProgress() {
+  const done  = tasks.filter(t => t.done).length;
+  const total = tasks.length;
+  return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
+}
+
+function motivational(pct) {
+  if (pct === 0)   return 'Vamos começar! Você consegue! 🚀';
+  if (pct < 25)    return 'Ótimo começo! Continue assim! 💪';
+  if (pct < 50)    return 'Você está indo muito bem! ⚡';
+  if (pct < 75)    return 'Mais da metade! Você é incrível! 🌟';
+  if (pct < 100)   return 'Quase lá! Força, você consegue! ✨';
+  return '🎉 PARABÉNS! Você completou tudo hoje!';
+}
+
+/* ============================
+   RENDER
+============================ */
+function render() {
+  renderProgress();
+  if (mode === 'child')  renderChildTasks();
+  if (mode === 'parent') { renderParentTasks(); renderActivityLog(); }
+}
+
+function renderProgress() {
+  const { done, total, pct } = getProgress();
+  const fmt = done + ' / ' + total;
+
+  document.getElementById('prog-text').textContent  = fmt;
+  document.getElementById('prog-bar').style.width   = pct + '%';
+  document.getElementById('prog-msg').textContent   = motivational(pct);
+  document.getElementById('m-done').textContent     = done;
+  document.getElementById('m-left').textContent     = total - done;
+
+  document.getElementById('parent-prog-text').textContent  = fmt;
+  document.getElementById('parent-prog-bar').style.width   = pct + '%';
+  document.getElementById('parent-prog-msg').textContent   =
+    pct === 100 ? '🎉 Seu filho completou toda a rotina hoje!' :
+    pct > 0     ? '✅ ' + done + ' de ' + total + ' tarefas concluídas' :
+                  'Acompanhe a rotina do seu filho 💜';
+}
+
+function renderChildTasks() {
+  const list   = document.getElementById('child-task-list');
+  const sorted = getSorted();
+
+  if (!sorted.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">Nenhuma tarefa ainda</div>
+        <div class="empty-sub">Os pais vão criar sua rotina em breve!</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  sorted.forEach(task => {
+    const div = document.createElement('div');
+    div.className = 'task-card' + (task.done ? ' done' : '');
+    div.id = 'ctask-' + task.id;
+    div.innerHTML = `
+      <div class="task-inner">
+        <div class="task-icon ${task.done ? 'done-icon' : ''}">${task.emoji}</div>
+        <div class="task-info">
+          <div class="task-name">${esc(task.name)}</div>
+          <div class="task-time">🕐 ${task.time}<span class="task-period">· ${task.period}</span></div>
+          <div class="task-status ${task.done ? 'completed' : 'pending'}">
+            ${task.done ? '✅ Concluído!' : '⏳ Pendente'}
+          </div>
+        </div>
+        <button
+          class="task-check-btn ${task.done ? 'checked' : ''}"
+          onclick="toggleTask(${task.id})"
+          aria-label="${task.done ? 'Desfazer tarefa' : 'Marcar como concluído'}"
+        >${task.done ? '✓' : ''}</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function renderParentTasks() {
+  const list   = document.getElementById('parent-task-list');
+  const sorted = getSorted();
+
+  if (!sorted.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">✏️</div>
+        <div class="empty-text">Crie a primeira tarefa!</div>
+        <div class="empty-sub">Use o formulário acima para começar a rotina.</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  sorted.forEach(task => {
+    const div = document.createElement('div');
+    div.className = 'task-card' + (task.done ? ' done' : '');
+    div.innerHTML = `
+      <div class="task-inner">
+        <div class="task-icon">${task.emoji}</div>
+        <div class="task-info">
+          <div class="task-name">${esc(task.name)}</div>
+          <div class="task-time">🕐 ${task.time}<span class="task-period">· ${task.period}</span></div>
+          <div class="task-status ${task.done ? 'completed' : 'pending'}">
+            ${task.done ? '✅ Concluído' : '⏳ Pendente'}
+          </div>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="task-edit-btn" onclick="startEdit(${task.id})">✏️ Editar</button>
+        <button class="task-del-btn"  onclick="deleteTask(${task.id})">🗑️ Remover</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function renderActivityLog() {
+  const sec = document.getElementById('activity-section');
+  const log = document.getElementById('activity-log');
+
+  if (!activityLog.length) { sec.style.display = 'none'; return; }
+
+  sec.style.display = 'block';
+  log.innerHTML = activityLog.slice().reverse().slice(0, 10).map(a =>
+    `<div class="activity-item"><div class="activity-dot"></div>${esc(a)}</div>`
+  ).join('');
+}
+
+/* ============================
+   ACTIONS
+============================ */
+function toggleTask(id) {
+  const task = tasks.find(x => x.id === id);
+  if (!task) return;
+  task.done = !task.done;
+  save();
+  renderProgress();
+  renderChildTasks();
+
+  if (task.done) {
+    const log = '✅ João concluiu: ' + task.name;
+    activityLog.push(log);
+    save();
+
+    showToast('📩 Notificação enviada para os pais!', false);
+
+    setTimeout(() => {
+      if (mode === 'parent') showToast(log, true);
+    }, 2200);
+
+    const { pct } = getProgress();
+    if (pct === 100) {
+      setTimeout(() => showToast('🎉 Incrível! Você completou toda a rotina de hoje!', false), 1500);
+    }
+  }
+}
+
+function selectEmoji(el) {
+  document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedEmoji = el.dataset.e;
+}
+
+function addOrUpdateTask() {
+  const name   = document.getElementById('task-name').value.trim();
+  const time   = document.getElementById('task-time').value;
+  const period = document.getElementById('task-period').value;
+
+  if (!name) { shakeInput('task-name'); return; }
+  if (!time) { shakeInput('task-time'); return; }
+
+  if (editingId !== null) {
+    const task = tasks.find(x => x.id === editingId);
+    if (task) {
+      task.name   = name;
+      task.time   = time;
+      task.period = period;
+      task.emoji  = selectedEmoji;
+    }
+    editingId = null;
+    setFormDefault();
+    showToast('✏️ Tarefa atualizada com sucesso!', true);
+  } else {
+    tasks.push({ id: Date.now(), name, time, period, emoji: selectedEmoji, done: false });
+    document.getElementById('task-name').value = '';
+    document.getElementById('task-time').value = '07:00';
+    showToast('✨ Tarefa criada com sucesso!', true);
+  }
+
+  save();
+  render();
+}
+
+function startEdit(id) {
+  const task = tasks.find(x => x.id === id);
+  if (!task) return;
+
+  editingId = id;
+  document.getElementById('task-name').value   = task.name;
+  document.getElementById('task-time').value   = task.time;
+  document.getElementById('task-period').value = task.period;
+
+  selectedEmoji = task.emoji;
+  document.querySelectorAll('.emoji-opt').forEach(e => {
+    e.classList.toggle('selected', e.dataset.e === task.emoji);
+  });
+
+  document.getElementById('form-title').textContent = 'Editar tarefa';
+  document.getElementById('add-btn').textContent    = '💾 Salvar alterações';
+  document.getElementById('cancel-btn').style.display = 'block';
+
+  document.getElementById('add-section').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function cancelEdit() {
+  editingId = null;
+  setFormDefault();
+}
+
+function setFormDefault() {
+  document.getElementById('task-name').value = '';
+  document.getElementById('task-time').value = '07:00';
+  document.getElementById('task-period').value = '🌅 Manhã';
+  document.getElementById('form-title').textContent = 'Criar nova tarefa';
+  document.getElementById('add-btn').textContent    = '+ Adicionar tarefa';
+  document.getElementById('cancel-btn').style.display = 'none';
+  selectedEmoji = '🦷';
+  document.querySelectorAll('.emoji-opt').forEach((e,i) => e.classList.toggle('selected', i===0));
+}
+
+function deleteTask(id) {
+  if (!confirm('Tem certeza que quer remover essa tarefa?')) return;
+  tasks = tasks.filter(x => x.id !== id);
+  if (editingId === id) { editingId = null; setFormDefault(); }
+  save();
+  render();
+  showToast('🗑️ Tarefa removida.', true);
+}
+
+function shakeInput(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = '#ff4fa3';
+  el.style.boxShadow   = '0 0 14px rgba(255,79,163,.45)';
+  setTimeout(() => { el.style.borderColor=''; el.style.boxShadow=''; }, 1400);
+}
+
+/* ============================
+   TOAST
+============================ */
+let toastTimer;
+function showToast(msg, isParent) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast' + (isParent ? ' parent-toast' : '') + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+/* ============================
+   DATE
+============================ */
+function updateDate() {
+  const days   = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const now    = new Date();
+  document.getElementById('date-display').textContent =
+    days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()];
+}
+
+/* ============================
+   ESCAPE HTML
+============================ */
+function esc(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ============================
+   INIT
+============================ */
+loadData();
+updateDate();
+render();
+</script>
+</body>
+</html>

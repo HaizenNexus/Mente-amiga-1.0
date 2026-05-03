@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Respiração Guiada</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep:     #080c1a;
+    --bg-surface:  #0d1226;
+    --bg-card:     #111827;
+    --accent-blue: #4f9cf9;
+    --accent-purple: #9b7ff4;
+    --accent-teal: #3dd9c0;
+    --glow-blue:   rgba(79,156,249,0.18);
+    --glow-purple: rgba(155,127,244,0.22);
+    --glow-teal:   rgba(61,217,192,0.18);
+    --text-primary: #e8eaf6;
+    --text-muted:   #8892b0;
+    --text-hint:    #4a5568;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --timing-inspire: 4s;
+    --timing-hold:    4s;
+    --timing-expire:  4s;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem 2rem;
+    overflow-x: hidden;
+    user-select: none;
+  }
+
+  /* Background gradient subtle */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 10%, rgba(79,156,249,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 90%, rgba(155,127,244,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .app-title {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-hint);
+  }
+
+  .module-title {
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+  }
+
+  .module-title span {
+    color: var(--accent-blue);
+    font-weight: 400;
+  }
+
+  /* Breathing circle area */
+  .breath-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 280px;
+    height: 280px;
+  }
+
+  /* Outer glow rings */
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    animation: none;
+  }
+
+  .ring-1 {
+    width: 100%;
+    height: 100%;
+    border-color: rgba(79,156,249,0.08);
+  }
+
+  .ring-2 {
+    width: 86%;
+    height: 86%;
+    border-color: rgba(79,156,249,0.13);
+  }
+
+  .ring-3 {
+    width: 72%;
+    height: 72%;
+    border-color: rgba(79,156,249,0.18);
+  }
+
+  /* Main breathing circle */
+  .breath-circle {
+    position: absolute;
+    width: 52%;
+    height: 52%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 38%,
+      rgba(79,156,249,0.55) 0%,
+      rgba(79,156,249,0.28) 45%,
+      rgba(155,127,244,0.22) 80%,
+      transparent 100%);
+    border: 1.5px solid rgba(79,156,249,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    box-shadow:
+      0 0 20px rgba(79,156,249,0.12),
+      0 0 40px rgba(79,156,249,0.06),
+      inset 0 0 20px rgba(79,156,249,0.08);
+  }
+
+  /* State phases */
+  .breath-circle.inspire {
+    animation: circleExpand var(--timing-inspire) ease-in-out forwards;
+  }
+
+  .breath-circle.hold {
+    animation: circleHold var(--timing-hold) ease-in-out forwards;
+  }
+
+  .breath-circle.expire {
+    animation: circleContract var(--timing-expire) ease-in-out forwards;
+  }
+
+  @keyframes circleExpand {
+    from { transform: scale(1); }
+    to   { transform: scale(1.95); }
+  }
+
+  @keyframes circleHold {
+    from { transform: scale(1.95); }
+    to   { transform: scale(1.95); }
+  }
+
+  @keyframes circleContract {
+    from { transform: scale(1.95); }
+    to   { transform: scale(1); }
+  }
+
+  /* Ring pulse animations */
+  .running .ring-1 {
+    animation: ringPulse1 8s ease-in-out infinite;
+  }
+  .running .ring-2 {
+    animation: ringPulse2 8s ease-in-out infinite 0.3s;
+  }
+  .running .ring-3 {
+    animation: ringPulse3 8s ease-in-out infinite 0.6s;
+  }
+
+  @keyframes ringPulse1 {
+    0%, 100% { border-color: rgba(79,156,249,0.08); }
+    50%       { border-color: rgba(79,156,249,0.22); }
+  }
+  @keyframes ringPulse2 {
+    0%, 100% { border-color: rgba(79,156,249,0.13); }
+    50%       { border-color: rgba(79,156,249,0.28); }
+  }
+  @keyframes ringPulse3 {
+    0%, 100% { border-color: rgba(79,156,249,0.18); }
+    50%       { border-color: rgba(79,156,249,0.35); }
+  }
+
+  /* Phase text */
+  .phase-display {
+    text-align: center;
+    height: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .phase-label {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    transition: opacity 0.5s ease, color 0.5s ease;
+    min-height: 36px;
+  }
+
+  .phase-label.inspire { color: #6db8ff; }
+  .phase-label.hold    { color: #b8a6ff; }
+  .phase-label.expire  { color: #5de8cc; }
+  .phase-label.idle    { color: var(--text-muted); font-size: 16px; letter-spacing: 0.04em; }
+
+  .phase-timer {
+    font-size: 13px;
+    color: var(--text-hint);
+    letter-spacing: 0.05em;
+    min-height: 20px;
+    font-variant-numeric: tabular-nums;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    width: 0%;
+    transition: width 1s linear, background 0.8s ease;
+  }
+
+  .progress-bar-fill.inspire { background: linear-gradient(90deg, #4f9cf9, #6db8ff); }
+  .progress-bar-fill.hold    { background: linear-gradient(90deg, #9b7ff4, #b8a6ff); }
+  .progress-bar-fill.expire  { background: linear-gradient(90deg, #3dd9c0, #5de8cc); }
+
+  /* Stats row */
+  .stats-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius-md);
+    padding: 14px 10px 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-hint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .stat-card.highlight .stat-value { color: var(--accent-blue); }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, rgba(79,156,249,0.22), rgba(155,127,244,0.22));
+    border: 1px solid rgba(79,156,249,0.4);
+    color: #a8c8ff;
+    padding: 14px 32px;
+    font-size: 15px;
+    min-width: 140px;
+    justify-content: center;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, rgba(79,156,249,0.32), rgba(155,127,244,0.32));
+    border-color: rgba(79,156,249,0.6);
+    color: #c8daff;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-icon {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: var(--text-muted);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .btn-icon:hover {
+    border-color: rgba(255,255,255,0.15);
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .btn-icon.active {
+    border-color: rgba(79,156,249,0.4);
+    color: var(--accent-blue);
+    background: rgba(79,156,249,0.08);
+  }
+
+  /* Sound panel */
+  .sound-panel {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .sound-panel-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-hint);
+  }
+
+  .sound-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .sound-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sound-btn:hover {
+    border-color: rgba(255,255,255,0.15);
+    color: var(--text-primary);
+  }
+
+  .sound-btn.active {
+    background: rgba(79,156,249,0.12);
+    border-color: rgba(79,156,249,0.35);
+    color: #6db8ff;
+  }
+
+  .volume-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .vol-icon {
+    font-size: 14px;
+    color: var(--text-hint);
+    width: 18px;
+    text-align: center;
+  }
+
+  input[type="range"].vol-slider {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"].vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(79,156,249,0.4);
+  }
+
+  input[type="range"].vol-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    cursor: pointer;
+    border: none;
+  }
+
+  /* Timing settings */
+  .timing-panel {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .timing-toggle {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 14px 18px;
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .timing-toggle:hover { color: var(--text-primary); }
+
+  .timing-toggle .arrow {
+    transition: transform 0.3s ease;
+    font-size: 10px;
+  }
+
+  .timing-toggle.open .arrow { transform: rotate(180deg); }
+
+  .timing-body {
+    display: none;
+    padding: 0 18px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .timing-body.open { display: flex; }
+
+  .timing-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .timing-name {
+    font-size: 13px;
+    color: var(--text-muted);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .timing-name span {
+    font-size: 11px;
+    color: var(--text-hint);
+    display: block;
+  }
+
+  input[type="range"].timing-slider {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"].timing-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    cursor: pointer;
+  }
+
+  input[type="range"].timing-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    cursor: pointer;
+    border: none;
+  }
+
+  .timing-val {
+    font-size: 13px;
+    color: var(--accent-purple);
+    font-variant-numeric: tabular-nums;
+    width: 30px;
+    text-align: right;
+  }
+
+  /* XP toast */
+  .xp-toast {
+    position: fixed;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: linear-gradient(135deg, rgba(79,156,249,0.2), rgba(155,127,244,0.2));
+    border: 1px solid rgba(79,156,249,0.35);
+    color: #a8c8ff;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s ease;
+    opacity: 0;
+    z-index: 100;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .xp-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Idle breath hint */
+  .idle-hint {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    animation: idleFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes idleFloat {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50%       { transform: scale(1.06); opacity: 1; }
+  }
+
+  /* Vibration indicator */
+  .vib-badge {
+    font-size: 11px;
+    color: var(--text-hint);
+    letter-spacing: 0.06em;
+    text-align: center;
+  }
+
+  @media (max-width: 380px) {
+    .breath-area { width: 240px; height: 240px; }
+    .phase-label { font-size: 24px; }
+    .module-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="xp-toast" id="xpToast">+10 XP · Ciclo concluído</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="app-title">Foco &amp; Bem-estar</div>
+    <div class="module-title">Respiração <span>Guiada</span></div>
+  </div>
+
+  <div class="breath-area" id="breathArea">
+    <div class="ring ring-1"></div>
+    <div class="ring ring-2"></div>
+    <div class="ring ring-3"></div>
+    <div class="breath-circle idle-hint" id="breathCircle"></div>
+  </div>
+
+  <div class="phase-display">
+    <div class="phase-label idle" id="phaseLabel">Pronto para começar</div>
+    <div class="phase-timer" id="phaseTimer"></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card highlight">
+      <div class="stat-value" id="statCycles">0</div>
+      <div class="stat-label">Ciclos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statMinutes">0:00</div>
+      <div class="stat-label">Tempo</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statXP">0</div>
+      <div class="stat-label">XP</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-icon" id="btnReset" title="Reiniciar">&#8635;</button>
+    <button class="btn btn-primary" id="btnPlay">
+      <span id="btnPlayIcon">▶</span>
+      <span id="btnPlayLabel">Iniciar</span>
+    </button>
+    <button class="btn btn-icon" id="btnSound" title="Som ambiente">&#9834;</button>
+  </div>
+
+  <div class="sound-panel" id="soundPanel">
+    <div class="sound-panel-title">Som ambiente</div>
+    <div class="sound-options">
+      <button class="sound-btn active" data-sound="rain" onclick="selectSound(this)">🌧 Chuva</button>
+      <button class="sound-btn" data-sound="wind" onclick="selectSound(this)">🌬 Vento</button>
+      <button class="sound-btn" data-sound="ocean" onclick="selectSound(this)">🌊 Oceano</button>
+      <button class="sound-btn" data-sound="none" onclick="selectSound(this)">✕ Silêncio</button>
+    </div>
+    <div class="volume-row">
+      <span class="vol-icon">🔈</span>
+      <input type="range" class="vol-slider" id="volumeSlider" min="0" max="100" value="50">
+      <span class="vol-icon">🔊</span>
+    </div>
+  </div>
+
+  <div class="timing-panel">
+    <button class="timing-toggle" id="timingToggle" onclick="toggleTiming()">
+      <span>Ajustar ritmo</span>
+      <span class="arrow">▼</span>
+    </button>
+    <div class="timing-body" id="timingBody">
+      <div class="timing-row">
+        <div class="timing-name">Inspire<span>segundos</span></div>
+        <input type="range" class="timing-slider" id="sliderInspire" min="2" max="10" value="4" step="1" oninput="updateTiming('inspire',this.value)">
+        <div class="timing-val" id="valInspire">4s</div>
+      </div>
+      <div class="timing-row">
+        <div class="timing-name">Segure<span>segundos</span></div>
+        <input type="range" class="timing-slider" id="sliderHold" min="0" max="10" value="4" step="1" oninput="updateTiming('hold',this.value)">
+        <div class="timing-val" id="valHold">4s</div>
+      </div>
+      <div class="timing-row">
+        <div class="timing-name">Expire<span>segundos</span></div>
+        <input type="range" class="timing-slider" id="sliderExpire" min="2" max="10" value="4" step="1" oninput="updateTiming('expire',this.value)">
+        <div class="timing-val" id="valExpire">4s</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vib-badge" id="vibBadge"></div>
+
+</div>
+
+<script>
+const TIMINGS = { inspire: 4, hold: 4, expire: 4 };
+
+let state = 'idle';
+let running = false;
+let cycles = 0;
+let xp = 0;
+let sessionSeconds = 0;
+let clockInterval = null;
+let phaseTimeout = null;
+let progressInterval = null;
+let progressStart = null;
+let phaseDuration = 0;
+
+const breathCircle = document.getElementById('breathCircle');
+const breathArea   = document.getElementById('breathArea');
+const phaseLabel   = document.getElementById('phaseLabel');
+const phaseTimer   = document.getElementById('phaseTimer');
+const progressFill = document.getElementById('progressFill');
+const btnPlay      = document.getElementById('btnPlay');
+const btnPlayIcon  = document.getElementById('btnPlayIcon');
+const btnPlayLabel = document.getElementById('btnPlayLabel');
+const statCycles   = document.getElementById('statCycles');
+const statMinutes  = document.getElementById('statMinutes');
+const statXP       = document.getElementById('statXP');
+const xpToast      = document.getElementById('xpToast');
+const soundPanel   = document.getElementById('soundPanel');
+const btnSound     = document.getElementById('btnSound');
+
+// ── Audio ─────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let ambientNode = null;
+let gainNode = null;
+let currentSound = 'rain';
+let soundOpen = false;
+let soundEnabled = false;
+const volSlider = document.getElementById('volumeSlider');
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  return audioCtx;
+}
+
+/* Generate ambient noise procedurally — no external files needed */
+function makeNoise(type) {
+  const ctx = getAudioCtx();
+  if (ambientNode) { try { ambientNode.stop(); } catch(e){} }
+  gainNode = ctx.createGain();
+  gainNode.gain.value = volSlider.value / 100 * 0.3;
+  gainNode.connect(ctx.destination);
+
+  const bufSize = ctx.sampleRate * 4;
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+
+  if (type === 'none') { soundEnabled = false; return; }
+
+  soundEnabled = true;
+
+  // white noise base
+  for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+
+  if (type === 'rain') {
+    // Low-pass filter for rain
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 2200;
+    const hpf = ctx.createBiquadFilter();
+    hpf.type = 'highpass';
+    hpf.frequency.value = 200;
+    src.connect(lpf); lpf.connect(hpf); hpf.connect(gainNode);
+  } else if (type === 'wind') {
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 600;
+    // LFO for wind sway
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 0.15;
+    lfoGain.gain.value = 0.18;
+    lfo.connect(lfoGain); lfoGain.connect(gainNode.gain);
+    lfo.start();
+    src.connect(lpf); lpf.connect(gainNode);
+  } else if (type === 'ocean') {
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 900;
+    // LFO for wave rhythm
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 0.08;
+    lfoGain.gain.value = 0.25;
+    lfo.connect(lfoGain); lfoGain.connect(gainNode.gain);
+    lfo.start();
+    src.connect(lpf); lpf.connect(gainNode);
+  }
+
+  src.start();
+  ambientNode = src;
+}
+
+function stopAmbient() {
+  if (ambientNode) { try { ambientNode.stop(); } catch(e){} ambientNode = null; }
+  if (gainNode) gainNode.disconnect();
+  soundEnabled = false;
+}
+
+function selectSound(btn) {
+  document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSound = btn.dataset.sound;
+  if (running || soundOpen) {
+    if (currentSound === 'none') stopAmbient();
+    else makeNoise(currentSound);
+  }
+}
+
+volSlider.addEventListener('input', () => {
+  if (gainNode) gainNode.gain.value = volSlider.value / 100 * 0.3;
+});
+
+btnSound.addEventListener('click', () => {
+  soundOpen = !soundOpen;
+  soundPanel.style.display = soundOpen ? 'flex' : 'none';
+  btnSound.classList.toggle('active', soundOpen);
+  if (soundOpen && currentSound !== 'none') makeNoise(currentSound);
+  else if (!soundOpen && !running) stopAmbient();
+});
+
+// Hide sound panel initially
+soundPanel.style.display = 'none';
+
+// ── Timing controls ────────────────────────────────
+function updateTiming(phase, val) {
+  TIMINGS[phase] = parseInt(val);
+  document.getElementById('val' + phase.charAt(0).toUpperCase() + phase.slice(1)).textContent = val + 's';
+  document.documentElement.style.setProperty('--timing-' + phase, val + 's');
+}
+
+function toggleTiming() {
+  const btn  = document.getElementById('timingToggle');
+  const body = document.getElementById('timingBody');
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+// ── Clock ──────────────────────────────────────────
+function startClock() {
+  if (clockInterval) return;
+  clockInterval = setInterval(() => {
+    sessionSeconds++;
+    const m = Math.floor(sessionSeconds / 60);
+    const s = sessionSeconds % 60;
+    statMinutes.textContent = m + ':' + String(s).padStart(2,'0');
+  }, 1000);
+}
+
+function stopClock() {
+  clearInterval(clockInterval);
+  clockInterval = null;
+}
+
+// ── Vibration ──────────────────────────────────────
+function vibrate(pattern) {
+  if (navigator.vibrate) {
+    navigator.vibrate(pattern);
+    document.getElementById('vibBadge').textContent = '';
+  }
+}
+
+// ── Phase logic ────────────────────────────────────
+function setPhase(phase) {
+  state = phase;
+
+  breathCircle.className = 'breath-circle ' + phase;
+
+  const labels = { inspire: 'Inspire', hold: 'Segure', expire: 'Expire' };
+  phaseLabel.className = 'phase-label ' + phase;
+  phaseLabel.textContent = labels[phase];
+
+  const durations = { inspire: TIMINGS.inspire, hold: TIMINGS.hold, expire: TIMINGS.expire };
+  phaseDuration = durations[phase];
+
+  progressFill.className = 'progress-bar-fill ' + phase;
+
+  // vibration cues
+  const vibs = { inspire: [60], hold: [30, 50, 30], expire: [80] };
+  vibrate(vibs[phase]);
+
+  // countdown & progress
+  clearInterval(progressInterval);
+  progressStart = Date.now();
+  let remaining = phaseDuration;
+  phaseTimer.textContent = remaining + 's';
+  progressFill.style.width = '0%';
+
+  progressInterval = setInterval(() => {
+    const elapsed = (Date.now() - progressStart) / 1000;
+    remaining = Math.max(0, phaseDuration - elapsed);
+    phaseTimer.textContent = Math.ceil(remaining) + 's';
+    progressFill.style.width = (elapsed / phaseDuration * 100).toFixed(1) + '%';
+  }, 80);
+
+  // schedule next
+  clearTimeout(phaseTimeout);
+  phaseTimeout = setTimeout(() => {
+    clearInterval(progressInterval);
+    progressFill.style.width = '100%';
+
+    if (!running) return;
+
+    if (phase === 'inspire') {
+      if (TIMINGS.hold > 0) setPhase('hold');
+      else setPhase('expire');
+    } else if (phase === 'hold') {
+      setPhase('expire');
+    } else {
+      // cycle complete
+      cycles++;
+      xp += 10;
+      statCycles.textContent = cycles;
+      statXP.textContent = xp;
+      showXP();
+      vibrate([80, 40, 80]);
+      setPhase('inspire');
+    }
+  }, phaseDuration * 1000);
+}
+
+function showXP() {
+  xpToast.classList.add('show');
+  setTimeout(() => xpToast.classList.remove('show'), 2200);
+}
+
+// ── Play / Pause ───────────────────────────────────
+btnPlay.addEventListener('click', () => {
+  if (!running) startSession();
+  else pauseSession();
+});
+
+function startSession() {
+  running = true;
+  breathCircle.classList.remove('idle-hint');
+  breathArea.classList.add('running');
+  btnPlayIcon.textContent = '⏸';
+  btnPlayLabel.textContent = 'Pausar';
+  startClock();
+  if (currentSound !== 'none') makeNoise(currentSound);
+  setPhase('inspire');
+}
+
+function pauseSession() {
+  running = false;
+  clearTimeout(phaseTimeout);
+  clearInterval(progressInterval);
+  breathCircle.className = 'breath-circle';
+  breathArea.classList.remove('running');
+  phaseLabel.className = 'phase-label idle';
+  phaseLabel.textContent = 'Pausado';
+  phaseTimer.textContent = '';
+  progressFill.style.width = '0%';
+  progressFill.className = 'progress-bar-fill';
+  btnPlayIcon.textContent = '▶';
+  btnPlayLabel.textContent = 'Continuar';
+  stopClock();
+}
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  running = false;
+  clearTimeout(phaseTimeout);
+  clearInterval(progressInterval);
+  stopClock();
+  stopAmbient();
+  sessionSeconds = 0;
+  cycles = 0; xp = 0;
+  statCycles.textContent = '0';
+  statMinutes.textContent = '0:00';
+  statXP.textContent = '0';
+  breathCircle.className = 'breath-circle idle-hint';
+  breathArea.classList.remove('running');
+  phaseLabel.className = 'phase-label idle';
+  phaseLabel.textContent = 'Pronto para começar';
+  phaseTimer.textContent = '';
+  progressFill.style.width = '0%';
+  progressFill.className = 'progress-bar-fill';
+  btnPlayIcon.textContent = '▶';
+  btnPlayLabel.textContent = 'Iniciar';
+  soundPanel.style.display = 'none';
+  btnSound.classList.remove('active');
+  soundOpen = false;
+});
+</script>
+</body>
+</html>

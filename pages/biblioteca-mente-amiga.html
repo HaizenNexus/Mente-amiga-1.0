@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mente Amiga — Biblioteca</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --neon-green:  #00ffaa;
+  --neon-blue:   #00d4ff;
+  --neon-purple: #b94fff;
+  --neon-pink:   #ff2d78;
+  --neon-yellow: #ffe400;
+
+  --bg-dark:     #060714;
+  --bg-card:     #0d1230;
+  --bg-panel:    #0a0f24;
+  --border-dim:  rgba(0,212,255,.18);
+
+  --font-head:   'Orbitron', sans-serif;
+  --font-body:   'Nunito', sans-serif;
+
+  --glow-green:  0 0 8px #00ffaa, 0 0 24px #00ffaa66;
+  --glow-blue:   0 0 8px #00d4ff, 0 0 24px #00d4ff66;
+  --glow-purple: 0 0 8px #b94fff, 0 0 24px #b94fff66;
+  --glow-pink:   0 0 8px #ff2d78, 0 0 24px #ff2d7866;
+  --glow-yellow: 0 0 8px #ffe400, 0 0 24px #ffe40066;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-dark);
+  color: #e0e8ff;
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* animated star / grid background */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,212,255,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(185,79,255,.06) 0%, transparent 70%),
+    repeating-linear-gradient(0deg,  transparent, transparent 39px, rgba(0,212,255,.04) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,212,255,.04) 40px);
+  pointer-events: none;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 4px; }
+
+/* ============================================================
+   APP WRAPPER
+   ============================================================ */
+#app {
+  position: relative; z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 60px;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SCREENS — show / hide
+   ============================================================ */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ============================================================
+   HEADER / TOPBAR
+   ============================================================ */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 0 16px;
+}
+
+.topbar-title {
+  font-family: var(--font-head);
+  font-size: clamp(1.1rem, 4vw, 1.6rem);
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--neon-blue);
+  text-shadow: var(--glow-blue);
+  flex: 1;
+}
+
+.topbar-title span { color: var(--neon-green); text-shadow: var(--glow-green); }
+
+/* ============================================================
+   BACK BUTTON
+   ============================================================ */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-head);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--neon-blue);
+  background: transparent;
+  border: 1.5px solid var(--neon-blue);
+  border-radius: 50px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: all .25s ease;
+  box-shadow: 0 0 8px rgba(0,212,255,.25);
+  white-space: nowrap;
+}
+.btn-back:hover {
+  background: var(--neon-blue);
+  color: var(--bg-dark);
+  box-shadow: var(--glow-blue);
+  transform: translateX(-3px);
+}
+.btn-back svg { width: 14px; height: 14px; }
+
+/* ============================================================
+   HERO (library screen)
+   ============================================================ */
+.hero {
+  text-align: center;
+  padding: 36px 0 48px;
+  animation: fadeUp .6s ease both;
+}
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: .65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--neon-purple);
+  border: 1px solid var(--neon-purple);
+  border-radius: 50px;
+  padding: 4px 16px;
+  margin-bottom: 18px;
+  box-shadow: var(--glow-purple);
+  animation: pulse 3s infinite;
+}
+.hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-green) 50%, var(--neon-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(0,212,255,.4));
+  margin-bottom: 12px;
+}
+.hero p {
+  color: rgba(200,215,255,.6);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ============================================================
+   SUBJECT GRID
+   ============================================================ */
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  padding-bottom: 20px;
+}
+
+.subject-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1.5px solid var(--card-color, var(--neon-blue));
+  border-radius: 20px;
+  padding: 32px 20px 28px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+  animation: fadeUp .5s ease both;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  text-align: center;
+}
+
+/* staggered entrance */
+.subject-card:nth-child(1) { animation-delay: .05s; }
+.subject-card:nth-child(2) { animation-delay: .10s; }
+.subject-card:nth-child(3) { animation-delay: .15s; }
+.subject-card:nth-child(4) { animation-delay: .20s; }
+.subject-card:nth-child(5) { animation-delay: .25s; }
+.subject-card:nth-child(6) { animation-delay: .30s; }
+
+.subject-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--card-color, var(--neon-blue)) 0%, transparent 70%);
+  opacity: .06;
+  transition: opacity .3s;
+}
+.subject-card:hover { transform: translateY(-8px) scale(1.03); }
+.subject-card:hover { box-shadow: 0 12px 40px -8px var(--card-color); }
+.subject-card:hover::before { opacity: .14; }
+
+.subject-card::after {
+  content: '';
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--card-color, var(--neon-blue)), transparent);
+  border-radius: 0 0 4px 4px;
+}
+
+.card-icon {
+  font-size: 2.8rem;
+  margin-bottom: 14px;
+  display: block;
+  filter: drop-shadow(0 0 8px var(--card-color, var(--neon-blue)));
+  transition: transform .3s ease;
+}
+.subject-card:hover .card-icon { transform: scale(1.15) rotate(-4deg); }
+
+.card-letter {
+  font-family: var(--font-head);
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--card-color, var(--neon-blue));
+  text-shadow: 0 0 16px var(--card-color, var(--neon-blue));
+  line-height: 1;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.card-name {
+  font-family: var(--font-head);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.8);
+  margin-bottom: 16px;
+}
+
+.card-badge {
+  display: inline-block;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--card-color, var(--neon-blue));
+  border: 1px solid var(--card-color, var(--neon-blue));
+  border-radius: 50px;
+  padding: 3px 12px;
+  opacity: .8;
+}
+
+/* ============================================================
+   SUBJECT SCREEN
+   ============================================================ */
+#screen-subject .topbar { padding-top: 22px; }
+
+.subject-header {
+  text-align: center;
+  padding: 28px 0 36px;
+  animation: fadeUp .5s ease both;
+}
+.subject-header .subject-icon { font-size: 3.4rem; display: block; margin-bottom: 10px; }
+.subject-header h2 {
+  font-family: var(--font-head);
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--active-color, var(--neon-blue));
+  text-shadow: 0 0 16px var(--active-color, var(--neon-blue));
+  margin-bottom: 8px;
+}
+.subject-header p { color: rgba(200,215,255,.5); font-size: .9rem; }
+
+/* year tabs */
+.year-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 28px;
+  scrollbar-width: none;
+}
+.year-tabs::-webkit-scrollbar { display: none; }
+
+.year-tab {
+  flex-shrink: 0;
+  font-family: var(--font-head);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--active-color, var(--neon-blue));
+  color: var(--active-color, var(--neon-blue));
+  background: transparent;
+  cursor: pointer;
+  transition: all .2s ease;
+  opacity: .5;
+}
+.year-tab.selected, .year-tab:hover {
+  background: var(--active-color, var(--neon-blue));
+  color: var(--bg-dark);
+  opacity: 1;
+  box-shadow: 0 0 12px var(--active-color, var(--neon-blue));
+}
+
+/* year content panel */
+.year-panel {
+  display: none;
+  animation: fadeUp .4s ease both;
+}
+.year-panel.active { display: block; }
+
+.content-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--active-color, var(--neon-blue));
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s, box-shadow .3s;
+}
+.content-section:hover {
+  border-left-color: var(--active-color, var(--neon-blue));
+  box-shadow: -4px 0 20px -4px var(--active-color, var(--neon-blue));
+}
+
+.section-title {
+  font-family: var(--font-head);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--active-color, var(--neon-blue));
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title span { font-size: 1.1rem; }
+
+.content-section p,
+.content-section li {
+  font-size: .93rem;
+  line-height: 1.75;
+  color: rgba(220,230,255,.82);
+}
+.content-section ul, .content-section ol { padding-left: 20px; }
+.content-section li { margin-bottom: 6px; }
+
+.highlight {
+  color: var(--active-color, var(--neon-blue));
+  font-weight: 700;
+}
+
+/* exercise / challenge boxes */
+.exercise-box {
+  background: rgba(0,0,0,.3);
+  border: 1px dashed rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 10px 0;
+}
+.exercise-box + .exercise-box { margin-top: 8px; }
+.exercise-num {
+  font-family: var(--font-head);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--neon-yellow);
+  margin-bottom: 6px;
+}
+
+.gabarito-item {
+  background: rgba(0,255,170,.05);
+  border: 1px solid rgba(0,255,170,.15);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+.gabarito-item .answer { color: var(--neon-green); font-weight: 700; }
+
+.mission-box {
+  background: linear-gradient(135deg, rgba(185,79,255,.1), rgba(0,212,255,.08));
+  border: 1.5px solid rgba(185,79,255,.35);
+  border-radius: 16px;
+  padding: 22px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.mission-box::before {
+  content: '🚀';
+  position: absolute; top: -10px; right: 14px;
+  font-size: 3.5rem; opacity: .08;
+}
+.mission-box h4 {
+  font-family: var(--font-head);
+  font-size: .9rem;
+  color: var(--neon-purple);
+  text-shadow: var(--glow-purple);
+  margin-bottom: 10px;
+}
+.mission-box p { color: rgba(220,230,255,.75); font-size: .9rem; line-height: 1.7; }
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 6px var(--neon-purple); }
+  50%      { box-shadow: var(--glow-purple); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 520px) {
+  .subject-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .subject-card { padding: 24px 12px 20px; }
+  .card-letter { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ====================== LIBRARY SCREEN ====================== -->
+  <div id="screen-library" class="screen active">
+    <div class="topbar">
+      <span class="topbar-title">Mente <span>Amiga</span></span>
+    </div>
+
+    <div class="hero">
+      <div class="hero-badge">⚡ Zona de Estudos</div>
+      <h1>Biblioteca<br>Galáctica</h1>
+      <p>Escolha uma matéria e decole no conhecimento! 🚀</p>
+    </div>
+
+    <div class="subject-grid" id="subjectGrid"></div>
+  </div>
+
+  <!-- ====================== SUBJECT SCREEN ====================== -->
+  <div id="screen-subject" class="screen">
+    <div class="topbar">
+      <button class="btn-back" id="btnBack">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Voltar
+      </button>
+      <span class="topbar-title" id="subjectTopTitle"></span>
+    </div>
+
+    <div class="subject-header">
+      <span class="subject-icon" id="subjectIcon"></span>
+      <h2 id="subjectTitle"></h2>
+      <p>Selecione o ano escolar para estudar 📚</p>
+    </div>
+
+    <div class="year-tabs" id="yearTabs"></div>
+    <div id="yearContent"></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   DATA — Subjects
+   ============================================================ */
+const SUBJECTS = [
+  { id: 'mat', letter: 'M', name: 'Matemática', icon: '📐', color: '#00ffaa', glow: '0 0 8px #00ffaa, 0 0 28px #00ffaa55' },
+  { id: 'por', letter: 'P', name: 'Português',  icon: '📝', color: '#00d4ff', glow: '0 0 8px #00d4ff, 0 0 28px #00d4ff55' },
+  { id: 'ing', letter: 'I', name: 'Inglês',     icon: '🌍', color: '#b94fff', glow: '0 0 8px #b94fff, 0 0 28px #b94fff55' },
+  { id: 'his', letter: 'H', name: 'História',   icon: '🏛️', color: '#ffe400', glow: '0 0 8px #ffe400, 0 0 28px #ffe40055' },
+  { id: 'cie', letter: 'C', name: 'Ciências',   icon: '🔬', color: '#ff2d78', glow: '0 0 8px #ff2d78, 0 0 28px #ff2d7855' },
+  { id: 'red', letter: 'R', name: 'Redação',    icon: '✍️', color: '#ff8c00', glow: '0 0 8px #ff8c00, 0 0 28px #ff8c0055' },
+];
+
+/* ============================================================
+   CONTENT GENERATOR — per subject/year
+   ============================================================ */
+const CONTENT = {
+
+  mat: {
+    1: {
+      explicacao: `A <span class="highlight">Matemática do 1º ano</span> é a sua primeira aventura com os números! Você vai aprender a contar, reconhecer os algarismos de <strong>0 a 10</strong>, comparar quantidades (mais, menos, igual) e dar os primeiros passos na adição. Tudo isso usando objetos, dedos e muita imaginação!`,
+      resumo: `<ul><li>Números de <strong>0 a 10</strong></li><li>Contar objetos no dia a dia</li><li>Comparar: <strong>maior, menor, igual</strong></li><li>Adição simples: juntar grupos</li><li>Formas geométricas básicas: círculo, quadrado, triângulo</li></ul>`,
+      exercicios: [
+        { q: 'Quantas maçãs existem? 🍎🍎🍎🍎', hint: 'Conte uma por uma.' },
+        { q: 'Qual é maior: 7 ou 4?', hint: 'Lembre da ordem dos números.' },
+        { q: '3 + 2 = ?', hint: 'Junte 3 e 2 objetos.' },
+        { q: 'Desenhe 5 estrelas ⭐', hint: 'Pode usar o dedo para contar.' },
+      ],
+      gabarito: [
+        { q: '🍎🍎🍎🍎', a: '4 maçãs', exp: 'Contamos cada maçã: 1, 2, 3, 4.' },
+        { q: '7 ou 4', a: '7 é maior', exp: 'Na ordem, 7 vem depois de 4.' },
+        { q: '3 + 2', a: '5', exp: 'Juntamos os 3 com os 2: total de 5.' },
+      ],
+      missao: `🎯 <strong>Missão Contador Espacial:</strong> Olhe ao redor do seu quarto e conte quantos objetos de cada cor você encontra. Anote tudo! Depois some as cores e descubra qual tem mais.`,
+    },
+    2: {
+      explicacao: `No <span class="highlight">2º ano</span>, os números crescem! Você vai trabalhar com dezenas, aprender a <strong>somar e subtrair até 100</strong> e começar a entender o que é dobro e metade. Também vai conhecer medidas simples, como centímetros e metros.`,
+      resumo: `<ul><li>Números até <strong>100</strong></li><li>Dezenas e unidades</li><li>Adição e subtração até 100</li><li>Dobro e metade</li><li>Medidas: cm, m, kg</li></ul>`,
+      exercicios: [
+        { q: '25 + 13 = ?', hint: 'Some as unidades e depois as dezenas.' },
+        { q: 'O dobro de 8 é?', hint: 'Dobro = número + número.' },
+        { q: '50 − 20 = ?', hint: 'Pense nas dezenas.' },
+        { q: 'Qual é a metade de 10?', hint: 'Divida em 2 partes iguais.' },
+      ],
+      gabarito: [
+        { q: '25 + 13', a: '38', exp: '5+3=8 e 2+1=3, resultado: 38.' },
+        { q: 'Dobro de 8', a: '16', exp: '8+8=16.' },
+        { q: '50 − 20', a: '30', exp: '5 dezenas − 2 dezenas = 3 dezenas = 30.' },
+        { q: 'Metade de 10', a: '5', exp: '10÷2=5.' },
+      ],
+      missao: `🎯 <strong>Missão Mercado Virtual:</strong> Imagine que você tem R$ 50,00. Escolha 3 itens (cada um custa entre R$ 5 e R$ 20). Some os preços e veja se tem troco!`,
+    },
+    3: {
+      explicacao: `O <span class="highlight">3º ano</span> traz a multiplicação! Você vai aprender as <strong>tabuadas de 1 a 5</strong>, entender frações simples (metade, terço, quarto) e trabalhar com números até <strong>1.000</strong>.`,
+      resumo: `<ul><li>Multiplicação: tabuadas de 1 a 5</li><li>Divisão exata simples</li><li>Frações: ½, ⅓, ¼</li><li>Números até 1.000</li><li>Perímetro de figuras</li></ul>`,
+      exercicios: [
+        { q: '4 × 3 = ?', hint: 'São 4 grupos de 3.' },
+        { q: 'Qual é ¼ de 20?', hint: 'Divida 20 por 4.' },
+        { q: '15 ÷ 3 = ?', hint: 'Quanto cabe 3 em 15?' },
+        { q: 'Um retângulo tem lados 5cm e 3cm. Qual é o perímetro?', hint: 'Some todos os lados.' },
+      ],
+      gabarito: [
+        { q: '4 × 3', a: '12', exp: '3+3+3+3 = 12.' },
+        { q: '¼ de 20', a: '5', exp: '20÷4=5.' },
+        { q: '15 ÷ 3', a: '5', exp: '5×3=15.' },
+        { q: 'Perímetro 5cm + 3cm', a: '16 cm', exp: '5+3+5+3=16.' },
+      ],
+      missao: `🎯 <strong>Missão Tabuada Ninja:</strong> Crie uma tabela de multiplicação 5×5 e pinte cada resultado par de uma cor e cada ímpar de outra. Quais aparecem mais?`,
+    },
+    4: {
+      explicacao: `No <span class="highlight">4º ano</span>, a multiplicação cresce para as <strong>tabuadas de 6 a 10</strong>. Você também vai aprender sobre frações equivalentes, divisão com resto e ângulos nas figuras geométricas.`,
+      resumo: `<ul><li>Tabuadas de 6 a 10</li><li>Divisão com resto</li><li>Frações equivalentes</li><li>Ângulos: agudo, reto, obtuso</li><li>Área de retângulos</li></ul>`,
+      exercicios: [
+        { q: '7 × 8 = ?', hint: 'Tabuada do 7.' },
+        { q: '29 ÷ 4 = ? (resto?)', hint: 'Quantas vezes 4 cabe em 29?' },
+        { q: '½ é equivalente a quantos quartos?', hint: 'Multiplique cima e baixo por 2.' },
+        { q: 'Área: base 6cm, altura 4cm.', hint: 'Área = base × altura.' },
+      ],
+      gabarito: [
+        { q: '7 × 8', a: '56', exp: 'Tabuada do 7: 7,14,21,28,35,42,49,56.' },
+        { q: '29 ÷ 4', a: '7 resto 1', exp: '4×7=28, sobra 1.' },
+        { q: '½ = ?/4', a: '2/4', exp: '1×2=2 e 2×2=4 → 2/4.' },
+        { q: 'Área 6×4', a: '24 cm²', exp: '6×4=24.' },
+      ],
+      missao: `🎯 <strong>Missão Arquiteto Digital:</strong> Desenhe a planta de um quarto com pelo menos 4 cômodos. Calcule a área de cada um e descubra qual é o maior!`,
+    },
+    5: {
+      explicacao: `O <span class="highlight">5º ano</span> introduz os <strong>números decimais</strong> e o sistema métrico completo. Você vai aprender operações com decimais, porcentagem básica e trabalhar com dados em gráficos.`,
+      resumo: `<ul><li>Decimais: 0,5 / 1,25 / 3,7</li><li>Frações e decimais (equivalências)</li><li>Porcentagem: 10%, 25%, 50%</li><li>Gráficos de barras e tabelas</li><li>Múltiplos e divisores</li></ul>`,
+      exercicios: [
+        { q: '2,5 + 1,3 = ?', hint: 'Alinhe as vírgulas e some.' },
+        { q: '25% de 80 = ?', hint: '25% = ¼, divida por 4.' },
+        { q: 'Quais são os múltiplos de 6 até 36?', hint: 'Conte de 6 em 6.' },
+        { q: 'Passe 3/4 para decimal.', hint: 'Divida 3 por 4.' },
+      ],
+      gabarito: [
+        { q: '2,5 + 1,3', a: '3,8', exp: 'Somamos 2+1=3 e 5+3=8 → 3,8.' },
+        { q: '25% de 80', a: '20', exp: '80÷4=20.' },
+        { q: 'Múltiplos de 6', a: '6,12,18,24,30,36', exp: '6×1 até 6×6.' },
+        { q: '3/4', a: '0,75', exp: '3÷4=0,75.' },
+      ],
+      missao: `🎯 <strong>Missão Economista:</strong> Pesquise 5 preços de produtos. Aplique 10% de desconto em cada um. Quanto você economizaria no total?`,
+    },
+    6: {
+      explicacao: `No <span class="highlight">6º ano</span> entram os <strong>números inteiros negativos</strong>! Você vai entender a reta numérica completa, aprender operações com inteiros e conhecer os primeiros passos da geometria plana.`,
+      resumo: `<ul><li>Números inteiros: positivos e negativos</li><li>Operações com inteiros (+, −, ×, ÷)</li><li>MMC e MDC</li><li>Proporcionalidade direta</li><li>Área e perímetro de polígonos</li></ul>`,
+      exercicios: [
+        { q: '(−3) + (+7) = ?', hint: 'Na reta numérica, saia de −3 e ande 7 para a direita.' },
+        { q: 'Calcule o MMC de 4 e 6.', hint: 'Múltiplos de 4: 4,8,12... Múltiplos de 6: 6,12...' },
+        { q: '(−5) × (−2) = ?', hint: 'Negativo × negativo = positivo.' },
+        { q: 'Se 3 livros custam R$ 45, quanto custam 5 livros?', hint: 'Proporção direta.' },
+      ],
+      gabarito: [
+        { q: '(−3)+(+7)', a: '+4', exp: 'Diferença = 7−3=4, sinal do maior (+7).' },
+        { q: 'MMC 4 e 6', a: '12', exp: '12 é o menor múltiplo comum.' },
+        { q: '(−5)×(−2)', a: '+10', exp: 'Sinais iguais → resultado positivo.' },
+        { q: '3 livros → R$45', a: 'R$75', exp: '45÷3=15 por livro; 15×5=75.' },
+      ],
+      missao: `🎯 <strong>Missão Temperatura Polar:</strong> Crie uma tabela com a temperatura de 7 cidades (use negativas para cidades frias). Calcule a variação entre a mais quente e a mais fria!`,
+    },
+    7: {
+      explicacao: `O <span class="highlight">7º ano</span> é o ano da <strong>álgebra</strong>! Você vai trabalhar com expressões algébricas, equações de 1º grau e entrar no mundo das probabilidades básicas.`,
+      resumo: `<ul><li>Expressões algébricas: 2x + 3</li><li>Equações de 1º grau: x + 5 = 12</li><li>Inequações simples</li><li>Probabilidade: eventos, espaço amostral</li><li>Estatística: média, moda, mediana</li></ul>`,
+      exercicios: [
+        { q: 'Resolva: x + 8 = 15', hint: 'Isole o x.' },
+        { q: 'Se x=3, calcule: 4x − 2', hint: 'Substitua x por 3.' },
+        { q: 'Uma moeda é lançada. Qual a probabilidade de sair cara?', hint: 'Casos favoráveis ÷ total de casos.' },
+        { q: 'Notas: 7, 8, 9, 6, 10. Qual a média?', hint: 'Some e divida pela quantidade.' },
+      ],
+      gabarito: [
+        { q: 'x+8=15', a: 'x=7', exp: '15−8=7.' },
+        { q: '4(3)−2', a: '10', exp: '12−2=10.' },
+        { q: 'P(cara)', a: '1/2 = 50%', exp: '1 cara em 2 faces possíveis.' },
+        { q: 'Média 7,8,9,6,10', a: '8', exp: '7+8+9+6+10=40; 40÷5=8.' },
+      ],
+      missao: `🎯 <strong>Missão Detetive Algébrico:</strong> Pense em um número, multiplique por 3, some 6, divida o resultado por 3 e subtraia o número inicial. O que você encontrou? Prove algebricamente por que isso sempre acontece!`,
+    },
+    8: {
+      explicacao: `No <span class="highlight">8º ano</span>, a álgebra avança com <strong>equações de 2º grau</strong> e você vai conhecer as poderosas fórmulas da geometria: Pitágoras, área do círculo e trigonometria básica.`,
+      resumo: `<ul><li>Equações de 2º grau: ax²+bx+c=0</li><li>Fórmula de Bhaskara</li><li>Teorema de Pitágoras</li><li>Área e circunferência do círculo</li><li>Semelhança de triângulos</li></ul>`,
+      exercicios: [
+        { q: 'x² − 5x + 6 = 0 (Bhaskara)', hint: 'a=1, b=−5, c=6. Calcule Δ=b²−4ac.' },
+        { q: 'Triângulo retângulo: catetos 3 e 4. Hipotenusa?', hint: 'Pitágoras: a²+b²=c².' },
+        { q: 'Área de círculo com raio 7cm (π≈3,14)', hint: 'A=π×r².' },
+        { q: 'Simplifique: 3x + 2x − x', hint: 'Some os termos semelhantes.' },
+      ],
+      gabarito: [
+        { q: 'x²−5x+6=0', a: 'x=2 ou x=3', exp: 'Δ=25−24=1; x=(5±1)/2.' },
+        { q: 'Pitágoras 3,4', a: '5', exp: '9+16=25; √25=5.' },
+        { q: 'Área r=7', a: '153,86 cm²', exp: '3,14×49=153,86.' },
+        { q: '3x+2x−x', a: '4x', exp: '(3+2−1)x=4x.' },
+      ],
+      missao: `🎯 <strong>Missão Engenheiro:</strong> Desenhe um triângulo retângulo e meça os dois catetos. Use Pitágoras para calcular a hipotenusa. Confira com régua!`,
+    },
+    9: {
+      explicacao: `O <span class="highlight">9º ano</span> fecha o ciclo com <strong>funções</strong>, trigonometria completa e geometria espacial. Você estará pronto para o Ensino Médio!`,
+      resumo: `<ul><li>Funções: linear, afim, quadrática</li><li>Trigonometria: seno, cosseno, tangente</li><li>Geometria espacial: cubo, cilindro, cone</li><li>Sistemas de equações</li><li>Noções de estatística avançada</li></ul>`,
+      exercicios: [
+        { q: 'f(x) = 2x + 1. Calcule f(4).', hint: 'Substitua x=4.' },
+        { q: 'Num triângulo retângulo, cateto oposto=4, hipotenusa=5. Calcule sen(θ).', hint: 'sen=oposto/hipotenusa.' },
+        { q: 'Resolva o sistema: x+y=10 e x−y=4', hint: 'Some as equações.' },
+        { q: 'Volume do cubo com aresta 3cm.', hint: 'V=a³.' },
+      ],
+      gabarito: [
+        { q: 'f(4)', a: '9', exp: '2(4)+1=8+1=9.' },
+        { q: 'sen(θ)', a: '4/5 = 0,8', exp: 'oposto/hipotenusa = 4/5.' },
+        { q: 'Sistema x+y=10, x−y=4', a: 'x=7, y=3', exp: 'Somando: 2x=14→x=7; y=10−7=3.' },
+        { q: 'Volume cubo a=3', a: '27 cm³', exp: '3³=27.' },
+      ],
+      missao: `🎯 <strong>Missão Cientista de Dados:</strong> Colete a altura de 10 colegas, calcule média, moda e mediana. Crie um gráfico de barras e apresente suas conclusões!`,
+    },
+  },
+
+  por: {
+    1: {
+      explicacao: `No <span class="highlight">Português do 1º ano</span>, você vai aprender o <strong>alfabeto</strong> completo, identificar letras maiúsculas e minúsculas e dar os primeiros passos na leitura de sílabas. Tudo começa aqui!`,
+      resumo: `<ul><li>Alfabeto: 26 letras</li><li>Vogais e consoantes</li><li>Sílabas simples: ba, ca, ma...</li><li>Nomes próprios (maiúscula)</li><li>Leitura de palavras simples</li></ul>`,
+      exercicios: [
+        { q: 'Quantas vogais tem o alfabeto?', hint: 'A, E, I, O, U.' },
+        { q: 'Separe em sílabas: BOLA', hint: 'BO-LA.' },
+        { q: 'Complete: B + A = ?', hint: 'Junte a consoante com a vogal.' },
+        { q: 'Escreva seu nome com letra maiúscula no início.', hint: 'Nomes próprios começam com maiúscula.' },
+      ],
+      gabarito: [
+        { q: 'Vogais', a: '5 vogais', exp: 'A, E, I, O, U são as 5 vogais.' },
+        { q: 'BOLA', a: 'BO-LA (2 sílabas)', exp: 'Dividimos entre as sílabas.' },
+        { q: 'B+A', a: 'BA', exp: 'Consoante + vogal forma sílaba.' },
+      ],
+      missao: `🎯 <strong>Missão Caça-Letras:</strong> Escolha 5 objetos da sua casa, escreva o nome de cada um e grife as vogais de uma cor e as consoantes de outra!`,
+    },
+    2: {
+      explicacao: `No <span class="highlight">2º ano</span> de Português, você aprende a ler e escrever pequenos textos, trabalha com <strong>famílias silábicas</strong> e começa a usar pontuação básica: ponto final, vírgula e ponto de interrogação.`,
+      resumo: `<ul><li>Famílias silábicas completas</li><li>Dígrafo: ch, lh, nh, rr, ss</li><li>Pontuação: . , ? !</li><li>Texto descritivo curto</li><li>Ortografia básica</li></ul>`,
+      exercicios: [
+        { q: 'Separe: CACHORRO', hint: 'CA-CHOR-RO.' },
+        { q: 'Use ponto final, interrogação ou exclamação: "Que dia bonito___"', hint: 'Expressa admiração.' },
+        { q: 'Forme palavras com NH: pa___, vi___, ta___', hint: 'Pinha, vinho, tanha.' },
+        { q: 'Escreva uma frase com a palavra CHUVA.', hint: 'Use maiúscula no início e ponto no fim.' },
+      ],
+      gabarito: [
+        { q: 'CACHORRO', a: 'CA-CHOR-RO', exp: '3 sílabas, dígrafo RR na segunda.' },
+        { q: '"Que dia bonito"', a: '! (exclamação)', exp: 'Admiração = exclamação.' },
+        { q: 'PA+NH', a: 'Panha, pinho, panha → PINHA, VINHO, TANHA', exp: 'NH muda o som da consoante.' },
+      ],
+      missao: `🎯 <strong>Missão Escritor Espacial:</strong> Escreva um pequeno texto de 5 linhas sobre seu super-herói favorito. Use pelo menos 3 pontuações diferentes!`,
+    },
+    3: {
+      explicacao: `O <span class="highlight">3º ano</span> introduz os <strong>tipos de texto</strong>: narrativo, descritivo e instrucional. Você vai aprender sobre substantivos, adjetivos e a diferença entre sílaba tônica e átona.`,
+      resumo: `<ul><li>Substantivo: próprio e comum</li><li>Adjetivo: qualidade do substantivo</li><li>Tipos de texto: narrativo, descritivo, instrucional</li><li>Sílaba tônica (acento)</li><li>Uso do dicionário</li></ul>`,
+      exercicios: [
+        { q: 'Classifique: CIDADE, BRASÍLIA, MENINO', hint: 'Próprio = nome específico.' },
+        { q: 'Dê 3 adjetivos para: CACHORRO', hint: 'Felpudo, brincalhão, veloz...' },
+        { q: 'Qual a sílaba tônica de TELEFONE?', hint: 'Fone → tônica na antepenúltima.' },
+        { q: 'O texto que ensina a fazer algo se chama ___?', hint: 'Pense em receitas e bulas.' },
+      ],
+      gabarito: [
+        { q: 'CIDADE, BRASÍLIA, MENINO', a: 'comum, próprio, comum', exp: 'Brasília é nome específico = próprio.' },
+        { q: 'Adjetivos cachorro', a: 'Muitas opções válidas!', exp: 'Qualquer palavra que qualifique o cachorro.' },
+        { q: 'Sílaba tônica TELEFONE', a: 'FO (te-le-FO-ne)', exp: 'A sílaba mais forte é FO.' },
+        { q: 'Texto instrucional', a: 'Texto instrucional', exp: 'Receitas, bulas e manuais são instrucionais.' },
+      ],
+      missao: `🎯 <strong>Missão Jornalista:</strong> Escreva uma notícia de 8 linhas sobre um evento fictício na sua escola. Invente um título chamativo e use adjetivos!`,
+    },
+    4: {
+      explicacao: `No <span class="highlight">4º ano</span>, você vai mergulhar nos <strong>verbos</strong>: presente, passado e futuro. Também aprenderá sobre pronomes e como evitar repetir palavras no texto.`,
+      resumo: `<ul><li>Verbo: presente, pretérito, futuro</li><li>Pronomes pessoais: eu, tu, ele...</li><li>Concordância verbal básica</li><li>Parágrafo e coesão textual</li><li>Crônica e conto</li></ul>`,
+      exercicios: [
+        { q: 'Conjugue CORRER no presente: Eu ___, Tu ___, Ele ___', hint: 'Corr + o, es, e.' },
+        { q: 'Substitua o substantivo por pronome: "O menino comprou o livro. ___ adorou o livro."', hint: 'Ele, ela, eles...' },
+        { q: 'Qual o tempo verbal: "Amanhã viajaremos."?', hint: 'Amanhã = futuro.' },
+        { q: 'Escreva 2 frases no passado sobre suas férias.', hint: 'Use verbos como fui, vi, brinquei.' },
+      ],
+      gabarito: [
+        { q: 'CORRER', a: 'Eu corro, Tu corres, Ele corre', exp: 'Terminações do presente do indicativo.' },
+        { q: 'Pronome', a: 'Ele adorou...', exp: 'Pronome "ele" substitui "o menino".' },
+        { q: 'Tempo verbal', a: 'Futuro do presente', exp: '"Amanhã" indica ação futura.' },
+      ],
+      missao: `🎯 <strong>Missão Contador de Histórias:</strong> Crie um conto com 3 parágrafos: introdução (presente), conflito (passado) e solução (futuro). Use pronomes para evitar repetição!`,
+    },
+    5: {
+      explicacao: `No <span class="highlight">5º ano</span>, você aprende a <strong>produzir textos argumentativos</strong>. Vai estudar artigo de opinião, figuras de linguagem básicas e as regras de acentuação gráfica.`,
+      resumo: `<ul><li>Argumentação: tese, argumento, conclusão</li><li>Figuras de linguagem: metáfora, comparação</li><li>Acentuação: agudo, circunflexo, til</li><li>Artigo de opinião</li><li>Leitura crítica</li></ul>`,
+      exercicios: [
+        { q: 'Identifique a figura de linguagem: "Meus olhos são dois oceanos."', hint: 'Compara sem usar "como".' },
+        { q: 'Acentue corretamente: CAFE, ONIBUS, AVIAO', hint: 'Regras de oxítona, paroxítona, proparoxítona.' },
+        { q: 'Escreva uma tese sobre: "Crianças devem brincar mais ao ar livre."', hint: 'Tese = posição + razão principal.' },
+        { q: 'Qual a diferença entre metáfora e comparação?', hint: 'Uma usa "como", a outra não.' },
+      ],
+      gabarito: [
+        { q: '"Olhos são oceanos"', a: 'Metáfora', exp: 'Compara sem usar como → metáfora.' },
+        { q: 'Acentuação', a: 'CAFÉ, ÔNIBUS, AVIÃO', exp: 'Agudo em Ê, circunflexo em Ô, til em ÃO.' },
+        { q: 'Diferença metáfora/comparação', a: 'Comparação usa "como"; metáfora não.', exp: '"Rápido como um raio" = comparação; "É um raio" = metáfora.' },
+      ],
+      missao: `🎯 <strong>Missão Debatedor:</strong> Escolha um assunto (ex: tela no quarto). Escreva 3 argumentos favoráveis e 3 contrários. Qual lado você defende? Por quê?`,
+    },
+    6: {
+      explicacao: `No <span class="highlight">6º ano</span>, o Português fica mais profundo: você estuda <strong>análise sintática básica</strong> (sujeito e predicado), interpretação de texto literário e ortografia avançada.`,
+      resumo: `<ul><li>Sujeito e predicado</li><li>Objeto direto e indireto</li><li>Texto literário: poema, conto</li><li>Ortografia: x ou ch? s ou z?</li><li>Inferência em leitura</li></ul>`,
+      exercicios: [
+        { q: 'Identifique sujeito e predicado: "O gato dormiu no sofá."', hint: 'Quem fez a ação? O que aconteceu?' },
+        { q: 'X ou CH: _ícara, en_er, pei_e', hint: 'Xícara, encher, peixe.' },
+        { q: '"João comprou flores para Maria." — objeto direto é?', hint: 'O quê ele comprou?' },
+        { q: 'Leia: "O sol se deitou no mar." — o que o poeta quis dizer?', hint: 'O sol não dorme! Pense figurativamente.' },
+      ],
+      gabarito: [
+        { q: '"O gato dormiu..."', a: 'Sujeito: O gato | Predicado: dormiu no sofá', exp: 'Sujeito = quem pratica a ação.' },
+        { q: 'X ou CH', a: 'Xícara, encher, peixe', exp: 'Cada palavra tem sua regra ortográfica.' },
+        { q: 'Obj. direto flores', a: 'Flores', exp: 'Responde "comprou o quê?" sem preposição.' },
+        { q: '"Sol deitou no mar"', a: 'Metáfora do pôr do sol', exp: 'Personificação + metáfora visual.' },
+      ],
+      missao: `🎯 <strong>Missão Análise Sintática:</strong> Pegue um parágrafo de um livro favorito e identifique sujeito e predicado de cada frase. Quantas frases sem sujeito explícito você encontra?`,
+    },
+    7: {
+      explicacao: `No <span class="highlight">7º ano</span>, você estuda <strong>morfologia completa</strong>: classes de palavras, formação de palavras e textos de gêneros variados como reportagem e carta argumentativa.`,
+      resumo: `<ul><li>Classes de palavras: substantivo, adjetivo, verbo, advérbio...</li><li>Prefixos e sufixos</li><li>Reportagem e entrevista</li><li>Crase: quando usar à?</li><li>Voz ativa e passiva</li></ul>`,
+      exercicios: [
+        { q: 'Classifique: RAPIDAMENTE, BONITO, CORREU, ÁRVORE', hint: 'Advérbio, adjetivo, verbo, substantivo.' },
+        { q: 'Forme palavras com ANTI-: ___social, ___biótico', hint: 'Anti = contra.' },
+        { q: 'Use ou não crase: Fui ___ escola.', hint: 'A escola → à escola.' },
+        { q: 'Passe para voz passiva: "O aluno leu o livro."', hint: '"O livro foi lido pelo aluno."' },
+      ],
+      gabarito: [
+        { q: 'Classe das palavras', a: 'Advérbio, adjetivo, verbo, substantivo', exp: '-mente = advérbio de modo.' },
+        { q: 'ANTI-', a: 'Antissocial, antibiótico', exp: 'Anti + palavra.' },
+        { q: 'Crase escola', a: 'À escola', exp: '"A" artigo + "a" preposição = crase.' },
+        { q: 'Voz passiva', a: 'O livro foi lido pelo aluno.', exp: 'Objeto → sujeito passivo.' },
+      ],
+      missao: `🎯 <strong>Missão Repórter:</strong> Entreviste um familiar sobre um evento da infância dele. Escreva a reportagem com título, introdução, corpo e conclusão!`,
+    },
+    8: {
+      explicacao: `No <span class="highlight">8º ano</span>, você mergulha na <strong>análise de discurso</strong>, tipos de argumento e textos de gêneros digitais como e-mail formal e post de blog.`,
+      resumo: `<ul><li>Tipos de argumento: autoridade, exemplificação, causa/consequência</li><li>Gêneros digitais: e-mail, blog, tweet</li><li>Período composto: coordenação e subordinação</li><li>Conjunções: aditiva, adversativa, causal</li><li>Redação dissertativa-argumentativa</li></ul>`,
+      exercicios: [
+        { q: 'Classifique a conjunção: "Estudei, porém não passei."', hint: 'Ideia de oposição.' },
+        { q: 'Escreva um argumento de autoridade sobre alimentação saudável.', hint: 'Cite um especialista ou dado científico.' },
+        { q: 'Identifique a oração subordinada: "Saí porque choveu."', hint: 'A que explica a causa.' },
+        { q: 'Transforme em período composto: "Ela correu. Ela chegou primeiro."', hint: 'Use uma conjunção.' },
+      ],
+      gabarito: [
+        { q: '"porém"', a: 'Conjunção adversativa', exp: 'Indica oposição/contraste.' },
+        { q: 'Arg. de autoridade', a: 'Variado (qualquer dado/citação válida)', exp: 'Ex: Segundo a OMS...' },
+        { q: '"porque choveu"', a: 'Oração subordinada adverbial causal', exp: '"Porque" indica causa.' },
+        { q: 'Período composto', a: '"Ela correu e chegou primeiro."', exp: 'Coordenação com "e" aditivo.' },
+      ],
+      missao: `🎯 <strong>Missão Artigo de Opinião:</strong> Escreva um artigo de 2 parágrafos sobre o uso de celular na escola. Use 2 tipos diferentes de argumento!`,
+    },
+    9: {
+      explicacao: `No <span class="highlight">9º ano</span>, o Português culmina com a preparação para o <strong>ENEM e vestibulares</strong>. Você domina a redação dissertativa-argumentativa, estilística e leitura de textos complexos.`,
+      resumo: `<ul><li>Redação dissertativa: introdução, desenvolvimento, conclusão</li><li>Intertextualidade e interdiscursividade</li><li>Figuras de linguagem avançadas</li><li>Variação linguística: formal e informal</li><li>Análise de texto publicitário</li></ul>`,
+      exercicios: [
+        { q: 'Escreva uma introdução para: "Impactos das redes sociais na saúde mental."', hint: 'Apresente o tema + tese.' },
+        { q: 'Identifique a figura: "Morte, decifra-me ou te devoro!" (Édipo e a Esfinge)', hint: 'Personificação de conceito abstrato.' },
+        { q: 'Qual a diferença entre variação regional e variação social?', hint: 'Dialeto vs. registro.' },
+        { q: 'Reescreva de forma formal: "Cara, esse negócio tá pesado demais!"', hint: 'Elimine gírias e informalidades.' },
+      ],
+      gabarito: [
+        { q: 'Introdução redes sociais', a: 'Variada — verifique: tem contexto, tema e tese?', exp: 'Bom começo apresenta o problema e posicionamento.' },
+        { q: '"Morte, decifra-me..."', a: 'Prosopopeia (personificação)', exp: 'A morte fala = personificação do abstrato.' },
+        { q: 'Regional vs. social', a: 'Regional = sotaque/vocabulário por região; Social = nível de formalidade', exp: 'Carioca, nordestino vs. formal/informal.' },
+        { q: 'Formal', a: 'Ex: "Esta situação é bastante complexa."', exp: 'Sem gírias, registro culto.' },
+      ],
+      missao: `🎯 <strong>Missão Vestibulando:</strong> Escreva uma redação completa sobre "O papel da educação na redução das desigualdades". Introdução, 2 parágrafos de desenvolvimento e conclusão com proposta de intervenção!`,
+    },
+  },
+
+  ing: {
+    1: {
+      explicacao: `Welcome! No <span class="highlight">Inglês do 1º ano</span>, você aprende os <strong>cumprimentos</strong> básicos, os números de 1 a 10 e as cores em inglês. Hello! Goodbye! Yes! No!`,
+      resumo: `<ul><li>Greetings: Hello, Hi, Bye</li><li>Numbers 1–10</li><li>Colors: red, blue, green, yellow...</li><li>Classroom objects: book, pen, desk</li><li>Alphabet song</li></ul>`,
+      exercicios: [
+        { q: 'How do you say "Olá" in English?', hint: 'Starts with H.' },
+        { q: 'What color is the sky? (Em inglês)', hint: 'Think of the ocean.' },
+        { q: 'Count: 1, 2, ___, 4, ___', hint: 'Three and Five.' },
+        { q: 'What is this? 📚', hint: 'It\'s a ___.' },
+      ],
+      gabarito: [
+        { q: '"Olá"', a: 'Hello / Hi', exp: 'Hello é formal, Hi é informal.' },
+        { q: 'Sky color', a: 'Blue', exp: 'The sky is blue.' },
+        { q: '1,2,___,4,___', a: 'Three, Five', exp: 'One, two, THREE, four, FIVE.' },
+        { q: '📚', a: "It's a book!", exp: '"It\'s a" = É um/uma.' },
+      ],
+      missao: `🎯 <strong>Mission Color Hunt:</strong> Walk around your home and find 5 objects. Say each one in English: "This is a red chair!" Write them down!`,
+    },
+    2: {
+      explicacao: `No <span class="highlight">2º ano de Inglês</span>, você aprende sobre <strong>família, animais e o verbo TO BE</strong>. I am, You are, He/She is — esses são seus novos superpoderes!`,
+      resumo: `<ul><li>Verbo To Be: am, is, are</li><li>Family: mother, father, sister, brother</li><li>Animals: dog, cat, bird, fish</li><li>Numbers 11–20</li><li>Yes/No questions</li></ul>`,
+      exercicios: [
+        { q: 'Complete: She ___ my sister.', hint: 'To Be para she.' },
+        { q: 'Translate: "Meu cachorro é marrom."', hint: 'My dog ___ brown.' },
+        { q: 'Is the cat big? Yes, ___!', hint: 'Short answer yes.' },
+        { q: 'How many legs does a spider have? (In English)', hint: 'Count spider legs: 8.' },
+      ],
+      gabarito: [
+        { q: 'She ___ my sister', a: 'She IS my sister.', exp: 'She → is (singular feminino).' },
+        { q: 'My dog...', a: 'My dog is brown.', exp: 'Dog = cachorro, brown = marrom.' },
+        { q: 'Yes, ___', a: 'Yes, it is!', exp: 'Resposta curta: Yes, it is.' },
+        { q: 'Spider legs', a: 'Eight / 8', exp: 'A spider has eight legs.' },
+      ],
+      missao: `🎯 <strong>Mission Family Tree:</strong> Draw your family tree and label each person in English: "This is my mother. She is kind."`,
+    },
+    3: {
+      explicacao: `O <span class="highlight">3º ano de Inglês</span> traz os <strong>verbos de ação</strong> no presente simples e as perguntas com DO/DOES. I like pizza! Do you like pizza?`,
+      resumo: `<ul><li>Present Simple: I play, she plays</li><li>Do/Does questions</li><li>Action verbs: run, eat, drink, play</li><li>Food vocabulary</li><li>Days of the week</li></ul>`,
+      exercicios: [
+        { q: 'Conjugate: He ___ (play) soccer.', hint: 'Third person adds -s.' },
+        { q: 'Make a question: You like chocolate. → ___ you like chocolate?', hint: 'Use Do.' },
+        { q: 'What day comes after Wednesday?', hint: 'Think of the week sequence.' },
+        { q: 'Translate: "Ela come pizza toda sexta."', hint: 'She ___ pizza every Friday.' },
+      ],
+      gabarito: [
+        { q: 'He ___ soccer', a: 'He PLAYS soccer.', exp: 'He/She/It → verbo + s.' },
+        { q: 'Question', a: 'Do you like chocolate?', exp: 'Pergunta com Do + sujeito + verbo.' },
+        { q: 'After Wednesday', a: 'Thursday', exp: 'Mon-Tue-Wed-THU-Fri-Sat-Sun.' },
+        { q: 'Translate', a: 'She eats pizza every Friday.', exp: 'She → eats (terceira pessoa).' },
+      ],
+      missao: `🎯 <strong>Mission Daily Routine:</strong> Write 7 sentences about your daily routine — one for each day of the week. Use present simple!`,
+    },
+    4: {
+      explicacao: `No <span class="highlight">4º ano de Inglês</span>, você entra no <strong>passado simples</strong> com verbos regulares e irregulares. Yesterday I played, I went, I saw!`,
+      resumo: `<ul><li>Past Simple: regular (played, cooked)</li><li>Irregular verbs: go→went, see→saw, eat→ate</li><li>Time expressions: yesterday, last week, ago</li><li>Negative: didn't</li><li>Questions: Did you...?</li></ul>`,
+      exercicios: [
+        { q: 'Past of GO:', hint: 'Irregular!' },
+        { q: 'Make negative: "She visited Paris." → She ___ visit Paris.', hint: 'Use didn\'t.' },
+        { q: 'Translate: "Eu comi pizza ontem."', hint: 'Eat → ate.' },
+        { q: 'Complete: ___ they watch the movie? Yes, they ___!', hint: 'Did... did.' },
+      ],
+      gabarito: [
+        { q: 'Past of GO', a: 'Went', exp: 'Go → went (irregular).' },
+        { q: 'Negative', a: "She DIDN'T visit Paris.", exp: "Didn't + verbo base." },
+        { q: 'Translate', a: 'I ate pizza yesterday.', exp: 'Eat → ate; yesterday no fim.' },
+        { q: 'Did... did', a: 'Did they...? Yes, they DID!', exp: 'Short answer: Yes, they did.' },
+      ],
+      missao: `🎯 <strong>Mission Time Capsule:</strong> Write a paragraph about last weekend: 5 things you did using past simple. Use regular AND irregular verbs!`,
+    },
+    5: {
+      explicacao: `O <span class="highlight">5º ano de Inglês</span> traz o <strong>futuro com WILL e BE GOING TO</strong>, comparativos e superlativos. Bigger, better, the best!`,
+      resumo: `<ul><li>Future: will / be going to</li><li>Comparatives: bigger, faster</li><li>Superlatives: the biggest, the fastest</li><li>Months and seasons</li><li>Weather vocabulary</li></ul>`,
+      exercicios: [
+        { q: 'Compare: elephant / mouse (big) → The elephant is ___ the mouse.', hint: 'Bigger than.' },
+        { q: 'Superlative of GOOD:', hint: 'Irregular!' },
+        { q: 'Future: "Amanhã vai chover." → It ___ rain tomorrow.', hint: 'Will ou be going to.' },
+        { q: 'Which season is December in Brazil?', hint: 'Southern hemisphere!' },
+      ],
+      gabarito: [
+        { q: 'bigger than', a: 'bigger than', exp: 'big → bigger (adj. curto + er).' },
+        { q: 'Superlative of GOOD', a: 'The BEST', exp: 'Good → better → the best (irregular).' },
+        { q: 'It ___ rain', a: "It WILL rain / It's going to rain.", exp: 'Ambos corretos para futuro.' },
+        { q: 'December Brazil', a: 'Summer (Verão)', exp: 'Brasil está no hemisfério sul → dezembro = verão.' },
+      ],
+      missao: `🎯 <strong>Mission Future Plans:</strong> Write 5 sentences about your plans for the next month using "will" and "be going to". Make them interesting!`,
+    },
+    6: {
+      explicacao: `No <span class="highlight">6º ano</span>, você aprende o <strong>Present Continuous</strong> (I am eating), Present Perfect básico e como descrever rotinas e hábitos com mais detalhes.`,
+      resumo: `<ul><li>Present Continuous: am/is/are + -ing</li><li>Stative vs. action verbs</li><li>Present Perfect: have/has + past participle</li><li>Adverbs of frequency: always, often, never</li><li>Prepositions of time: in, on, at</li></ul>`,
+      exercicios: [
+        { q: 'What are you doing? (resposta: I ___ studying)', hint: 'Am + verb-ing.' },
+        { q: '"I have never ___ (see) the ocean."', hint: 'Past participle of see.' },
+        { q: 'She ___ always ___ (arrive) late. (present simple com advérbio)', hint: 'She always arrives...' },
+        { q: 'Correct: "I am knowing the answer."', hint: 'Know é stative verb!' },
+      ],
+      gabarito: [
+        { q: 'I ___ studying', a: 'I AM studying.', exp: 'I + am + verb-ing.' },
+        { q: 'Never ___ seen', a: 'I have never SEEN the ocean.', exp: 'See → saw → seen.' },
+        { q: 'Always arrives', a: 'She always arrives late.', exp: 'Advérbio entre sujeito e verbo.' },
+        { q: '"I am knowing"', a: 'I KNOW the answer.', exp: '"Know" não usa continuous.' },
+      ],
+      missao: `🎯 <strong>Mission Present Perfect Diary:</strong> Write 5 experiences you have had (or never had) using Present Perfect. Ex: "I have never eaten sushi."`,
+    },
+    7: {
+      explicacao: `O <span class="highlight">7º ano de Inglês</span> foca em <strong>modais</strong> (can, could, should, must) e desenvolve habilidades de escrita com e-mails formais e informais.`,
+      resumo: `<ul><li>Modal verbs: can, could, should, must, might</li><li>Formal vs. informal writing</li><li>Conditional type 0 and 1</li><li>Phrasal verbs basics</li><li>Passive voice introduction</li></ul>`,
+      exercicios: [
+        { q: 'Translate: "Você deveria estudar mais."', hint: 'Should.' },
+        { q: '"If it rains, we ___ stay home." (will/would)', hint: 'Type 1 conditional.' },
+        { q: 'Passive: "They built the bridge in 1990." →', hint: 'The bridge was built...' },
+        { q: 'Phrasal verb: GIVE ___= desistir', hint: 'Think: surrender.' },
+      ],
+      gabarito: [
+        { q: 'Should', a: 'You should study more.', exp: 'Should = conselho/obrigação fraca.' },
+        { q: 'If it rains...', a: 'we WILL stay home.', exp: 'Type 1: if + present, will + infinitive.' },
+        { q: 'Passive', a: 'The bridge was built in 1990.', exp: 'Sujeito recebe a ação.' },
+        { q: 'Give UP', a: 'Give up = desistir', exp: '"Don\'t give up!" = Não desista!' },
+      ],
+      missao: `🎯 <strong>Mission Advice Column:</strong> Write 5 pieces of advice for a new student using "should", "must" and "could". Be helpful and creative!`,
+    },
+    8: {
+      explicacao: `No <span class="highlight">8º ano de Inglês</span>, você estuda os <strong>tempos verbais complexos</strong>: Past Perfect, Future Perfect e o 2º condicional. Também desenvolve argumentação em inglês.`,
+      resumo: `<ul><li>Past Perfect: had + past participle</li><li>Second Conditional: If I were...</li><li>Reported Speech: He said that...</li><li>Relative clauses: who, which, that</li><li>Academic writing basics</li></ul>`,
+      exercicios: [
+        { q: '"Se eu fosse rico, viajaria pelo mundo." → If I ___ rich, I ___ travel...' , hint: 'were / would.' },
+        { q: 'Reported: She said, "I love pizza." → She said that she ___ pizza.', hint: 'Backshift tense.' },
+        { q: 'Combine: "The book is interesting. I read it." → The book ___ I read is interesting.', hint: 'Relative pronoun for things.' },
+        { q: 'Past Perfect: "When I arrived, the movie ___ (start) already."', hint: 'Had started.' },
+      ],
+      gabarito: [
+        { q: 'If I ___ rich', a: 'If I WERE rich, I WOULD travel...', exp: '2nd conditional: were/would.' },
+        { q: 'Reported speech', a: 'She said that she LOVED pizza.', exp: 'Love → loved (backshift).' },
+        { q: 'Relative clause', a: 'The book THAT I read is interesting.', exp: 'That = pronome relativo para coisas.' },
+        { q: 'Had started', a: '...the movie HAD ALREADY STARTED.', exp: 'Past Perfect = ação anterior no passado.' },
+      ],
+      missao: `🎯 <strong>Mission Dream Life:</strong> Write a paragraph using 2nd conditional about your dream life. If you could be anyone/anywhere, what would you do?`,
+    },
+    9: {
+      explicacao: `No <span class="highlight">9º ano de Inglês</span>, você está quase fluente! Estuda <strong>textos autênticos</strong>, argumentação avançada, vocabulário acadêmico e se prepara para exames de proficiência.`,
+      resumo: `<ul><li>Advanced vocabulary: synonyms, antonyms</li><li>Essay writing: thesis, body, conclusion</li><li>Idiomatic expressions</li><li>Reading comprehension strategies</li><li>Test-taking strategies (TOEFL, Cambridge prep)</li></ul>`,
+      exercicios: [
+        { q: 'What does "break a leg" mean?', hint: 'It\'s an idiom — not literal!' },
+        { q: 'Write a thesis statement: Social media and mental health.', hint: 'Take a clear position.' },
+        { q: 'Synonym of IMPORTANT:', hint: 'Think of academic vocabulary.' },
+        { q: '"Despite the rain, ___ went to school." (we/they)', hint: 'Despite = apesar de → não muda sujeito.' },
+      ],
+      gabarito: [
+        { q: '"Break a leg"', a: '"Boa sorte!" (Good luck!)', exp: 'Idiom teatral = deseje sorte.' },
+        { q: 'Thesis social media', a: 'Variada — tem posição clara e razão?', exp: 'Ex: "Social media significantly harms teenage mental health."' },
+        { q: 'Synonym of important', a: 'Crucial, significant, essential, vital', exp: 'Escolha a mais formal para o contexto.' },
+        { q: '"Despite the rain"', a: 'Despite the rain, WE/THEY went to school.', exp: '"Despite" não é conjunção, não conecta orações separadas.' },
+      ],
+      missao: `🎯 <strong>Mission Final Essay:</strong> Write a complete 5-paragraph essay in English on: "Technology: blessing or curse for students?" Use all the skills you've learned!`,
+    },
+  },
+
+  his: {
+    1: {
+      explicacao: `No <span class="highlight">História do 1º ano</span>, você começa pelo mais próximo: <strong>sua própria história!</strong> Família, tradições, a história da sua casa e da sua rua. Todo lugar tem uma história para contar.`,
+      resumo: `<ul><li>Minha história: nascimento, família</li><li>Linha do tempo pessoal</li><li>Tradições e festas da família</li><li>Memória: fotos, objetos antigos</li><li>Espaço: minha rua, meu bairro</li></ul>`,
+      exercicios: [
+        { q: 'O que é uma linha do tempo?', hint: 'Uma sequência de eventos em ordem.' },
+        { q: 'Cite 2 tradições que sua família tem.', hint: 'Pense em festas, comidas, costumes.' },
+        { q: 'Por que guardamos fotos antigas?', hint: 'Memória e história.' },
+        { q: 'Qual é a diferença entre passado e presente?', hint: 'Ontem e hoje.' },
+      ],
+      gabarito: [
+        { q: 'Linha do tempo', a: 'Representação de eventos em ordem cronológica', exp: 'Cronológica = por ordem de tempo.' },
+        { q: 'Tradições', a: 'Variado (qualquer tradição familiar)', exp: 'Cada família tem sua própria história!' },
+        { q: 'Fotos antigas', a: 'Para guardar memórias e conhecer o passado', exp: 'Memória = registro do passado.' },
+        { q: 'Passado vs. presente', a: 'Passado = o que já aconteceu; presente = agora', exp: 'O futuro ainda vai acontecer.' },
+      ],
+      missao: `🎯 <strong>Missão Historiador da Família:</strong> Entreviste um avô ou familiar mais velho. Pergunte 5 coisas sobre como era a vida quando ele/ela era criança. Anote e compare com hoje!`,
+    },
+    2: {
+      explicacao: `No <span class="highlight">2º ano de História</span>, você estuda a história da sua <strong>cidade e estado</strong>. Como surgiu? Quem morava aqui antes? Como as coisas mudaram?`,
+      resumo: `<ul><li>História do município e estado</li><li>Fundação das cidades</li><li>Povos que habitavam a região</li><li>Mudanças ao longo do tempo (campo x cidade)</li><li>Fontes históricas: documentos, fotos, museus</li></ul>`,
+      exercicios: [
+        { q: 'O que é uma fonte histórica?', hint: 'De onde vêm as informações sobre o passado.' },
+        { q: 'Cite 3 tipos de fonte histórica.', hint: 'Pense em documentos, objetos, testemunhos.' },
+        { q: 'O que significa "patrimônio histórico"?', hint: 'Herança do passado.' },
+        { q: 'Por que as cidades crescem?', hint: 'Pense em trabalho e moradia.' },
+      ],
+      gabarito: [
+        { q: 'Fonte histórica', a: 'Qualquer registro que dá informações sobre o passado', exp: 'Podem ser escritas, orais ou materiais.' },
+        { q: '3 tipos', a: 'Documentos escritos, fotografias, objetos/artefatos', exp: 'Depoimentos orais também são fontes!' },
+        { q: 'Patrimônio histórico', a: 'Bens culturais herdados de gerações passadas', exp: 'Edificios, monumentos, tradições.' },
+        { q: 'Cidades crescem', a: 'Busca por trabalho, serviços e qualidade de vida', exp: 'Êxodo rural = pessoas saem do campo.' },
+      ],
+      missao: `🎯 <strong>Missão Patrimônio Local:</strong> Descubra um monumento ou prédio histórico da sua cidade. Pesquise quando foi construído, por quem e por quê. Crie um cartaz sobre ele!`,
+    },
+    3: {
+      explicacao: `No <span class="highlight">3º ano de História</span>, você explora a <strong>pré-história</strong> e os primeiros povos do Brasil. Índios, quilombolas e imigrantes formaram quem somos!`,
+      resumo: `<ul><li>Pré-história: Homo sapiens, pinturas rupestres</li><li>Povos indígenas do Brasil</li><li>Quilombos e resistência africana</li><li>Imigração europeia e asiática</li><li>Diversidade cultural brasileira</li></ul>`,
+      exercicios: [
+        { q: 'O que são pinturas rupestres?', hint: 'Feitas em rochas e cavernas.' },
+        { q: 'Por que os africanos vieram ao Brasil?', hint: 'Trágico capítulo da história.' },
+        { q: 'O que é um quilombo?', hint: 'Local de resistência.' },
+        { q: 'Cite 2 países que imigraram muito para o Brasil.', hint: 'Pense em culinária e sobrenomes.' },
+      ],
+      gabarito: [
+        { q: 'Pinturas rupestres', a: 'Desenhos feitos em pedras/cavernas por povos pré-históricos', exp: 'Forma mais antiga de comunicação visual.' },
+        { q: 'Africanos no Brasil', a: 'Trazidos à força como escravizados', exp: 'Escravidão = um dos maiores crimes da história.' },
+        { q: 'Quilombo', a: 'Comunidade formada por escravizados fugidos que buscavam liberdade', exp: 'Quilombo dos Palmares = maior quilombo do Brasil.' },
+        { q: '2 países imigrantes', a: 'Itália, Portugal, Alemanha, Japão (várias opções)', exp: 'Cada grupo trouxe cultura, culinária e tradições.' },
+      ],
+      missao: `🎯 <strong>Missão Diversidade Cultural:</strong> Pesquise uma tradição indígena, uma africana e uma europeia presente no Brasil hoje. Como cada uma influencia nossa cultura?`,
+    },
+    4: {
+      explicacao: `No <span class="highlight">4º ano de História</span>, você estuda o <strong>Brasil colonial</strong>: a chegada dos portugueses, o Tratado de Tordesilhas e a exploração do pau-brasil e do ouro.`,
+      resumo: `<ul><li>Chegada de Cabral: 1500</li><li>Tratado de Tordesilhas (1494)</li><li>Pau-brasil e ciclo econômico</li><li>Capitanias Hereditárias</li><li>Entradas e Bandeiras</li></ul>`,
+      exercicios: [
+        { q: 'Em que ano os portugueses chegaram ao Brasil?', hint: 'Número redondo após 1400.' },
+        { q: 'O que eram as Capitanias Hereditárias?', hint: 'Divisão do território para colonização.' },
+        { q: 'Por que o pau-brasil era valioso?', hint: 'Pense em cores de tecido na Europa.' },
+        { q: 'Quem eram os bandeirantes?', hint: 'Desbravadores do interior.' },
+      ],
+      gabarito: [
+        { q: 'Chegada 1500', a: '1500 — Pedro Álvares Cabral', exp: '22 de abril de 1500 = chegada oficial.' },
+        { q: 'Capitanias', a: 'Divisões do território brasileiro dadas a donatários para colonizar', exp: '15 capitanias originais.' },
+        { q: 'Pau-brasil', a: 'Produzia tinta vermelha valorizada na Europa para tingir tecidos', exp: 'Exploração intensa levou a quase extinção.' },
+        { q: 'Bandeirantes', a: 'Exploradores que adentraram o interior em busca de índios, ouro e novas terras', exp: 'Papel polêmico: expansão territorial vs. escravização indígena.' },
+      ],
+      missao: `🎯 <strong>Missão Mapa Colonial:</strong> Desenhe o mapa do Brasil e marque as 15 capitanias hereditárias. Pesquise o nome de 3 donatários e o que aconteceu com suas capitanias!`,
+    },
+    5: {
+      explicacao: `No <span class="highlight">5º ano de História</span>, você chega à <strong>Independência do Brasil</strong> (1822), o Império e os movimentos que levaram à República.`,
+      resumo: `<ul><li>Vinda da família real (1808)</li><li>Independência: 7 de setembro de 1822</li><li>Dom Pedro I e Dom Pedro II</li><li>Abolição da escravidão (Lei Áurea, 1888)</li><li>Proclamação da República (1889)</li></ul>`,
+      exercicios: [
+        { q: 'Em que data o Brasil se tornou independente?', hint: 'Setembro de 1822.' },
+        { q: 'O que foi a Lei Áurea?', hint: 'Assinada pela Princesa Isabel.' },
+        { q: 'Qual foi o grito simbólico da Independência?', hint: 'Às margens do rio Ipiranga.' },
+        { q: 'Quem proclamou a República brasileira?', hint: 'Marechal do Exército.' },
+      ],
+      gabarito: [
+        { q: 'Independência', a: '7 de setembro de 1822', exp: 'Dom Pedro I proclamou às margens do Ipiranga.' },
+        { q: 'Lei Áurea', a: 'Lei que aboliu a escravidão no Brasil, em 13 de maio de 1888', exp: 'Princesa Isabel assinou; último país das Américas.' },
+        { q: 'Grito', a: '"Independência ou Morte!"', exp: 'Gesto simbólico de D. Pedro I.' },
+        { q: 'República', a: 'Marechal Deodoro da Fonseca, em 15 de novembro de 1889', exp: 'Fim do Império; início da República.' },
+      ],
+      missao: `🎯 <strong>Missão Linha do Tempo Imperial:</strong> Crie uma linha do tempo do Brasil de 1808 a 1889 com pelo menos 8 eventos importantes. Use imagens e cores!`,
+    },
+    6: {
+      explicacao: `No <span class="highlight">6º ano de História</span>, você recua ao passado e estuda as <strong>Civilizações Antigas</strong>: Mesopotâmia, Egito, Grécia e Roma.`,
+      resumo: `<ul><li>Mesopotâmia: Sumérios, escrita cuneiforme</li><li>Egito: faraós, pirâmides, hieróglifos</li><li>Grécia: democracia, mitologia, filosofia</li><li>Roma: República, Império, direito romano</li><li>Grandes religiões antigas</li></ul>`,
+      exercicios: [
+        { q: 'O que é a escrita cuneiforme?', hint: 'Primeira escrita da humanidade.' },
+        { q: 'Qual civilização criou a democracia?', hint: 'Pense em Atenas.' },
+        { q: 'Quem eram os faraós?', hint: 'Governantes divinos.' },
+        { q: 'Por que o direito romano é importante até hoje?', hint: 'Base dos sistemas jurídicos modernos.' },
+      ],
+      gabarito: [
+        { q: 'Cuneiforme', a: 'Sistema de escrita dos sumérios usando cunhas em argila', exp: 'Mais antiga forma de escrita conhecida (~3.500 a.C.).' },
+        { q: 'Democracia', a: 'Grécia Antiga (Atenas)', exp: 'Demokratia = poder do povo — mas excluía mulheres e escravos.' },
+        { q: 'Faraós', a: 'Governantes absolutos do Egito, considerados deuses vivos', exp: 'Ramessés II foi o mais poderoso.' },
+        { q: 'Direito romano', a: 'Princípios como presunção de inocência e contratos ainda são usados', exp: 'Base do Direito Ocidental moderno.' },
+      ],
+      missao: `🎯 <strong>Missão Civilização:</strong> Escolha uma das 4 civilizações e crie um "dossiê": localização, período, 3 conquistas e por que elas desapareceram ou se transformaram.`,
+    },
+    7: {
+      explicacao: `No <span class="highlight">7º ano de História</span>, você viaja pela <strong>Idade Média</strong> e o início da Era Moderna: feudalismo, Cruzadas, Renascimento e Grandes Navegações.`,
+      resumo: `<ul><li>Feudalismo: suseranos, vassalos, servos</li><li>Igreja Católica e poder medieval</li><li>Cruzadas: causas e consequências</li><li>Renascimento: arte, ciência, humanismo</li><li>Grandes Navegações: Portugal e Espanha</li></ul>`,
+      exercicios: [
+        { q: 'O que era o feudalismo?', hint: 'Sistema político e econômico medieval.' },
+        { q: 'Por que as Cruzadas aconteceram?', hint: 'Terra Santa e religião.' },
+        { q: 'Cite um artista do Renascimento.', hint: 'Leonardo, Michelangelo, Rafael...' },
+        { q: 'Quem financiou as Grandes Navegações?', hint: 'Monarquias europeias.' },
+      ],
+      gabarito: [
+        { q: 'Feudalismo', a: 'Sistema de organização política baseado na troca de terras por serviços/lealdade', exp: 'Rei → Suseranos → Vassalos → Servos.' },
+        { q: 'Cruzadas', a: 'Guerras religiosas para reconquistar Jerusalém dos muçulmanos (1096–1291)', exp: '8 Cruzadas principais; consequências econômicas e culturais.' },
+        { q: 'Artista renascentista', a: 'Leonardo da Vinci, Michelangelo, Rafael, Botticelli...', exp: 'Renascimento = "renascimento" da cultura greco-romana.' },
+        { q: 'Financiadores', a: 'Portugal (D. João II, D. Manuel) e Espanha (Reis Católicos)', exp: 'Busca de rotas para especiarias asiáticas.' },
+      ],
+      missao: `🎯 <strong>Missão Medieval:</strong> Imagine que você é um servo na Idade Média. Escreva um diário de uma semana descrevendo seu trabalho, o feudo e sua relação com o senhor feudal.`,
+    },
+    8: {
+      explicacao: `No <span class="highlight">8º ano de História</span>, você estuda as <strong>Revoluções</strong> que mudaram o mundo: Francesa, Industrial e Americana, e seus impactos até hoje.`,
+      resumo: `<ul><li>Revolução Francesa (1789): liberdade, igualdade, fraternidade</li><li>Revolução Industrial: máquinas, capitalismo, proletariado</li><li>Independência dos EUA (1776)</li><li>Marxismo e socialismo</li><li>Imperialismo europeu na África e Ásia</li></ul>`,
+      exercicios: [
+        { q: 'Qual foi o lema da Revolução Francesa?', hint: 'Três palavras que começam com L, I, F.' },
+        { q: 'O que foi a Revolução Industrial?', hint: 'Transformação do trabalho manual em mecânico.' },
+        { q: 'Quem foi Karl Marx?', hint: 'Filósofo alemão que criticou o capitalismo.' },
+        { q: 'O que é imperialismo?', hint: 'Dominação de países mais fortes sobre mais fracos.' },
+      ],
+      gabarito: [
+        { q: 'Lema FR', a: 'Liberté, Égalité, Fraternité (Liberdade, Igualdade, Fraternidade)', exp: 'Valores iluministas que guiam democracias até hoje.' },
+        { q: 'Rev. Industrial', a: 'Transformação da produção artesanal para fabril, iniciada na Inglaterra (~1760)', exp: 'Surgimento do proletariado e do capitalismo industrial.' },
+        { q: 'Karl Marx', a: 'Filósofo que analisou o capitalismo e propôs o comunismo (com Engels)', exp: '"Manifesto Comunista" (1848) e "O Capital" (1867).' },
+        { q: 'Imperialismo', a: 'Domínio político, econômico e cultural de nações poderosas sobre povos mais fracos', exp: 'Séculos XIX-XX: Europa dominou África e Ásia.' },
+      ],
+      missao: `🎯 <strong>Missão Comparativa:</strong> Compare a Revolução Francesa e a Revolução Industrial. O que tinham em comum? O que as diferenciava? Qual impacto de cada uma vivemos até hoje?`,
+    },
+    9: {
+      explicacao: `No <span class="highlight">9º ano de História</span>, você chega ao <strong>século XX</strong>: Guerras Mundiais, Holocausto, Guerra Fria, e o Brasil na República contemporânea até a democracia atual.`,
+      resumo: `<ul><li>1ª Guerra Mundial (1914–1918)</li><li>2ª Guerra Mundial e Holocausto (1939–1945)</li><li>Guerra Fria: EUA vs. URSS</li><li>Brasil: Getúlio Vargas, Ditadura Militar (1964–1985)</li><li>Redemocratização e Constituição de 1988</li></ul>`,
+      exercicios: [
+        { q: 'O que foi o Holocausto?', hint: 'Genocídio nazista.' },
+        { q: 'O que foi a Guerra Fria?', hint: 'Rivalidade sem conflito direto.' },
+        { q: 'Quando começou a Ditadura Militar no Brasil?', hint: 'Ano de golpe.' },
+        { q: 'O que garantiu a Constituição de 1988?', hint: '"Constituição Cidadã".' },
+      ],
+      gabarito: [
+        { q: 'Holocausto', a: 'Genocídio sistemático de ~6 milhões de judeus pelo regime nazista', exp: 'Um dos maiores crimes contra a humanidade da história.' },
+        { q: 'Guerra Fria', a: 'Disputa geopolítica e ideológica entre EUA (capitalismo) e URSS (socialismo) de 1947–1991', exp: 'Nunca houve guerra direta, mas corrida nuclear e proxies.' },
+        { q: 'Ditadura', a: '1964 — Golpe militar depôs João Goulart', exp: 'Durou até 1985; torturas e censura marcaram o período.' },
+        { q: 'Constituição 1988', a: 'Direitos civis, liberdades democráticas, voto universal, dignidade humana', exp: 'Chamada "Constituição Cidadã" por Ulysses Guimarães.' },
+      ],
+      missao: `🎯 <strong>Missão Século XX:</strong> Crie uma linha do tempo do século XX com os 10 eventos que você considera mais importantes. Justifique cada escolha em uma frase!`,
+    },
+  },
+
+  cie: {
+    1: {
+      explicacao: `No <span class="highlight">Ciências do 1º ano</span>, você explora o mundo ao seu redor! <strong>Seres vivos e não-vivos</strong>, as estações do ano e os 5 sentidos humanos. A ciência começa pela observação!`,
+      resumo: `<ul><li>Seres vivos: plantas, animais, fungos</li><li>Seres não-vivos: pedras, água, ar</li><li>Os 5 sentidos: visão, audição, olfato, tato, paladar</li><li>Estações do ano</li><li>O sol, a lua e as estrelas</li></ul>`,
+      exercicios: [
+        { q: 'Cite 3 diferenças entre seres vivos e não-vivos.', hint: 'Respiração, reprodução, crescimento...' },
+        { q: 'Qual sentido usamos para ver?', hint: 'Órgão = olhos.' },
+        { q: 'Quantas estações do ano existem?', hint: 'Verão, outono...' },
+        { q: 'O sol é uma estrela? Por quê?', hint: 'Pense em luz e calor.' },
+      ],
+      gabarito: [
+        { q: '3 diferenças', a: 'Vivos: respiram, se reproduzem, crescem. Não-vivos: nenhuma dessas funções.', exp: 'Funções vitais = marca dos seres vivos.' },
+        { q: 'Sentido visão', a: 'Visão → olhos', exp: 'Cada sentido tem seu órgão.' },
+        { q: 'Estações', a: '4: verão, outono, inverno, primavera', exp: 'Cada estação dura ~3 meses.' },
+        { q: 'Sol = estrela?', a: 'Sim! O sol é a estrela mais próxima da Terra', exp: 'Emite luz e calor por fusão nuclear.' },
+      ],
+      missao: `🎯 <strong>Missão Cientista Observador:</strong> Vá ao jardim ou parque. Liste 5 seres vivos e 5 não-vivos que encontrar. Use os 5 sentidos para descrever cada um!`,
+    },
+    2: {
+      explicacao: `No <span class="highlight">2º ano de Ciências</span>, você vai fundo no corpo humano! <strong>Sistemas</strong> do corpo, alimentação saudável e higiene pessoal são os temas da missão!`,
+      resumo: `<ul><li>Corpo humano: partes externas e internas</li><li>Alimentação saudável: pirâmide alimentar</li><li>Higiene pessoal</li><li>Doenças e prevenção</li><li>Sistema digestório básico</li></ul>`,
+      exercicios: [
+        { q: 'Cite 3 alimentos saudáveis e 3 não saudáveis.', hint: 'Frutas vs. frituras.' },
+        { q: 'Qual o órgão principal do sistema digestório?', hint: 'Onde os alimentos são processados.' },
+        { q: 'Por que devemos lavar as mãos?', hint: 'Microrganismos invisíveis.' },
+        { q: 'O que são vitaminas?', hint: 'Substâncias essenciais para a saúde.' },
+      ],
+      gabarito: [
+        { q: '3 saudáveis / 3 não', a: 'Saudáveis: fruta, verdura, feijão | Não saudáveis: refrigerante, salgadinho, bolo industrializado', exp: 'Equilíbrio é a chave!' },
+        { q: 'Órgão digestório', a: 'Estômago (junto ao intestino)', exp: 'Boca → Esôfago → Estômago → Intestinos.' },
+        { q: 'Lavar mãos', a: 'Para eliminar bactérias e vírus que causam doenças', exp: 'Especialmente antes de comer e após o banheiro.' },
+        { q: 'Vitaminas', a: 'Substâncias orgânicas essenciais em pequenas quantidades para o metabolismo', exp: 'A, B, C, D, E, K — cada uma tem função específica.' },
+      ],
+      missao: `🎯 <strong>Missão Nutricionista:</strong> Anote tudo que você comeu hoje. Depois pesquise na pirâmide alimentar e veja se sua dieta está equilibrada. O que você mudaria?`,
+    },
+    3: {
+      explicacao: `No <span class="highlight">3º ano de Ciências</span>, você explora os <strong>ecossistemas</strong> e a cadeia alimentar. Produtor, consumidor, decomposto — todo mundo tem um papel!`,
+      resumo: `<ul><li>Ecossistema: componentes bióticos e abióticos</li><li>Cadeia alimentar</li><li>Fotossíntese básica</li><li>Ciclo da água</li><li>Animais vertebrados e invertebrados</li></ul>`,
+      exercicios: [
+        { q: 'O que é cadeia alimentar? Dê um exemplo.', hint: 'Planta → animal → predador.' },
+        { q: 'O que fazem os decompositores?', hint: 'Fungos e bactérias.' },
+        { q: 'Explique a fotossíntese em 2 frases.', hint: 'Luz + CO₂ + água → glicose + O₂.' },
+        { q: 'Cite 2 vertebrados e 2 invertebrados.', hint: 'Coluna vertebral.' },
+      ],
+      gabarito: [
+        { q: 'Cadeia alimentar', a: 'Sequência de seres vivos onde cada um serve de alimento para o próximo. Ex: grama → gafanhoto → sapo → cobra.', exp: 'Começa sempre nos produtores (plantas).' },
+        { q: 'Decompositores', a: 'Decompõem matéria orgânica morta, devolvendo nutrientes ao solo', exp: 'Fungos e bactérias = recicladores naturais.' },
+        { q: 'Fotossíntese', a: 'Plantas usam luz solar, água e CO₂ para produzir glicose (alimento). Liberam oxigênio como subproduto.', exp: 'Clorofila = pigmento que capta a luz.' },
+        { q: 'Vertebrados/Invertebrados', a: 'Vertebrados: cachorro, peixe | Invertebrados: formiga, polvo', exp: 'Vertebrado tem coluna vertebral; invertebrado não.' },
+      ],
+      missao: `🎯 <strong>Missão Ecossistema:</strong> Escolha um bioma brasileiro (Amazônia, Cerrado, Mata Atlântica...). Desenhe uma cadeia alimentar com pelo menos 4 organismos desse bioma!`,
+    },
+    4: {
+      explicacao: `No <span class="highlight">4º ano de Ciências</span>, você mergulha no <strong>sistema solar</strong> e na Terra como planeta: camadas da Terra, placas tectônicas e fenômenos naturais.`,
+      resumo: `<ul><li>Sistema solar: 8 planetas</li><li>Camadas da Terra: crosta, manto, núcleo</li><li>Rochas: ígneas, sedimentares, metamórficas</li><li>Vulcões e terremotos</li><li>Eclipse solar e lunar</li></ul>`,
+      exercicios: [
+        { q: 'Quantos planetas tem o sistema solar? Cite-os.', hint: 'Plutão foi rebaixado em 2006.' },
+        { q: 'Qual a diferença entre eclipse solar e lunar?', hint: 'Quem bloqueia a luz de quem?' },
+        { q: 'O que causa um terremoto?', hint: 'Placas tectônicas.' },
+        { q: 'Qual planeta é o maior do sistema solar?', hint: 'Gigante gasoso.' },
+      ],
+      gabarito: [
+        { q: '8 planetas', a: 'Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano, Netuno', exp: 'Mnemônico: "Minha Vó Tem Muitos Joias Sobre Uvas Negras".' },
+        { q: 'Eclipse solar vs. lunar', a: 'Solar: Lua bloqueia o Sol (dia vira noite). Lunar: Terra projeta sombra na Lua.', exp: 'Eclipse solar total dura poucos minutos.' },
+        { q: 'Terremoto', a: 'Movimento e choque das placas tectônicas na crosta terrestre', exp: 'Medido na escala Richter.' },
+        { q: 'Maior planeta', a: 'Júpiter', exp: 'Júpiter cabe ~1.300 Terras dentro.' },
+      ],
+      missao: `🎯 <strong>Missão Astronauta:</strong> Crie um "guia de sobrevivência" para viver em Marte. Pesquise temperatura, gravidade, atmosfera e o que seria necessário para sobreviver lá!`,
+    },
+    5: {
+      explicacao: `No <span class="highlight">5º ano de Ciências</span>, você estuda <strong>matéria e energia</strong>: estados físicos, mudanças de estado, eletricidade estática e magnetismo.`,
+      resumo: `<ul><li>Estados da matéria: sólido, líquido, gasoso</li><li>Mudanças de estado: fusão, ebulição, condensação...</li><li>Mistura homogênea e heterogênea</li><li>Eletricidade estática</li><li>Magnetismo e bússola</li></ul>`,
+      exercicios: [
+        { q: 'O que acontece com a água ao ser aquecida a 100°C?', hint: 'Mudança de líquido para gás.' },
+        { q: 'Cite a mudança de estado: gelo → água.', hint: 'Fusão.' },
+        { q: 'Areia + água é uma mistura ___ (homogênea/heterogênea)?', hint: 'Você consegue ver os dois componentes?' },
+        { q: 'O que é eletricidade estática?', hint: 'Cabelo que se levanta com o pente.' },
+      ],
+      gabarito: [
+        { q: 'Água a 100°C', a: 'Ebulição → água vira vapor (gás)', exp: 'Ponto de ebulição da água = 100°C ao nível do mar.' },
+        { q: 'Gelo → água', a: 'Fusão', exp: 'Sólido → líquido = fusão.' },
+        { q: 'Areia + água', a: 'Heterogênea', exp: 'Dá para ver os dois componentes separados.' },
+        { q: 'Eletricidade estática', a: 'Acúmulo de cargas elétricas na superfície de um objeto', exp: 'Pente no cabelo, raios na tempestade = eletricidade estática.' },
+      ],
+      missao: `🎯 <strong>Missão Química Caseira:</strong> Faça 3 misturas em casa (agua+sal, agua+óleo, areia+pedrinhas). Classifique cada uma como homogênea ou heterogênea e tente separá-las!`,
+    },
+    6: {
+      explicacao: `No <span class="highlight">6º ano de Ciências</span>, você entra na <strong>célula</strong> — a unidade básica da vida — e estuda os reinos dos seres vivos em detalhes.`,
+      resumo: `<ul><li>Célula: procariota e eucariota</li><li>Organelas: núcleo, mitocôndria, cloroplasto</li><li>Reinos: animal, vegetal, fungi, protista, monera</li><li>Vírus: estrutura e doenças</li><li>Microscópio: história e uso</li></ul>`,
+      exercicios: [
+        { q: 'Qual a diferença entre célula procariota e eucariota?', hint: 'Presença ou ausência de núcleo definido.' },
+        { q: 'Qual organela é a "usina de energia" da célula?', hint: 'Começa com M.' },
+        { q: 'Vírus são seres vivos? Justifique.', hint: 'Eles dependem de outro organismo para se reproduzir.' },
+        { q: 'O que é a cloroplasto e em quais células está presente?', hint: 'Fotossíntese.' },
+      ],
+      gabarito: [
+        { q: 'Procariota vs. eucariota', a: 'Procariota: sem núcleo definido (bactérias). Eucariota: com núcleo membranoso (animais, plantas, fungos).', exp: 'Pro = antes de | eu = verdadeiro.' },
+        { q: 'Usina de energia', a: 'Mitocôndria', exp: 'Produz ATP por respiração celular.' },
+        { q: 'Vírus = ser vivo?', a: 'Debate científico! Não têm célula, mas se reproduzem usando células hospedeiras.', exp: 'Considerados "à beira da vida" — não são classificados em nenhum reino.' },
+        { q: 'Cloroplasto', a: 'Organela que realiza fotossíntese; presente nas células vegetais e algas', exp: 'Contém clorofila, pigmento verde que absorve luz.' },
+      ],
+      missao: `🎯 <strong>Missão Célula 3D:</strong> Construa um modelo de célula animal ou vegetal usando materiais de casa (massinha, gelatina, frutas...). Identifique pelo menos 5 organelas!`,
+    },
+    7: {
+      explicacao: `No <span class="highlight">7º ano de Ciências</span>, você domina a <strong>genética básica</strong>, evolução das espécies e como o corpo humano se reproduz.`,
+      resumo: `<ul><li>DNA e genes</li><li>Herança genética: dominante e recessivo</li><li>Evolução: Darwin e seleção natural</li><li>Sistema reprodutor humano</li><li>Puberdade e desenvolvimento</li></ul>`,
+      exercicios: [
+        { q: 'O que é DNA?', hint: 'Molécula que carrega informação genética.' },
+        { q: 'O que é seleção natural?', hint: 'Teoria de Darwin.' },
+        { q: 'Gene dominante vs. recessivo: exemplo olhos.', hint: 'Castanho domina sobre azul.' },
+        { q: 'O que são mutações genéticas?', hint: 'Alterações no DNA.' },
+      ],
+      gabarito: [
+        { q: 'DNA', a: 'Ácido desoxirribonucleico: molécula em dupla hélice que carrega as instruções genéticas de todos os seres vivos', exp: 'Humanos têm ~3 bilhões de pares de bases no DNA.' },
+        { q: 'Seleção natural', a: 'Indivíduos com características mais adaptadas ao ambiente sobrevivem e se reproduzem mais', exp: 'Base da Teoria da Evolução de Darwin (1859).' },
+        { q: 'Dominante vs. recessivo', a: 'Olhos castanhos (dominante) se expressam mesmo com 1 cópia; azul (recessivo) precisa de 2 cópias', exp: 'Tabela de Punnett mostra as probabilidades.' },
+        { q: 'Mutações', a: 'Alterações na sequência do DNA; podem ser neutras, benéficas ou prejudiciais', exp: 'Raios UV, radioatividade e erros de cópia causam mutações.' },
+      ],
+      missao: `🎯 <strong>Missão Herança Genética:</strong> Pesquise quais características físicas você herdou de cada pai. Use a tabela de Punnett para prever a probabilidade de uma característica em seus possíveis filhos!`,
+    },
+    8: {
+      explicacao: `No <span class="highlight">8º ano de Ciências</span>, você entra na <strong>Química</strong>: tabela periódica, ligações químicas, reações e a estrutura dos átomos.`,
+      resumo: `<ul><li>Átomo: prótons, nêutrons, elétrons</li><li>Tabela periódica: grupos e períodos</li><li>Ligações: iônica, covalente, metálica</li><li>Reações químicas: reagentes e produtos</li><li>pH: ácido, neutro e básico</li></ul>`,
+      exercicios: [
+        { q: 'Qual a carga do próton, nêutron e elétron?', hint: '+, 0, −' },
+        { q: 'O símbolo do ouro na tabela periódica é?', hint: 'Aurum em latim.' },
+        { q: 'Água (H₂O) tem ligação ___ (iônica/covalente)?', hint: 'Compartilham elétrons.' },
+        { q: 'O suco de limão tem pH ácido ou básico?', hint: 'Limão é ácido!' },
+      ],
+      gabarito: [
+        { q: 'Cargas', a: 'Próton: +1 | Nêutron: 0 | Elétron: −1', exp: 'Átomo neutro tem mesmo nº de prótons e elétrons.' },
+        { q: 'Símbolo ouro', a: 'Au (de Aurum)', exp: 'Muitos símbolos vêm do latim ou grego.' },
+        { q: 'H₂O ligação', a: 'Covalente', exp: 'O e H compartilham pares de elétrons.' },
+        { q: 'pH limão', a: 'Ácido (pH ~2)', exp: 'pH <7 = ácido; =7 = neutro; >7 = básico.' },
+      ],
+      missao: `🎯 <strong>Missão Laboratório em Casa:</strong> Use repolho roxo como indicador de pH. Teste suco de limão, bicarbonato, leite e água. Qual ficou mais roxo? Mais rosado? Explique!`,
+    },
+    9: {
+      explicacao: `No <span class="highlight">9º ano de Ciências</span>, você domina a <strong>Física</strong>: leis de Newton, energia, ondes e eletricidade — preparando para o Ensino Médio!`,
+      resumo: `<ul><li>Leis de Newton: inércia, F=ma, ação/reação</li><li>Tipos de energia: cinética, potencial, térmica</li><li>Ondas: mecânicas e eletromagnéticas</li><li>Eletricidade: corrente, tensão, resistência (Lei de Ohm)</li><li>Fontes renováveis e não renováveis</li></ul>`,
+      exercicios: [
+        { q: 'Enuncie a 1ª Lei de Newton.', hint: 'Lei da Inércia.' },
+        { q: 'Um objeto de 5kg sofre força de 10N. Qual a aceleração?', hint: 'F = m×a.' },
+        { q: 'Qual a diferença entre energia cinética e potencial?', hint: 'Movimento vs. posição.' },
+        { q: 'Cite 2 fontes de energia renovável.', hint: 'Solar, eólica, hidráulica...' },
+      ],
+      gabarito: [
+        { q: '1ª Lei Newton', a: '"Todo corpo permanece em repouso ou em movimento uniforme, a não ser que uma força externa atue sobre ele."', exp: 'Lei da Inércia: objetos resistem a mudanças de estado.' },
+        { q: 'F=ma → aceleração', a: 'a = F/m = 10/5 = 2 m/s²', exp: 'F=ma → a=F÷m.' },
+        { q: 'Cinética vs. potencial', a: 'Cinética: energia do movimento (carro andando). Potencial: energia armazenada pela posição (pedra no alto).', exp: 'Ambas se convertem entre si (conservação de energia).' },
+        { q: '2 renováveis', a: 'Solar, eólica, hidráulica, biomassa, geotérmica (qualquer 2)', exp: 'Renováveis não se esgotam e poluem menos.' },
+      ],
+      missao: `🎯 <strong>Missão Cientista Completo:</strong> Crie um projeto de ciências que use pelo menos 2 conceitos estudados no 9º ano. Apresente hipótese, experimento, resultado e conclusão!`,
+    },
+  },
+
+  red: {
+    1: {
+      explicacao: `Na <span class="highlight">Redação do 1º ano</span>, você aprende a colocar pensamentos no papel! <strong>Descrever</strong> objetos, animais e situações simples com frases curtas. Todo grande escritor começou assim!`,
+      resumo: `<ul><li>Frase: começa com maiúscula, termina com ponto</li><li>Texto descritivo simples</li><li>Uso de adjetivos</li><li>Ilustração + texto</li><li>Meu nome, minha família, meu animal favorito</li></ul>`,
+      exercicios: [
+        { q: 'Descreva seu animal favorito em 2 frases.', hint: 'Como ele é? O que ele faz?' },
+        { q: 'Complete: "O sol é ___ e ___." (use adjetivos)', hint: 'Brilhante, quente...' },
+        { q: 'Escreva seu nome completo com maiúsculas corretas.', hint: 'Nome Próprio = Maiúscula.' },
+        { q: 'O que tem no final de uma frase declarativa?', hint: 'Ponto.' },
+      ],
+      gabarito: [
+        { q: 'Animal favorito', a: 'Variado — verificar: maiúscula no início, ponto no fim?', exp: 'Toda frase começa com maiúscula e termina com ponto.' },
+        { q: '"O sol é ___ e ___"', a: 'O sol é brilhante e quente.', exp: 'Adjetivos descrevem qualidades.' },
+        { q: 'Maiúsculas', a: 'Cada palavra do nome começa com maiúscula', exp: 'Ex: João Pedro Silva.' },
+        { q: 'Final de frase', a: 'Ponto final (.)', exp: 'Pergunta = ?, exclamação = !' },
+      ],
+      missao: `🎯 <strong>Missão Meu Livro:</strong> Crie um mini-livro de 4 páginas sobre você. Página 1: nome e desenho. Página 2: família. Página 3: animal favorito. Página 4: sonho!`,
+    },
+    2: {
+      explicacao: `Na <span class="highlight">Redação do 2º ano</span>, você aprende a escrever <strong>pequenas histórias</strong> com começo, meio e fim. É hora de dar asas à imaginação!`,
+      resumo: `<ul><li>Estrutura narrativa: início, desenvolvimento, fim</li><li>Personagens e cenário</li><li>Sequência lógica dos eventos</li><li>Conectivos: então, depois, por fim</li><li>Parágrafo</li></ul>`,
+      exercicios: [
+        { q: 'Complete a história: "Era uma vez um dragão pequeno que tinha medo de fogo..."', hint: 'O que aconteceu? Como resolveu?' },
+        { q: 'Ordene: "Fim. Início. Meio." — qual a ordem correta?', hint: 'Sequência lógica.' },
+        { q: 'Use 3 conectivos para ligar estas ideias: acordei, tomei café, fui à escola.', hint: 'Primeiro, depois, por fim.' },
+        { q: 'Quantas frases tem um parágrafo, em geral?', hint: 'Nem 1, nem 20.' },
+      ],
+      gabarito: [
+        { q: 'Dragão com medo de fogo', a: 'Variado — verificar: tem início, conflito e resolução?', exp: 'Boa história tem problema que é resolvido.' },
+        { q: 'Ordem', a: 'Início → Meio → Fim', exp: 'Cronologia básica da narrativa.' },
+        { q: 'Conectivos', a: 'Primeiro acordei, depois tomei café, por fim fui à escola.', exp: 'Conectivos dão fluidez ao texto.' },
+        { q: 'Frases no parágrafo', a: 'Em geral 3 a 6 frases', exp: 'Parágrafo desenvolve uma ideia central.' },
+      ],
+      missao: `🎯 <strong>Missão Conta Histórias:</strong> Escreva uma história de 3 parágrafos (início, meio, fim) sobre uma aventura no espaço. Crie pelo menos 2 personagens e um problema a resolver!`,
+    },
+    3: {
+      explicacao: `Na <span class="highlight">Redação do 3º ano</span>, você aprende sobre <strong>tipos de texto</strong>: descrição, narração e instrução. Cada um tem seu jeito especial!`,
+      resumo: `<ul><li>Texto narrativo: conta uma história</li><li>Texto descritivo: descreve algo</li><li>Texto instrucional: ensina a fazer</li><li>Diálogo: o que os personagens falam</li><li>Travessão no diálogo</li></ul>`,
+      exercicios: [
+        { q: 'Escreva 2 frases descrevendo sua escola.', hint: 'Como ela é, o que tem.' },
+        { q: 'Receitas e bulas são exemplos de qual tipo de texto?', hint: 'Ensinam a fazer algo.' },
+        { q: 'Escreva um diálogo curto entre 2 amigos.', hint: 'Use travessão (—) para cada fala.' },
+        { q: 'Qual tipo de texto conta uma aventura?', hint: 'Tem personagens e ação.' },
+      ],
+      gabarito: [
+        { q: 'Descrever escola', a: 'Variado — verificar: usa adjetivos e detalhes sensoriais?', exp: 'Bom texto descritivo usa os 5 sentidos.' },
+        { q: 'Receitas', a: 'Texto instrucional', exp: 'Instruções ensinam a fazer algo passo a passo.' },
+        { q: 'Diálogo', a: 'Variado — verificar: usa travessão?', exp: '— Olá! / — Tudo bem?' },
+        { q: 'Aventura', a: 'Texto narrativo', exp: 'Narração = contar eventos em sequência.' },
+      ],
+      missao: `🎯 <strong>Missão Tri-Texto:</strong> Escolha um tema (ex: cachorro). Escreva sobre ele 3 vezes: 1) narrando uma aventura, 2) descrevendo como é, 3) dando instruções de como cuidar!`,
+    },
+    4: {
+      explicacao: `Na <span class="highlight">Redação do 4º ano</span>, você desenvolve a habilidade de <strong>argumentar</strong>! Carta, e-mail, texto de opinião — quando você quer convencer alguém, precisa de bons argumentos!`,
+      resumo: `<ul><li>Carta: formal e informal</li><li>Texto de opinião: tema, posição, argumentos</li><li>Parágrafo argumentativo</li><li>Exemplos e dados como argumentos</li><li>Coerência e coesão</li></ul>`,
+      exercicios: [
+        { q: 'Qual a estrutura de uma carta formal?', hint: 'Local, data, destinatário, corpo, despedida, assinatura.' },
+        { q: 'Escreva 2 argumentos para: "Deveríamos ter mais aulas de Arte na escola."', hint: 'Pense em benefícios concretos.' },
+        { q: 'O que é coerência em um texto?', hint: 'As ideias fazem sentido juntas?' },
+        { q: 'Qual a diferença entre carta formal e informal?', hint: 'Linguagem e destinatário.' },
+      ],
+      gabarito: [
+        { q: 'Carta formal', a: 'Local e data / Destinatário / Cumprimento / Corpo / Despedida / Assinatura', exp: 'Carta informal é mais livre na estrutura.' },
+        { q: 'Argumentos Arte', a: 'Ex: Desenvolve criatividade; reduz estresse; desenvolve habilidades motoras finas', exp: 'Bom argumento é concreto e explicado.' },
+        { q: 'Coerência', a: 'As ideias do texto se relacionam logicamente e fazem sentido', exp: 'Texto incoerente é contraditório ou sem lógica.' },
+        { q: 'Formal vs. informal', a: 'Formal: linguagem culta, destinatário desconhecido. Informal: gírias permitidas, para amigos.', exp: 'O contexto determina o registro.' },
+      ],
+      missao: `🎯 <strong>Missão Carta do Presidente:</strong> Escreva uma carta formal ao prefeito da sua cidade pedindo uma melhoria (parque, escola, hospital). Use estrutura correta e 3 argumentos!`,
+    },
+    5: {
+      explicacao: `Na <span class="highlight">Redação do 5º ano</span>, você está quase pronto para o Ensino Fundamental II! Aprende sobre <strong>parágrafos estruturados</strong>, revisão de texto e o início da dissertação.`,
+      resumo: `<ul><li>Parágrafo: tópico frasal + desenvolvimento + fechamento</li><li>Revisão: ortografia, coesão, clareza</li><li>Dissertação simples: introdução e conclusão</li><li>Citações e exemplos no texto</li><li>Vocabulário variado (evitar repetição)</li></ul>`,
+      exercicios: [
+        { q: 'O que é tópico frasal?', hint: 'Ideia principal do parágrafo.' },
+        { q: 'Reescreva sem repetir "bonito": "O parque é bonito. As flores são bonitas. O lago é bonito."', hint: 'Use sinônimos.' },
+        { q: 'Escreva uma conclusão para: "A leitura é importante para as crianças porque..."', hint: 'Retome a tese e proponha algo.' },
+        { q: 'Cite 3 sinônimos de "dizer".', hint: 'Afirmar, declarar...' },
+      ],
+      gabarito: [
+        { q: 'Tópico frasal', a: 'Frase que apresenta a ideia principal do parágrafo', exp: 'Geralmente é a 1ª frase do parágrafo.' },
+        { q: 'Sem repetir "bonito"', a: '"O parque é encantador. As flores são exuberantes. O lago é magnífico."', exp: 'Sinônimos enriquecem o vocabulário.' },
+        { q: 'Conclusão leitura', a: 'Variado — verificar: retoma a tese e propõe ação?', exp: 'Boa conclusão não traz ideias novas, retoma e fecha.' },
+        { q: 'Sinônimos de "dizer"', a: 'Afirmar, declarar, mencionar, revelar, expor, ressaltar', exp: 'Variar verbos de elocução melhora o texto.' },
+      ],
+      missao: `🎯 <strong>Missão Editor:</strong> Pegue um texto que você escreveu antes. Revise buscando: repetições, erros de ortografia, falta de coesão, parágrafos mal estruturados. Reescreva melhorado!`,
+    },
+    6: {
+      explicacao: `Na <span class="highlight">Redação do 6º ano</span>, você estuda os <strong>gêneros textuais</strong> em profundidade: crônica, conto, reportagem e artigo de opinião. Cada gênero tem sua identidade!`,
+      resumo: `<ul><li>Crônica: cotidiano com reflexão</li><li>Conto: narrativa curta com conflito</li><li>Reportagem: informação objetiva</li><li>Artigo de opinião: argumentação</li><li>Linguagem formal e informal por gênero</li></ul>`,
+      exercicios: [
+        { q: 'Qual a diferença entre conto e crônica?', hint: 'Tema e tom.' },
+        { q: 'Escreva o lead de uma reportagem sobre: "Nova praça inaugurada na cidade."', hint: 'Lead responde: o quê, quem, quando, onde, como, por quê.' },
+        { q: 'Em qual gênero o autor defende uma opinião?', hint: 'Artigo de ___.' },
+        { q: 'Escreva a abertura de uma crônica sobre segunda-feira.', hint: 'Tom informal, reflexivo, do cotidiano.' },
+      ],
+      gabarito: [
+        { q: 'Conto vs. crônica', a: 'Conto: narrativa ficcional com conflito e personagens. Crônica: reflexão curta sobre o cotidiano, tom jornalístico-literário.', exp: 'Cronistas: Rubem Braga, Fernando Sabino.' },
+        { q: 'Lead reportagem', a: 'Ex: "A Prefeitura inaugurou ontem a Praça das Flores no bairro Centro, trazendo área de lazer para 500 famílias."', exp: 'Lead resume o essencial da notícia.' },
+        { q: 'Gênero de opinião', a: 'Artigo de opinião', exp: 'Editorial, artigo e carta do leitor também são opinativos.' },
+        { q: 'Abertura crônica', a: 'Variado — verificar: é reflexivo? Fala do cotidiano? Tem voz autoral?', exp: 'Crônica começa muitas vezes com uma cena ou observação simples.' },
+      ],
+      missao: `🎯 <strong>Missão Gênero Mestre:</strong> Escolha um tema (ex: amizade). Escreva sobre ele 2 vezes: uma como crônica e outra como artigo de opinião. Compare os textos!`,
+    },
+    7: {
+      explicacao: `Na <span class="highlight">Redação do 7º ano</span>, você avança na <strong>argumentação</strong>: tipos de argumento, contra-argumentação e estrutura dissertativa completa.`,
+      resumo: `<ul><li>Tese: posicionamento claro</li><li>Argumentos: autoridade, dados, exemplos, causas</li><li>Contra-argumento e refutação</li><li>Coesão entre parágrafos: marcadores</li><li>Proposta de intervenção básica</li></ul>`,
+      exercicios: [
+        { q: 'O que é contra-argumento?', hint: 'O outro lado da discussão.' },
+        { q: 'Escreva um argumento de dados para: "Jovens leem pouco."', hint: 'Use estatísticas ou pesquisas.' },
+        { q: 'Que tipo de argumento é: "Segundo o neurocientista X, ler melhora o cérebro."?', hint: 'Quem faz a afirmação?' },
+        { q: 'Cite 3 marcadores de coesão entre parágrafos.', hint: 'Além disso, no entanto...' },
+      ],
+      gabarito: [
+        { q: 'Contra-argumento', a: 'Argumento contrário à tese, trazido para depois ser refutado', exp: 'Mostra que o autor conhece o outro lado.' },
+        { q: 'Arg. de dados', a: 'Ex: "Segundo pesquisa do IBGE, 56% dos jovens não leram nenhum livro no último ano."', exp: 'Dados dão credibilidade e objetividade.' },
+        { q: 'Tipo de argumento', a: 'Argumento de autoridade', exp: 'Citar especialistas = argumento de autoridade.' },
+        { q: 'Marcadores de coesão', a: 'Além disso, no entanto, portanto, por outro lado, em suma, ademais', exp: 'Conectores interparágrafos dão fluência ao texto.' },
+      ],
+      missao: `🎯 <strong>Missão Debate Escrito:</strong> Escreva um texto de 3 parágrafos com: 1) sua tese, 2) contra-argumento + refutação, 3) conclusão. Tema: "Smartphones deveriam ser proibidos nas escolas."`,
+    },
+    8: {
+      explicacao: `Na <span class="highlight">Redação do 8º ano</span>, você vai dominar a <strong>redação dissertativa-argumentativa</strong> no padrão exigido por vestibulares e pelo ENEM!`,
+      resumo: `<ul><li>Estrutura ENEM: introdução, 2 desenvolvimentos, conclusão</li><li>Proposta de intervenção: agente, ação, finalidade, meio, efeito</li><li>Detalhamento de parágrafos</li><li>Linguagem formal e impessoal</li><li>Evitar gírias, 1ª pessoa excessiva, clichês</li></ul>`,
+      exercicios: [
+        { q: 'Quais são os 5 elementos de uma proposta de intervenção completa?', hint: 'Quem faz o quê, como, por quê e com que efeito.' },
+        { q: 'Escreva uma introdução para: "Saúde mental na era digital."', hint: 'Apresente o problema + contextualize + tese.' },
+        { q: 'Por que devemos evitar a 1ª pessoa do singular na redação ENEM?', hint: 'Linguagem formal = impessoal.' },
+        { q: 'Cite 2 clichês que NÃO devem aparecer em redações.', hint: '"Desde os primórdios..." "É notório que..."' },
+      ],
+      gabarito: [
+        { q: '5 elementos proposta', a: 'Agente (quem), Ação (o quê), Finalidade (para quê), Meio/Modo (como), Efeito/Resultado', exp: 'Proposta completa = 100 pontos no ENEM.' },
+        { q: 'Introdução saúde mental', a: 'Variado — verificar: contextualiza o tema, apresenta tese clara?', exp: 'Introdução 5 linhas: gancho + contextualização + tese.' },
+        { q: '1ª pessoa ENEM', a: 'A redação ENEM exige linguagem objetiva e impessoal, sem "eu acho" ou "eu penso"', exp: 'Use: "Observa-se que...", "É possível notar..."' },
+        { q: 'Clichês proibidos', a: '"Desde os primórdios da humanidade", "Nos dias atuais", "É de extrema importância"', exp: 'Aberturas clichês não contextualizam e tiram pontos.' },
+      ],
+      missao: `🎯 <strong>Missão ENEM Simulado:</strong> Escreva uma redação completa (400–600 palavras) sobre: "Desafios para a inclusão digital no Brasil." Siga a estrutura ENEM e inclua proposta de intervenção!`,
+    },
+    9: {
+      explicacao: `Na <span class="highlight">Redação do 9º ano</span>, você está no nível máximo! Redação nota 1000: <strong>repertório cultural, argumentação sofisticada e proposta detalhada</strong>. Você está pronto!`,
+      resumo: `<ul><li>Repertório: referências culturais, históricas, filosóficas</li><li>Argumentação em cadeia: tese → argumento → exemplo → conclusão parcial</li><li>Proposta de intervenção detalhada (5 elementos)</li><li>Coesão avançada: operadores argumentativos</li><li>Revisão final e estratégias de nota máxima</li></ul>`,
+      exercicios: [
+        { q: 'O que é repertório sociocultural em uma redação?', hint: 'Referências externas ao texto.' },
+        { q: 'Escreva uma introdução com repertório filosófico para: "O papel do Estado na garantia de direitos."', hint: 'Cite um filósofo, conceito ou obra.' },
+        { q: 'Como transformar um argumento simples em um argumento em cadeia?', hint: 'Desenvolva em 4 etapas.' },
+        { q: 'Escreva uma proposta de intervenção completa para o tema da saúde mental.', hint: 'Inclua os 5 elementos.' },
+      ],
+      gabarito: [
+        { q: 'Repertório sociocultural', a: 'Referência a autores, obras, fatos históricos, dados, filmes, pensamentos filosóficos que fundamentam o argumento', exp: 'Não basta citar; precisa ser pertinente e bem usado.' },
+        { q: 'Introdução filosófica', a: 'Ex: "Para o filósofo Rousseau, o Estado surge do contrato social para garantir os direitos naturais dos indivíduos..."', exp: 'Repertório pertinente + conexão clara com o tema.' },
+        { q: 'Argumento em cadeia', a: 'Tese → Desenvolvimento → Exemplo concreto → Mini-conclusão (portanto / assim)', exp: 'Cada parágrafo de desenvolvimento deve seguir essa lógica.' },
+        { q: 'Proposta saúde mental', a: 'Ex: "Cabe ao Ministério da Saúde (agente) implementar campanhas de conscientização em escolas públicas (ação), por meio de parcerias com profissionais de psicologia (modo), a fim de identificar precocemente transtornos mentais em jovens (finalidade), reduzindo o número de casos graves na vida adulta (efeito)."', exp: 'Todos os 5 elementos estão explícitos!' },
+      ],
+      missao: `🎯 <strong>Missão Nota 1000:</strong> Escreva sua melhor redação ENEM sobre: "Invisibilidade e registro civil no Brasil." Use repertório, argumentação em cadeia e proposta completa. Peça para alguém corrigir!`,
+    },
+  },
+};
+
+/* ============================================================
+   YEAR LABELS
+   ============================================================ */
+const YEARS = Array.from({length:9}, (_,i)=>`${i+1}º Ano`);
+
+/* ============================================================
+   DOM REFS
+   ============================================================ */
+const screenLibrary  = document.getElementById('screen-library');
+const screenSubject  = document.getElementById('screen-subject');
+const subjectGrid    = document.getElementById('subjectGrid');
+const btnBack        = document.getElementById('btnBack');
+const subjectTopTitle= document.getElementById('subjectTopTitle');
+const subjectIcon    = document.getElementById('subjectIcon');
+const subjectTitle   = document.getElementById('subjectTitle');
+const yearTabsEl     = document.getElementById('yearTabs');
+const yearContentEl  = document.getElementById('yearContent');
+
+/* ============================================================
+   BUILD LIBRARY GRID
+   ============================================================ */
+SUBJECTS.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'subject-card';
+  card.style.setProperty('--card-color', s.color);
+  card.innerHTML = `
+    <span class="card-icon">${s.icon}</span>
+    <span class="card-letter">${s.letter}</span>
+    <div class="card-name">${s.name}</div>
+    <span class="card-badge">9 anos • 45 atividades</span>
+  `;
+  card.addEventListener('click', () => openSubject(s));
+  subjectGrid.appendChild(card);
+});
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function openSubject(s) {
+  // Set active color CSS var
+  document.documentElement.style.setProperty('--active-color', s.color);
+
+  subjectTopTitle.textContent = s.name;
+  subjectIcon.textContent = s.icon;
+  subjectTitle.textContent = s.name;
+
+  buildYearTabs(s);
+
+  screenLibrary.classList.remove('active');
+  screenSubject.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+btnBack.addEventListener('click', () => {
+  screenSubject.classList.remove('active');
+  screenLibrary.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+/* ============================================================
+   BUILD YEAR TABS + CONTENT
+   ============================================================ */
+function buildYearTabs(s) {
+  yearTabsEl.innerHTML = '';
+  yearContentEl.innerHTML = '';
+
+  YEARS.forEach((label, i) => {
+    const yr = i + 1;
+
+    // Tab button
+    const tab = document.createElement('button');
+    tab.className = 'year-tab' + (yr === 1 ? ' selected' : '');
+    tab.textContent = label;
+    tab.dataset.yr = yr;
+    tab.style.setProperty('--active-color', s.color);
+    tab.addEventListener('click', () => selectYear(yr));
+    yearTabsEl.appendChild(tab);
+
+    // Panel
+    const data = CONTENT[s.id]?.[yr];
+    const panel = document.createElement('div');
+    panel.className = 'year-panel' + (yr === 1 ? ' active' : '');
+    panel.id = `year-panel-${yr}`;
+    panel.style.setProperty('--active-color', s.color);
+
+    if (!data) {
+      panel.innerHTML = `<div class="content-section"><p>Conteúdo em breve! 🚀</p></div>`;
+    } else {
+      panel.innerHTML = buildPanelHTML(data, s.color);
+    }
+    yearContentEl.appendChild(panel);
+  });
+}
+
+function selectYear(yr) {
+  document.querySelectorAll('.year-tab').forEach(t => {
+    t.classList.toggle('selected', parseInt(t.dataset.yr) === yr);
+  });
+  document.querySelectorAll('.year-panel').forEach(p => {
+    p.classList.toggle('active', p.id === `year-panel-${yr}`);
+  });
+  window.scrollTo({top: yearTabsEl.offsetTop - 80, behavior:'smooth'});
+}
+
+/* ============================================================
+   BUILD PANEL HTML
+   ============================================================ */
+function buildPanelHTML(d, color) {
+  let exercHTML = (d.exercicios || []).map((ex, i) => `
+    <div class="exercise-box">
+      <div class="exercise-num">Exercício ${i+1}</div>
+      <p>${ex.q}</p>
+      ${ex.hint ? `<p style="font-size:.8rem;opacity:.55;margin-top:6px;">💡 Dica: ${ex.hint}</p>` : ''}
+    </div>
+  `).join('');
+
+  let gabHTML = (d.gabarito || []).map((g, i) => `
+    <div class="gabarito-item">
+      <div class="exercise-num">Questão ${i+1}: ${esc(g.q)}</div>
+      <p class="answer">✅ ${esc(g.a)}</p>
+      <p style="font-size:.82rem;opacity:.65;margin-top:4px;">📖 ${esc(g.exp)}</p>
+    </div>
+  `).join('');
+
+  return `
+    <div class="content-section">
+      <div class="section-title"><span>📖</span> Explicação</div>
+      <p>${d.explicacao}</p>
+    </div>
+    <div class="content-section">
+      <div class="section-title"><span>🧠</span> Resumo</div>
+      ${d.resumo}
+    </div>
+    <div class="content-section">
+      <div class="section-title"><span>✏️</span> Exercícios</div>
+      ${exercHTML}
+    </div>
+    <div class="content-section">
+      <div class="section-title"><span>✅</span> Gabarito Explicado</div>
+      ${gabHTML}
+    </div>
+    <div class="content-section">
+      <div class="section-title"><span>🎮</span> Desafio — Missão</div>
+      <div class="mission-box">
+        <h4>⚡ Missão do Ano</h4>
+        <p>${d.missao}</p>
+      </div>
+    </div>
+  `;
+}
+
+function esc(str) {
+  if (!str) return '';
+  return str.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

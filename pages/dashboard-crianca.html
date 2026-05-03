@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Espaço das Crianças 🧒</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧒</text></svg>"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link rel="stylesheet" href="../css/dashboard-kids.css"/>
+</head>
+<body data-page="kids-dashboard">
+
+<!-- NAVBAR KIDS -->
+<nav class="navbar navbar-kids" role="navigation" aria-label="Navegação principal">
+  <a class="nav-logo" href="../index.html">
+<img src="../assets/heroisapp.png" alt="heroisicon">
+    <span class="nav-logo-text">Mente Amiga</span>
+  </a>
+
+  <div style="display:flex;align-items:center;gap:12px;background:var(--c-orange-light);border-radius:999px;padding:6px 16px">
+    <span id="nav-char-icon" style="font-size:1.5rem">🧒</span>
+    <span id="nav-char-name" style="font-size:0.875rem;font-weight:700;color:#B05B00">Meu Personagem</span>
+  </div>
+
+  <div class="nav-actions">
+    <!-- XP badge -->
+    <div style="display:flex;align-items:center;gap:6px;background:var(--c-yellow-light);border-radius:999px;padding:6px 14px;border:1px solid rgba(255,214,0,0.3)">
+      <span>⭐</span>
+      <span id="nav-xp" style="font-size:0.875rem;font-weight:800;color:#B8860B">0 XP</span>
+    </div>
+    <button class="btn-theme" id="btn-theme" aria-label="Mudar tema">🌙</button>
+    <a href="../index.html" class="btn btn-ghost btn-sm">← Voltar</a>
+    <button class="hamburger" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-drawer">
+  <a href="#secao-jogos">🎮 Jogos</a>
+  <a href="#secao-ia">🤖 IA Amiga</a>
+  <a href="rotina.html">📅 Rotina</a>
+  <a href="#secao-educacao">📚 Estudar</a>
+  <a href="personagens.html">🦸 Personagens</a>
+</div>
+
+<!-- HERO KIDS -->
+<section class="kids-hero" aria-label="Boas-vindas">
+  <div class="kids-hero-bg">
+    <div class="kids-bubble b1"></div>
+    <div class="kids-bubble b2"></div>
+    <div class="kids-bubble b3"></div>
+    <div class="kids-bubble b4"></div>
+  </div>
+  <div class="kids-hero-content">
+    <div class="kids-welcome-card" id="welcome-card">
+      <div class="kids-avatar" id="kids-avatar">🧒</div>
+      <div>
+        <h2 id="kids-greeting">Olá, aventureiro(a)! 👋</h2>
+        <p style="color:var(--text-secondary)">O que vamos fazer hoje?</p>
+      </div>
+    </div>
+
+    <!-- Barra de XP/Nível -->
+    <div class="xp-bar-container">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:0.85rem;font-weight:700;color:var(--text-secondary)">⭐ Nível <span id="kids-level">1</span></span>
+        <span style="font-size:0.85rem;font-weight:700;color:var(--c-purple)"><span id="kids-xp-cur">0</span> / <span id="kids-xp-max">100</span> XP</span>
+      </div>
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Medalhas rápidas -->
+    <div class="medals-row" id="medals-row" aria-label="Suas medalhas">
+      <div class="medal-empty">Jogue para ganhar medalhas! 🏅</div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU PRINCIPAL KIDS -->
+<main style="padding:2rem 1.5rem 4rem;max-width:1100px;margin:0 auto">
+
+  <!-- Acesso rápido -->
+  <section id="secao-jogos" aria-labelledby="quick-title">
+    <h2 id="quick-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
+      🎮 <span>Mini Jogos</span>
+    </h2>
+
+    <div class="games-grid">
+
+      <a href="../jogos/cores.html" class="game-card gc-orange" aria-label="Jogo das Cores">
+        <div class="game-card-icon">🎨</div>
+        <h3 class="game-card-title">Jogo das Cores</h3>
+        <p class="game-card-desc">Descubra as cores certas!</p>
+        <div class="game-card-xp">+10 XP</div>
+      </a>
+
+      <a href="../jogos/memorianeon.html" class="game-card gc-purple" aria-label="Jogo da Memória">
+        <div class="game-card-icon">🃏</div>
+        <h3 class="game-card-title">Jogo da Memória</h3>
+        <p class="game-card-desc">Encontre os pares!</p>
+        <div class="game-card-xp">+15 XP</div>
+      </a>
+
+      <a href="../jogos/respiracao-guiada.html" class="game-card gc-teal" aria-label="Respiração Guiada">
+        <div class="game-card-icon">🫧</div>
+        <h3 class="game-card-title">Respiração</h3>
+        <p class="game-card-desc">Respira fundo com a gente!</p>
+        <div class="game-card-xp">+5 XP</div>
+      </a>
+
+      <a href="../jogos/foco.html" class="game-card gc-blue" aria-label="Jogo de Foco">
+        <div class="game-card-icon">🎯</div>
+        <h3 class="game-card-title">Jogo do Foco</h3>
+        <p class="game-card-desc">Clique no objeto certo!</p>
+        <div class="game-card-xp">+12 XP</div>
+      </a>
+
+      <a href="../jogos/colorir.html" class="game-card gc-pink" aria-label="Jogo de Colorir">
+        <div class="game-card-icon">🖍️</div>
+        <h3 class="game-card-title">Colorir</h3>
+        <p class="game-card-desc">Pinte figuras incríveis!</p>
+        <div class="game-card-xp">+8 XP</div>
+      </a>
+
+      <a href="../jogos/corrida.html" class="game-card gc-green" aria-label="Jogo de Corrida">
+        <div class="game-card-icon">🏎️</div>
+        <h3 class="game-card-title">Corrida</h3>
+        <p class="game-card-desc">Acelera e vença a corrida!</p>
+        <div class="game-card-xp">+20 XP</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Seção IA -->
+  <section id="secao-ia" style="margin-top:3rem" aria-labelledby="ia-title">
+    <h2 id="ia-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
+      🌙 <span>IA Amiga</span>
+    </h2>
+    <a href="../front end/ia.html" style="display:block;text-decoration:none">
+      <div style="background:linear-gradient(135deg,var(--c-purple-light),var(--c-blue-light));border:2px solid rgba(124,92,191,0.2);border-radius:var(--r-xl);padding:2rem;display:flex;align-items:center;gap:1.5rem;transition:all 0.3s ease;cursor:pointer"
+           onmouseenter="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--shadow-lg)'"
+           onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+        <div class="icong">
+          <img src="../front end/luna.png" alt="iconluna"/>
+        </div>
+        <div>
+          <h3 style="font-family:var(--font-display);margin-bottom:0.5rem">Olá! Eu sou a Luna, sua IA amiga! 💜</h3>
+          <p style="color:var(--text-secondary);font-size:0.925rem">Posso conversar com você, te ajudar quando estiver triste, ansioso ou com dúvidas. Estou sempre aqui!</p>
+          <span style="display:inline-flex;align-items:center;gap:6px;margin-top:0.75rem;background:var(--c-purple);color:#fff;padding:8px 20px;border-radius:999px;font-size:0.875rem;font-weight:700">
+            Conversar com a Luna →
+          </span>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- Rotina Rápida -->
+  <section id="secao-rotina" style="margin-top:3rem" aria-labelledby="rotina-title">
+    <h2 id="rotina-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
+      📅 <span>Minha Rotina de Hoje</span>
+    </h2>
+    <div id="rotina-preview" style="background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem">
+      <div id="rotina-items" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+      <div style="margin-top:1rem;text-align:center">
+        <a href="rotina.html" class="btn btn-secondary btn-sm">Ver Rotina Completa →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Educação -->
+  <section id="secao-educacao" style="margin-top:3rem" aria-labelledby="edu-title">
+    <h2 id="edu-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
+      📚 <span>Aprender é Legal!</span>
+    </h2>
+    <div class="edu-grid">
+      <a href="biblioteca-mente-amiga.html?materia=matematica" class="edu-card" style="--edu-color:#4A90D9">
+        <span class="edu-icon">🔢</span>
+        <span class="edu-name">Matemática</span>
+      </a>
+      <a href="biblioteca-mente-amiga.html?materia=portugues" class="edu-card" style="--edu-color:#E91E8C">
+        <span class="edu-icon">📖</span>
+        <span class="edu-name">Português</span>
+      </a>
+      <a href="biblioteca-mente-amiga.html?materia=ciencias" class="edu-card" style="--edu-color:#4CAF50">
+        <span class="edu-icon">🔬</span>
+        <span class="edu-name">Ciências</span>
+      </a>
+      <a href="biblioteca-mente-amiga.html?materia=historia" class="edu-card" style="--edu-color:#FF8C42">
+        <span class="edu-icon">🏛️</span>
+        <span class="edu-name">História</span>
+      </a>
+      <a href="biblioteca-mente-amiga.html?materia=geografia" class="edu-card" style="--edu-color:#2BB5A0">
+        <span class="edu-icon">🌍</span>
+        <span class="edu-name">Geografia</span>
+      </a>
+      <a href="biblioteca-mente-amiga.html?materia=artes" class="edu-card" style="--edu-color:#7C5CBF">
+        <span class="edu-icon">✍🏻</span>
+        <span class="edu-name">Redação</span>
+      </a>
+    </div>
+    <div style="text-align:center;margin-top:1rem">
+      <a href="biblioteca-mente-amiga.html" class="btn btn-secondary btn-sm">Ver todas as matérias →</a>
+    </div>
+  </section>
+
+  <!-- Personagens -->
+  <section style="margin-top:3rem" aria-labelledby="char-title">
+    <h2 id="char-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
+      🦸 <span>Meu Personagem</span>
+    </h2>
+    <a href="personagens.html" style="display:block;text-decoration:none">
+      <div id="char-preview" style="background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;display:flex;align-items:center;gap:1.5rem;transition:all 0.3s"
+           onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-md)'"
+           onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+        <div id="char-avatar-big" style="width:80px;height:80px;border-radius:var(--r-md);background:var(--c-purple-light);display:flex;align-items:center;justify-content:center;font-size:3rem;border:2px solid var(--border)">🧒</div>
+        <div>
+          <h3 id="char-name-big" style="font-family:var(--font-display);margin-bottom:4px">Escolha seu personagem!</h3>
+          <p style="font-size:0.9rem;color:var(--text-secondary)">Jogue com um personagem especial que representa você.</p>
+          <span style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;color:var(--c-purple);font-weight:700;font-size:0.875rem">
+            Ver personagens →
+          </span>
+        </div>
+      </div>
+    </a>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-bottom" style="max-width:1100px;margin:0 auto;padding:1.5rem 0 0">
+    <p class="footer-copy">© Direitos autorais — <strong>CEO Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
+    <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
+  </div>
+</footer>
+
+<div class="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Carregar dados do usuário
+  const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
+  const xp = prog.xp || 0;
+  const level = prog.level || 1;
+  const xpInLevel = xp % 100;
+
+  document.getElementById('kids-level').textContent = level;
+  document.getElementById('kids-xp-cur').textContent = xpInLevel;
+  document.getElementById('nav-xp').textContent = xp + ' XP';
+  document.getElementById('xp-bar-fill').style.width = xpInLevel + '%';
+
+  // Personagem selecionado
+  const charMap = {
+    'ingrid':    { icon: '👧', name: 'Ingrid', color: '#4CAF50' },
+    'tryannaxx': { icon: '👧', name: 'Tryannaxx', color: '#E91E8C' },
+    'geovania':  { icon: '👧', name: 'Geovania', color: '#4A90D9' },
+    'heitozin':  { icon: '👦', name: 'Heitozin', color: '#7C5CBF' },
+    'henrique':  { icon: '👦', name: 'Henrique', color: '#FF8C42' },
+    'prof_conceicao': { icon: '👩', name: 'Prof. Conceição', color: '#2BB5A0' },
+  };
+  if (prog.character && charMap[prog.character]) {
+    const c = charMap[prog.character];
+    document.getElementById('kids-avatar').textContent = c.icon;
+    document.getElementById('kids-avatar').style.background = c.color + '22';
+    document.getElementById('nav-char-icon').textContent = c.icon;
+    document.getElementById('nav-char-name').textContent = c.name;
+    document.getElementById('char-avatar-big').textContent = c.icon;
+    document.getElementById('char-name-big').textContent = c.name;
+    document.getElementById('kids-greeting').textContent = `Olá, ${c.name}! 👋`;
+  }
+
+  // Rotina preview
+  const rotina = JSON.parse(localStorage.getItem('ma-rotina') || '[]');
+  const container = document.getElementById('rotina-items');
+  if (rotina.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:1rem">Nenhuma rotina configurada. Peça aos seus pais para criar! 😊</p>';
+  } else {
+    rotina.slice(0, 4).forEach(item => {
+      const done = prog.rotina_done?.includes(item.id);
+      container.innerHTML += `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:${done ? 'var(--c-teal-light)' : 'var(--bg-secondary)'};border-radius:var(--r-md);border:1px solid var(--border)">
+          <span>${item.icon || '📌'}</span>
+          <div style="flex:1">
+            <div style="font-size:0.875rem;font-weight:700">${item.nome}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">${item.hora}</div>
+          </div>
+          <span>${done ? '✅' : '○'}</span>
+        </div>`;
+    });
+  }
+
+  // Medalhas
+  const medals = prog.medals || [];
+  const mRow = document.getElementById('medals-row');
+  if (medals.length) {
+    mRow.innerHTML = medals.map(m => `<span title="${m.desc}" style="font-size:1.75rem;cursor:default">${m.icon}</span>`).join('');
+  }
+});
+</script>
+</body>
+</html>

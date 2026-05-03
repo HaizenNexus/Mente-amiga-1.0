@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luna 🌙 IA</title>
+  <link rel="stylesheet" href="style (2).css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Bolhas de fundo decorativas -->
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
+  <div class="app-wrapper">
+
+    <!-- Cabeçalho -->
+    <header class="chat-header">
+      <div class="header-avatar">
+        <div class="avatar-ring">
+          <div class="avatar-inner">
+            <video src="lunaia.mp4" autoplay muted loop playsinline></video>
+          </div>
+        </div>
+        <div class="status-dot" aria-label="Online"></div>
+      </div>
+      <div class="header-info">
+        <h1 class="header-name">Luna</h1>
+        <span class="header-status">Sua amiga virtual 💜</span>
+      </div>
+      <div class="header-stars" aria-hidden="true">✨</div>
+    </header>
+
+    <!-- Área de mensagens -->
+    <main class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-label="Conversa com Luna">
+
+      <!-- Mensagem de boas-vindas -->
+      <div class="message-wrapper luna-wrapper" id="welcome-message">
+        <div class="message-avatar" aria-hidden="true">
+          <img src="luna.png" alt="iconluna">
+        </div>
+        <div class="message luna-message">
+          <p>Oi! Eu sou a <strong>Luna</strong>, sua amiga virtual! 🌟</p>
+          <p>Estou aqui para conversar com você, te ouvir e te ajudar sempre que precisar. Pode falar o que quiser — não precisa ter vergonha! 💜</p>
+          <p>Como você está hoje? 😊</p>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Indicador de digitação -->
+    <div class="typing-area" id="typing-indicator" style="display: none;" aria-live="polite" aria-atomic="true">
+      <div class="typing-avatar" aria-hidden="true">
+        <img src="luna.png" alt="iconluna">
+      </div>
+      <div class="typing-bubble">
+        <span class="typing-label">Luna está digitando</span>
+        <div class="typing-dots" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Área de input -->
+    <footer class="chat-input-area">
+      <div class="input-container">
+        <textarea
+          id="user-input"
+          class="chat-input"
+          placeholder="Escreva sua mensagem para a Luna... 💬"
+          rows="1"
+          maxlength="500"
+          aria-label="Digite sua mensagem"
+        ></textarea>
+        <button
+          id="send-btn"
+          class="send-button"
+          aria-label="Enviar mensagem"
+          title="Enviar"
+        >
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <p class="input-hint">Pressione <kbd>Enter</kbd> para enviar • <kbd>Shift+Enter</kbd> para nova linha</p>
+    </footer>
+
+  </div>
+<script src="script.js"></script>
+  
+  
+</body>
+</html>

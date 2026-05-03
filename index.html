@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mente Amiga — Plataforma interativa para jovens com TEA e TDAH. Jogos, IA, rotina e muito mais!" />
+  <meta name="author" content="Pedro Henrique" />
+  <title>Mente Amiga</title>
+
+  <!-- Favicon (logo como emoji fallback) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+
+  <!-- Fonts pré-carregadas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Navegação principal">
+  <a class="nav-logo" href="index.html" aria-label="Ir para página inicial">
+    <img src="assets/iconapp.png" alt="icon" class="logo-img">
+    <span class="nav-logo-text">Mente Amiga</span>
+  </a>
+
+  <ul class="nav-links" role="list">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#escolha">Entrar</a></li>
+    <li><a href="#recursos">Recursos</a></li>
+    <li><a href="#para-pais">Para Pais</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <button class="btn-theme" id="btn-theme" aria-label="Alternar modo escuro/claro" title="Mudar tema">🌙</button>
+    <a href="#escolha" class="btn btn-primary btn-sm" style="display:none" id="nav-enter-btn">Entrar</a>
+    <button class="hamburger" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Drawer mobile -->
+<div class="nav-drawer" role="navigation" aria-label="Menu mobile">
+  <a href="#sobre">🏠 Sobre</a>
+  <a href="#escolha">🚀 Entrar</a>
+  <a href="#recursos">🎮 Recursos</a>
+  <a href="#para-pais">👨‍👩‍👧 Para Pais</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section class="hero" id="sobre" aria-labelledby="hero-title">
+  <div class="hero-bg">
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge" role="note">
+      <span>💜</span>
+      <span>Plataforma acessível para TEA e TDAH</span>
+    </div>
+
+    <h1 class="hero-title" id="hero-title">
+      Aprender é mais<br/>
+      <span class="gradient-text">divertido junto!</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Um espaço seguro, colorido e cheio de amor para crianças e adolescentes
+      desenvolverem seu potencial com jogos, IA amiga e muito mais. 💜
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#escolha" class="btn btn-primary btn-lg">
+        <span>Começar Agora</span>
+        <span>🚀</span>
+      </a>
+      <a href="#recursos" class="btn btn-secondary btn-lg">
+        <span>Ver Recursos</span>
+        <span>✨</span>
+      </a>
+    </div>
+
+    <div class="hero-stats" aria-label="Estatísticas da plataforma">
+      <div class="stat-item">
+        <div class="stat-number">6+</div>
+        <div class="stat-label">Mini Jogos</div>
+      </div>
+      <div class="stat-item" style="border-left:1px solid var(--border);border-right:1px solid var(--border);padding:0 3rem">
+        <div class="stat-number">6</div>
+        <div class="stat-label">Matérias</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Inclusivo</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator" aria-hidden="true">
+    <div class="scroll-dot"></div>
+    <span>Role para baixo</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SEÇÃO DE ESCOLHA DE PERFIL
+═══════════════════════════════════════ -->
+<section class="section-choose" id="escolha" aria-labelledby="choose-title">
+  <div class="container">
+    <h2 class="section-title reveal" id="choose-title">
+      Qual é o seu <span class="text-gradient">perfil?</span>
+    </h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+      Escolha abaixo para entrar na sua área especial,
+      feita do jeitinho que você precisa! 💜
+    </p>
+
+    <div class="choose-grid" role="list">
+
+      <!-- Card Crianças -->
+      <a class="choose-card choose-card-kids reveal reveal-delay-2"
+         href="pages/dashboard-crianca.html"
+         role="listitem"
+         aria-label="Entrar na área infantil, para crianças de 4 a 11 anos"
+         onclick="window.MA?.Progress?.setProfile('kids')">
+        
+        
+        <div class="choose-icon choose-icon-kids">
+  <img src="assets/criança.png" alt="criança 1">
+</div>
+        
+          
+
+        <span class="choose-age choose-age-kids">4 – 11 anos</span>
+
+        <h3 class="choose-title choose-title-kids">Espaço das<br/>Crianças</h3>
+
+        <p class="choose-desc">
+          Jogos coloridos, personagens divertidos,
+          histórias e aventuras incríveis esperando por você!
+        </p>
+
+        <div class="choose-tags" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;position:relative;z-index:1">
+          <span style="font-size:0.75rem;background:rgba(255,140,66,0.12);color:#B05B00;padding:4px 12px;border-radius:999px;font-weight:700">🎮 Jogos</span>
+          <span style="font-size:0.75rem;background:rgba(255,140,66,0.12);color:#B05B00;padding:4px 12px;border-radius:999px;font-weight:700">🤖 IA Amiga</span>
+          <span style="font-size:0.75rem;background:rgba(255,140,66,0.12);color:#B05B00;padding:4px 12px;border-radius:999px;font-weight:700">📚 Aprender</span>
+        </div>
+
+        <div class="choose-arrow choose-arrow-kids" aria-hidden="true">→</div>
+      </a>
+
+      <!-- Card Adolescentes -->
+      <a class="choose-card choose-card-teen reveal reveal-delay-3"
+         href="pages/dashboard-adolescente.html"
+         role="listitem"
+         aria-label="Entrar na área adolescente, para jovens de 12 a 17 anos"
+         onclick="window.MA?.Progress?.setProfile('teen')">
+        
+        <div class="choose-icon choose-icon-teen">
+        <img src="assets/adolescentes 1.png" alt="adolescentes 1"/>
+        </div>
+
+        
+
+        <span class="choose-age choose-age-teen">12 – 17 anos</span>
+
+        <h3 class="choose-title choose-title-teen">Espaço dos<br/>Adolescentes</h3>
+
+        <p class="choose-desc">
+          Heróis, missões, mini PC, YouTube integrado,
+          chat inteligente e muito estilo para você!
+        </p>
+
+        <div class="choose-tags" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;position:relative;z-index:1">
+          <span style="font-size:0.75rem;background:rgba(74,144,217,0.12);color:#1A4A8A;padding:4px 12px;border-radius:999px;font-weight:700">🦸 Heróis</span>
+          <span style="font-size:0.75rem;background:rgba(74,144,217,0.12);color:#1A4A8A;padding:4px 12px;border-radius:999px;font-weight:700">💻 Mini PC</span>
+          <span style="font-size:0.75rem;background:rgba(74,144,217,0.12);color:#1A4A8A;padding:4px 12px;border-radius:999px;font-weight:700">▶️ YouTube</span>
+        </div>
+
+        <div class="choose-arrow choose-arrow-teen" aria-hidden="true">→</div>
+      </a>
+
+    </div>
+
+    <!-- Acesso para pais -->
+    <div style="text-align:center;margin-top:2.5rem" class="reveal reveal-delay-4">
+      <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:0.75rem">
+        É pai, mãe ou responsável?
+      </p>
+      
+      <a href="pages/rotina.html" class="btn btn-ghost btn-sm">
+        <span>👨‍👩‍👧</span>
+        <span>Área dos Pais — Configurar Rotina</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     RECURSOS / FEATURES
+═══════════════════════════════════════ -->
+<section class="section-features" id="recursos" aria-labelledby="features-title">
+  <div class="container">
+    <h2 class="section-title reveal" id="features-title">
+      Tudo que você <span class="text-gradient">precisa</span>
+    </h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+      Desenvolvido com carinho para apoiar cada passo da jornada
+    </p>
+
+    <div class="features-grid">
+
+      <div class="feature-card fc-purple reveal reveal-delay-1">
+        <div class="feature-icon fi-purple">🎮</div>
+        <h4>Mini Jogos Acessíveis</h4>
+        <p>6 jogos projetados para estimular foco, memória e calma.
+           Feedbacks sempre positivos, nunca frustrantes.</p>
+      </div>
+
+      <div class="feature-card fc-teal reveal reveal-delay-2">
+        <div class="feature-icon fi-teal">🤖</div>
+        <h4>IA Amiga</h4>
+        <p>Assistente inteligente que conversa, apoia em momentos de
+           ansiedade e sugere atividades personalizadas.</p>
+      </div>
+
+      <div class="feature-card fc-orange reveal reveal-delay-3">
+        <div class="feature-icon fi-orange">📅</div>
+        <h4>Rotina Visual</h4>
+        <p>Pais criam a rotina do dia e as crianças ganham recompensas
+           ao seguir cada etapa. Simples e divertido!</p>
+      </div>
+
+      <div class="feature-card fc-pink reveal reveal-delay-1">
+        <div class="feature-icon fi-pink">🦸</div>
+        <h4>Personagens Heróis</h4>
+        <p>Escolha seu personagem favorito — adolescente estiloso
+           ou herói poderoso — e jogue como ele!</p>
+      </div>
+
+      <div class="feature-card fc-green reveal reveal-delay-2">
+        <div class="feature-icon fi-green">📚</div>
+        <h4>Sistema de Ensino</h4>
+        <p>Tutores virtuais para cada matéria escolar, com
+           linguagem acolhedora e atividades adaptadas.</p>
+      </div>
+
+      <div class="feature-card fc-blue reveal reveal-delay-3">
+        <div class="feature-icon fi-blue">🏆</div>
+        <h4>Recompensas & XP</h4>
+        <p>Medalhas, pontos de experiência, níveis e mensagens
+           motivacionais para cada conquista alcançada.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SEÇÃO PARA PAIS
+═══════════════════════════════════════ -->
+<section style="padding:6rem 2rem;background:var(--bg-secondary)" id="para-pais" aria-labelledby="pais-title">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:1000px;margin:0 auto">
+
+      <div class="reveal">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:var(--c-teal-light);color:#0F6E56;border-radius:999px;padding:8px 20px;font-size:0.875rem;font-weight:700;margin-bottom:1.25rem">
+          <span>👨‍👩‍👧</span><span>Para Pais e Responsáveis</span>
+        </div>
+        <h2 id="pais-title">Você no controle<br/><span class="text-gradient">com carinho</span></h2>
+        <p style="color:var(--text-secondary);margin:1rem 0 1.5rem;line-height:1.8">
+          Configure a rotina diária do seu filho, acompanhe o progresso,
+          veja quais jogos ele jogou e receba relatórios de evolução —
+          tudo em um painel simples e bonito.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem">
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
+            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="color:var(--text-secondary)">Configure horários de estudo, almoço, leitura e dormir</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
+            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="color:var(--text-secondary)">Seu filho ganha recompensas ao seguir a rotina</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
+            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="color:var(--text-secondary)">Veja o progresso nos jogos e na educação</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
+            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="color:var(--text-secondary)">100% seguro, sem anúncios, sem dados vendidos</span>
+          </div>
+        </div>
+        <a href="pages/rotina.html" class="btn btn-primary">
+          <span>Configurar Rotina</span><span>→</span>
+        </a>
+      </div>
+
+      <!-- Mockup visual da rotina -->
+      <div class="reveal reveal-delay-2" style="perspective:1000px">
+        <div style="background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem;box-shadow:var(--shadow-xl);transform:rotateY(-6deg) rotateX(2deg);transition:transform 0.4s ease"
+             onmouseenter="this.style.transform='rotateY(0deg) rotateX(0deg)'"
+             onmouseleave="this.style.transform='rotateY(-6deg) rotateX(2deg)'">
+
+          <div style="font-weight:800;font-size:1rem;margin-bottom:1rem;font-family:var(--font-display)">📅 Rotina do João — Hoje</div>
+
+          <div style="display:flex;flex-direction:column;gap:0.6rem">
+            <!-- Itens da rotina mockup -->
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-teal-light);border-radius:var(--r-md)">
+              <span>☀️</span>
+              <div style="flex:1">
+                <div style="font-size:0.85rem;font-weight:700;color:#085041">Acordar e tomar café</div>
+                <div style="font-size:0.75rem;color:#0F6E56">07:00</div>
+              </div>
+              <span style="font-size:1rem">✅</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-blue-light);border-radius:var(--r-md)">
+              <span>📚</span>
+              <div style="flex:1">
+                <div style="font-size:0.85rem;font-weight:700;color:#0C447C">Hora de estudar</div>
+                <div style="font-size:0.75rem;color:#185FA5">09:00 – 10:30</div>
+              </div>
+              <span style="font-size:1rem">✅</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-orange-light);border-radius:var(--r-md)">
+              <span>🍽️</span>
+              <div style="flex:1">
+                <div style="font-size:0.85rem;font-weight:700;color:#854F0B">Almoço em família</div>
+                <div style="font-size:0.75rem;color:#BA7517">12:00</div>
+              </div>
+              <span style="font-size:1rem;color:var(--text-muted)">○</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-purple-light);border-radius:var(--r-md)">
+              <span>📖</span>
+              <div style="flex:1">
+                <div style="font-size:0.85rem;font-weight:700;color:#3C3489">Ler um livro</div>
+                <div style="font-size:0.75rem;color:#534AB7">14:00 – 14:30</div>
+              </div>
+              <span style="font-size:1rem;color:var(--text-muted)">○</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-pink-light);border-radius:var(--r-md)">
+              <span>🌙</span>
+              <div style="flex:1">
+                <div style="font-size:0.85rem;font-weight:700;color:#72243E">Hora de dormir</div>
+                <div style="font-size:0.75rem;color:#993556">21:00</div>
+              </div>
+              <span style="font-size:1rem;color:var(--text-muted)">○</span>
+            </div>
+          </div>
+
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:0.8rem;color:var(--text-muted)">Progresso de hoje</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:120px;height:6px;background:var(--border);border-radius:999px;overflow:hidden">
+                <div style="width:40%;height:100%;background:linear-gradient(90deg,var(--c-teal),var(--c-blue));border-radius:999px"></div>
+              </div>
+              <span style="font-size:0.8rem;font-weight:700;color:var(--c-teal)">40%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     BANNER CTA FINAL
+═══════════════════════════════════════ -->
+<section style="padding:5rem 2rem;background:var(--bg-primary)" aria-labelledby="cta-title">
+  <div class="container">
+    <div style="background:var(--grad-hero);border-radius:var(--r-2xl);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;max-width:900px;margin:0 auto" class="reveal">
+      <!-- Orbs decorativos dentro do banner -->
+      <div style="position:absolute;width:300px;height:300px;background:rgba(255,255,255,0.1);border-radius:50%;top:-100px;left:-80px;pointer-events:none"></div>
+      <div style="position:absolute;width:250px;height:250px;background:rgba(255,255,255,0.08);border-radius:50%;bottom:-80px;right:-60px;pointer-events:none"></div>
+
+      <div style="position:relative;z-index:1">
+        <div style="font-size:3.5rem;margin-bottom:1rem">🧠✨</div>
+        <h2 id="cta-title" style="color:#fff;margin-bottom:1rem;font-size:clamp(1.5rem,4vw,2.5rem)">
+          Pronto para começar sua jornada?
+        </h2>
+        <p style="color:rgba(255,255,255,0.85);max-width:500px;margin:0 auto 2rem;font-size:1.05rem">
+          Junte-se a nós e transforme o aprendizado em uma aventura cheia de descobertas e alegria!
+        </p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+          <a href="#escolha" style="background:#fff;color:var(--c-purple);border-radius:999px;padding:16px 36px;font-weight:800;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.2)"
+             onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(0,0,0,0.3)'"
+             onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.2)'">
+            <span>Entrar Agora</span><span>🚀</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <!-- Marca -->
+    <div class="footer-brand">
+      <a class="footer-logo" href="index.html" aria-label="Mente Amiga - página inicial">
+       <img src="assets/iconapp.png" alt="iconfooter">
+        <span class="footer-logo-text">Mente Amiga</span>
+      </a>
+      <p class="footer-desc">
+        Uma plataforma criada com amor para apoiar crianças e adolescentes
+        com TEA e TDAH a aprenderem, crescerem e se divertirem.
+      </p>
+      <div style="display:flex;gap:10px;margin-top:1.25rem">
+        <a href="#" style="width:36px;height:36px;background:var(--bg-tertiary);border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1rem;transition:background 0.2s" title="Instagram" aria-label="Instagram">📸</a>
+        <a href="#" style="width:36px;height:36px;background:var(--bg-tertiary);border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1rem;transition:background 0.2s" title="Facebook" aria-label="Facebook">📘</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="js/app.js"></script>
+</body>
+</html>

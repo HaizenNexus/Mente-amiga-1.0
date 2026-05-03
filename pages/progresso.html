@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mente Amiga — Minhas Conquistas 🏆</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    /* ─── Hero de progresso ─── */
+    .prog-hero {
+      padding: 90px 1.5rem 2.5rem;
+      background: var(--bg-secondary);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .prog-hero-orb {
+      position: absolute; border-radius: 50%; opacity: .18;
+      filter: blur(60px); pointer-events: none;
+    }
+
+    /* ─── Cards de estatísticas ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 0 auto 2rem;
+      max-width: 860px;
+    }
+    .stat-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: all var(--t-slow);
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; border-radius: var(--r-full) var(--r-full) 0 0;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .sc-purple::before { background: var(--grad-hero); }
+    .sc-orange::before { background: linear-gradient(90deg,#FF8C42,#FFD600); }
+    .sc-teal::before   { background: linear-gradient(90deg,#2BB5A0,#4A90D9); }
+    .sc-pink::before   { background: linear-gradient(90deg,#E91E8C,#7C5CBF); }
+    .stat-card-icon { font-size: 2rem; margin-bottom: .375rem; }
+    .stat-card-val {
+      font-family: var(--font-display);
+      font-size: 2.2rem; font-weight: 900; line-height: 1;
+      background: var(--grad-hero);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card-label { font-size: .75rem; color: var(--text-muted); font-weight: 600; margin-top: .25rem; }
+
+    /* ─── Nível e XP ─── */
+    .level-card {
+      background: var(--grad-hero);
+      border-radius: var(--r-xl);
+      padding: 1.75rem 2rem;
+      color: #fff;
+      display: flex; align-items: center; gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .level-badge {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      border: 3px solid rgba(255,255,255,.4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1.8rem; font-weight: 900;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    }
+    .level-info { flex: 1; min-width: 200px; }
+    .level-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; margin-bottom: .25rem; }
+    .level-sub { font-size: .85rem; opacity: .85; margin-bottom: .75rem; }
+    .level-xp-bar {
+      height: 12px; background: rgba(255,255,255,.2);
+      border-radius: 999px; overflow: hidden;
+    }
+    .level-xp-fill {
+      height: 100%; border-radius: 999px;
+      background: rgba(255,255,255,.8);
+      transition: width 1.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .level-xp-text { font-size: .78rem; opacity: .8; margin-top: .375rem; }
+    .level-char { font-size: 4rem; flex-shrink: 0; }
+
+    /* ─── Seção geral ─── */
+    .section-box {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-box-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem; font-weight: 800;
+      margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ─── Medalhas ─── */
+    .medals-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: .875rem;
+    }
+    .medal-item {
+      text-align: center;
+      padding: 1rem .75rem;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      transition: all var(--t-slow);
+      cursor: default;
+      position: relative;
+    }
+    .medal-item.earned {
+      background: linear-gradient(145deg, var(--c-yellow-light), #FFF9E0);
+      border-color: rgba(255,214,0,.4);
+      box-shadow: 0 2px 12px rgba(255,214,0,.2);
+    }
+    .medal-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .medal-item-icon { font-size: 2.5rem; margin-bottom: .375rem; filter: grayscale(1) opacity(.35); }
+    .medal-item.earned .medal-item-icon { filter: none; }
+    .medal-item-name { font-size: .72rem; font-weight: 700; color: var(--text-muted); line-height: 1.3; }
+    .medal-item.earned .medal-item-name { color: #B8860B; }
+    .medal-item-cond { font-size: .65rem; color: var(--text-muted); margin-top: 2px; }
+    .medal-new-badge {
+      position: absolute; top: 6px; right: 6px;
+      background: var(--c-red); color: #fff;
+      font-size: .58rem; font-weight: 800;
+      padding: 2px 6px; border-radius: 999px;
+      animation: pulse 1.5s ease infinite;
+    }
+
+    /* ─── Jogos jogados ─── */
+    .games-history {
+      display: flex; flex-direction: column; gap: .625rem;
+    }
+    .game-hist-row {
+      display: flex; align-items: center; gap: 1rem;
+      padding: .875rem 1rem;
+      border-radius: var(--r-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+    }
+    .ghicon { font-size: 1.5rem; }
+    .ghinfo { flex: 1; }
+    .ghname { font-size: .875rem; font-weight: 700; }
+    .ghscore { font-size: .72rem; color: var(--text-muted); }
+    .ghxp { font-size: .78rem; font-weight: 800; color: var(--c-purple);
+      background: var(--c-purple-light); padding: 4px 10px; border-radius: 999px; }
+
+    /* ─── Rotina streak ─── */
+    .streak-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: .5rem;
+      margin-top: .75rem;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700;
+    }
+    .cal-day.done    { background: var(--c-teal); color: #fff; }
+    .cal-day.missed  { background: var(--bg-tertiary); color: var(--text-muted); }
+    .cal-day.today   { background: var(--c-purple); color: #fff; box-shadow: 0 0 0 2px var(--c-purple), 0 0 0 4px var(--bg-primary); }
+    .cal-day.future  { background: transparent; border: 1px dashed var(--border); color: var(--text-muted); opacity:.5; }
+
+    /* ─── Próximas conquistas ─── */
+    .next-medals {
+      display: flex; flex-direction: column; gap: .625rem;
+    }
+    .next-medal-row {
+      display: flex; align-items: center; gap: .875rem;
+      padding: .875rem; border-radius: var(--r-md);
+      background: var(--bg-secondary); border: 1px solid var(--border);
+    }
+    .nm-icon { font-size: 1.75rem; filter: grayscale(.6); }
+    .nm-info { flex: 1; }
+    .nm-name { font-size: .875rem; font-weight: 700; }
+    .nm-prog { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+    .nm-bar { height: 5px; background: var(--bg-tertiary); border-radius: 999px; overflow: hidden; margin-top: 5px; }
+    .nm-fill { height: 100%; border-radius: 999px; background: var(--grad-hero); transition: width .8s ease; }
+
+    /* ─── Botão compartilhar ─── */
+    .share-strip {
+      display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      .level-card { padding: 1.25rem; }
+      .medals-showcase { grid-template-columns: repeat(3,1fr); }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: repeat(2,1fr); gap:.625rem; }
+      .medals-showcase { grid-template-columns: repeat(3,1fr); }
+      .streak-calendar { gap:.375rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <a class="nav-logo" href="../index.html">
+    <span style="font-size:2rem;line-height:1">🧠</span>
+    <span class="nav-logo-text">Mente Amiga</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:8px;background:var(--c-yellow-light);border-radius:999px;padding:6px 14px;border:1px solid rgba(255,214,0,.35)">
+    <span>🏆</span>
+    <span style="font-size:.82rem;font-weight:700;color:#B8860B">Minhas Conquistas</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-theme" id="btn-theme">🌙</button>
+    <button onclick="history.back()" class="btn btn-ghost btn-sm">← Voltar</button>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<main style="padding:80px 1.5rem 4rem; max-width:900px; margin:0 auto;">
+
+  <!-- HERO -->
+  <div class="prog-hero" style="background:none;padding-top:0;margin-bottom:1.5rem">
+    <div class="prog-hero-orb" style="width:300px;height:300px;background:var(--c-purple);top:-80px;right:-80px"></div>
+    <div class="prog-hero-orb" style="width:200px;height:200px;background:var(--c-yellow);bottom:-40px;left:-40px"></div>
+  </div>
+
+  <!-- CARD DE NÍVEL -->
+  <div class="level-card" id="level-card">
+    <div class="level-char" id="level-char">🧒</div>
+    <div class="level-badge" id="level-badge">1</div>
+    <div class="level-info">
+      <div class="level-title" id="level-title">Explorador Iniciante</div>
+      <div class="level-sub" id="level-sub">Continue jogando para subir de nível!</div>
+      <div class="level-xp-bar">
+        <div class="level-xp-fill" id="level-xp-fill" style="width:0%"></div>
+      </div>
+      <div class="level-xp-text" id="level-xp-text">0 / 100 XP para o próximo nível</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card sc-purple reveal">
+      <div class="stat-card-icon">⭐</div>
+      <div class="stat-card-val" id="stat-xp-total">0</div>
+      <div class="stat-card-label">XP Total</div>
+    </div>
+    <div class="stat-card sc-orange reveal reveal-delay-1">
+      <div class="stat-card-icon">🎮</div>
+      <div class="stat-card-val" id="stat-jogos">0</div>
+      <div class="stat-card-label">Jogos Jogados</div>
+    </div>
+    <div class="stat-card sc-teal reveal reveal-delay-2">
+      <div class="stat-card-icon">🔥</div>
+      <div class="stat-card-val" id="stat-streak">0</div>
+      <div class="stat-card-label">Dias Seguidos</div>
+    </div>
+    <div class="stat-card sc-pink reveal reveal-delay-3">
+      <div class="stat-card-icon">🏅</div>
+      <div class="stat-card-val" id="stat-medals-count">0</div>
+      <div class="stat-card-label">Medalhas</div>
+    </div>
+  </div>
+
+  <!-- MEDALHAS -->
+  <div class="section-box reveal">
+    <div class="section-box-title">🏅 Minhas Medalhas</div>
+    <div class="medals-showcase" id="medals-showcase"></div>
+  </div>
+
+  <!-- PRÓXIMAS CONQUISTAS -->
+  <div class="section-box reveal">
+    <div class="section-box-title">🎯 Próximas Conquistas</div>
+    <div class="next-medals" id="next-medals"></div>
+  </div>
+
+  <!-- CALENDÁRIO DE ROTINA -->
+  <div class="section-box reveal">
+    <div class="section-box-title">📅 Rotina — Últimos 14 Dias</div>
+    <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:.75rem">
+      🟢 Completo &nbsp; ⬜ Pendente &nbsp; 🟣 Hoje
+    </p>
+    <div class="streak-calendar" id="streak-calendar"></div>
+  </div>
+
+  <!-- HISTÓRICO DE JOGOS -->
+  <div class="section-box reveal">
+    <div class="section-box-title">🎮 Histórico de Atividades</div>
+    <div class="games-history" id="games-history"></div>
+  </div>
+
+  <!-- BOTÕES DE AÇÃO -->
+  <div class="share-strip">
+    <button class="btn btn-primary" onclick="compartilharProgresso()">
+      📤 Compartilhar Progresso
+    </button>
+    <button class="btn btn-secondary" onclick="resetarProgresso()">
+      🔄 Reiniciar Progresso
+    </button>
+    <a href="jogos.html" class="btn btn-kids">
+      🎮 Jogar Mais!
+    </a>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-bottom" style="max-width:900px;margin:0 auto;padding:1.5rem 0 0">
+    <p class="footer-copy">© Direitos autorais — <strong>CEO Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
+    <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
+  </div>
+</footer>
+
+<div class="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+/* ─── Definição de todas as medalhas ─── */
+const ALL_MEDALS = [
+  { id:'primeiro-jogo',   icon:'🎮', name:'Primeiro Jogo!',       cond:'Jogue 1 jogo',           req:{ games:1 } },
+  { id:'cinco-jogos',     icon:'🕹️', name:'Jogador!',             cond:'Jogue 5 jogos',          req:{ games:5 } },
+  { id:'dez-jogos',       icon:'🏆', name:'Gamer Incrível!',      cond:'Jogue 10 jogos',         req:{ games:10} },
+  { id:'nivel-5',         icon:'⭐', name:'Nível 5!',             cond:'Alcance o nível 5',      req:{ level:5 } },
+  { id:'nivel-10',        icon:'🌟', name:'Nível 10!',            cond:'Alcance o nível 10',     req:{ level:10} },
+  { id:'xp-100',          icon:'💎', name:'100 XP!',              cond:'Ganhe 100 XP',           req:{ xp:100  } },
+  { id:'xp-500',          icon:'👑', name:'500 XP!',              cond:'Ganhe 500 XP',           req:{ xp:500  } },
+  { id:'streak-3',        icon:'🔥', name:'Em Chama!',            cond:'3 dias seguidos',        req:{ streak:3} },
+  { id:'streak-7',        icon:'🌈', name:'Uma Semana!',          cond:'7 dias seguidos',        req:{ streak:7} },
+  { id:'rotina-completa', icon:'🏅', name:'Dia Perfeito!',        cond:'Complete a rotina',      req:{ rotina:1} },
+  { id:'ia-conversa',     icon:'🤖', name:'Amigo da Luna!',       cond:'Converse com a Luna',    req:{ ia:1    } },
+  { id:'educacao-5',      icon:'📚', name:'Estudioso!',           cond:'5 aulas',                req:{ edu:5   } },
+  { id:'respiracao',      icon:'🫧', name:'Zen Mestre!',          cond:'Complete respiração',    req:{ breath:1} },
+  { id:'coloriu',         icon:'🎨', name:'Artista!',             cond:'Salve um desenho',       req:{ draw:1  } },
+  { id:'personagem',      icon:'🦸', name:'Herói Escolhido!',     cond:'Escolha um personagem',  req:{ char:1  } },
+  { id:'corrida-100',     icon:'🏎️', name:'Piloto de Elite!',    cond:'100 pts na corrida',     req:{ race:100} },
+];
+
+/* ─── Nomes de nível ─── */
+const LEVEL_NAMES = [
+  '', 'Explorador Iniciante', 'Aventureiro Curioso', 'Herói em Formação',
+  'Guardião do Saber', 'Campeão do Coração', 'Mestre da Mente',
+  'Lenda Viva', 'Superstar', 'Ícone Épico', 'Lenda Suprema 🌟'
+];
+
+const CHAR_MAP = {
+  ingrid:'👧', tryannaxx:'👓', geovania:'🖤', heitozin:'🎒', henrique:'🎧',
+  prof_conceicao:'👩‍🏫', codigo_fantasma:'🥷', vibora_noturna:'🐍',
+  feiticeira_escalate:'🔮', lamina_fantasma:'⚔️', dama_da_luz:'🗡️', aurora_da_luz:'✨',
+};
+
+/* ─── Verificar e conceder medalhas automaticamente ─── */
+function checkAndAwardMedals(prog) {
+  const earned = (prog.medals || []).map(m => m.id);
+  const newOnes = [];
+
+  ALL_MEDALS.forEach(m => {
+    if (earned.includes(m.id)) return;
+    const r = m.req;
+    let shouldAward = false;
+    if (r.games  !== undefined && (prog.games_played||0)  >= r.games)  shouldAward = true;
+    if (r.level  !== undefined && (prog.level||1)          >= r.level)  shouldAward = true;
+    if (r.xp     !== undefined && (prog.xp||0)             >= r.xp)     shouldAward = true;
+    if (r.streak !== undefined && (prog.streak||0)         >= r.streak) shouldAward = true;
+    if (r.char   !== undefined && prog.character)                        shouldAward = true;
+    if (r.rotina !== undefined) {
+      const done = JSON.parse(localStorage.getItem('ma-rotina-done-' + new Date().toISOString().split('T')[0]) || '[]');
+      const rotina = JSON.parse(localStorage.getItem('ma-rotina') || '[]');
+      if (rotina.length > 0 && done.length >= rotina.length) shouldAward = true;
+    }
+    if (shouldAward) {
+      newOnes.push(m);
+      (prog.medals || (prog.medals=[])).push({ id:m.id, icon:m.icon, desc:m.name, new:true });
+    }
+  });
+
+  if (newOnes.length) localStorage.setItem('ma-progress', JSON.stringify(prog));
+  return newOnes;
+}
+
+/* ─── Renderizar tudo ─── */
+function renderProgresso() {
+  const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
+  const xp       = prog.xp || 0;
+  const level    = prog.level || 1;
+  const games    = prog.games_played || 0;
+  const streak   = prog.streak || 0;
+  const medals   = prog.medals || [];
+  const xpInLvl  = xp % 100;
+  const charIcon = CHAR_MAP[prog.character] || '🧒';
+  const lvlName  = LEVEL_NAMES[Math.min(level, LEVEL_NAMES.length-1)] || 'Herói';
+
+  // Verificar novas medalhas
+  checkAndAwardMedals(prog);
+
+  // Nível card
+  document.getElementById('level-char').textContent   = charIcon;
+  document.getElementById('level-badge').textContent  = level;
+  document.getElementById('level-title').textContent  = lvlName;
+  document.getElementById('level-sub').textContent    = level >= 10
+    ? '🌟 Você alcançou o nível máximo! Incrível!'
+    : `Continue jogando para alcançar o Nível ${level+1}!`;
+  document.getElementById('level-xp-fill').style.width = xpInLvl + '%';
+  document.getElementById('level-xp-text').textContent = `${xpInLvl} / 100 XP para Nível ${level+1}`;
+
+  // Stats
+  document.getElementById('stat-xp-total').textContent     = xp;
+  document.getElementById('stat-jogos').textContent        = games;
+  document.getElementById('stat-streak').textContent       = streak;
+  document.getElementById('stat-medals-count').textContent = medals.length;
+
+  // Medalhas showcase
+  const showcase = document.getElementById('medals-showcase');
+  showcase.innerHTML = ALL_MEDALS.map(m => {
+    const e = medals.find(x => x.id === m.id);
+    return `
+      <div class="medal-item${e?' earned':''}" title="${m.cond}">
+        ${e?.new ? '<span class="medal-new-badge">NOVO!</span>' : ''}
+        <div class="medal-item-icon">${m.icon}</div>
+        <div class="medal-item-name">${m.name}</div>
+        <div class="medal-item-cond">${m.cond}</div>
+      </div>`;
+  }).join('');
+
+  // Próximas conquistas (as 4 mais próximas de ganhar)
+  const nextContainer = document.getElementById('next-medals');
+  const notEarned = ALL_MEDALS.filter(m => !medals.find(e => e.id === m.id));
+  const withProgress = notEarned.map(m => {
+    const r = m.req;
+    let cur=0, total=1;
+    if (r.games)  { cur=Math.min(games,r.games);   total=r.games; }
+    if (r.level)  { cur=Math.min(level,r.level);   total=r.level; }
+    if (r.xp)     { cur=Math.min(xp,r.xp);         total=r.xp;   }
+    if (r.streak) { cur=Math.min(streak,r.streak); total=r.streak;}
+    return { ...m, cur, total, pct: Math.round(cur/total*100) };
+  }).sort((a,b) => b.pct - a.pct).slice(0,4);
+
+  nextContainer.innerHTML = withProgress.length
+    ? withProgress.map(m => `
+        <div class="next-medal-row">
+          <div class="nm-icon">${m.icon}</div>
+          <div class="nm-info">
+            <div class="nm-name">${m.name}</div>
+            <div class="nm-prog">${m.cond} — ${m.cur}/${m.total}</div>
+            <div class="nm-bar"><div class="nm-fill" style="width:${m.pct}%"></div></div>
+          </div>
+          <div style="font-size:.78rem;font-weight:800;color:var(--c-purple)">${m.pct}%</div>
+        </div>`).join('')
+    : '<p style="color:var(--text-muted);font-size:.875rem">🎉 Você ganhou todas as medalhas disponíveis! Incrível!</p>';
+
+  // Calendário de streak (últimos 14 dias)
+  const cal = document.getElementById('streak-calendar');
+  const today = new Date();
+  cal.innerHTML = '';
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    const done = localStorage}
+  }

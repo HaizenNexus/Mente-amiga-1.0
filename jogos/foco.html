@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo do Foco</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep:    #080812;
+    --bg-mid:     #0d0d1e;
+    --bg-card:    #11112a;
+    --bg-raised:  #161635;
+    --border:     rgba(120,100,255,0.15);
+    --border-glow:rgba(120,100,255,0.35);
+    --neon-purple:#9b8fff;
+    --neon-teal:  #44d9b8;
+    --neon-pink:  #e060a0;
+    --neon-amber: #f0a840;
+    --neon-blue:  #50b8ff;
+    --text-1:     #ddd8ff;
+    --text-2:     #8888b8;
+    --text-3:     #50507a;
+    --success:    #40c890;
+    --danger:     #e05070;
+    --font-main: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html, body {
+    background: var(--bg-deep);
+    color: var(--text-1);
+    font-family: var(--font-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(100,80,220,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 35% at 80% 85%, rgba(40,180,140,0.09) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 16px;
+  }
+  .header-brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--neon-purple);
+    letter-spacing: 0.02em;
+  }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--text-3);
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    margin-top: 1px;
+  }
+  .header-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .icon-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .icon-btn:hover { border-color: var(--border-glow); color: var(--neon-purple); }
+  .icon-btn.active { border-color: var(--neon-purple); color: var(--neon-purple); background: rgba(155,143,255,0.1); }
+
+  /* ── LEVEL & XP ── */
+  .level-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .level-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+  .level-tag span { color: var(--neon-purple); font-weight: 500; }
+  .xp-track {
+    flex: 1;
+    height: 4px;
+    background: var(--bg-raised);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-purple), var(--neon-teal));
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .level-name {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .stat-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    font-family: var(--font-mono);
+  }
+  .stat-value {
+    font-size: 20px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    line-height: 1;
+  }
+  .stat-value.c-xp     { color: var(--neon-teal); }
+  .stat-value.c-hits   { color: var(--neon-purple); }
+  .stat-value.c-streak { color: var(--neon-amber); }
+  .stat-value.c-time   { color: var(--neon-blue); }
+
+  /* ── DIFFICULTY ── */
+  .diff-row {
+    width: 100%;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .diff-btn {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    border-radius: 8px;
+    padding: 6px 4px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .diff-btn:hover { color: var(--text-2); border-color: var(--border-glow); }
+  .diff-btn.sel {
+    border-color: var(--neon-purple);
+    color: var(--neon-purple);
+    background: rgba(155,143,255,0.08);
+  }
+
+  /* ── RULE BOX ── */
+  .rule-box {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text-2);
+    text-align: center;
+    margin-bottom: 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.5;
+    transition: border-color 0.3s;
+  }
+  .rule-box.active { border-color: rgba(155,143,255,0.4); }
+  .rule-box strong { color: var(--neon-purple); font-weight: 600; }
+
+  /* ── GAME AREA ── */
+  .game-area {
+    width: 100%;
+    background: var(--bg-mid);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+    min-height: 240px;
+  }
+
+  .elements-grid {
+    display: grid;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .el-slot {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .game-el {
+    width: 100%;
+    max-width: 64px;
+    aspect-ratio: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid;
+    transition: transform 0.12s ease;
+    animation: elPop 0.3s cubic-bezier(.34,1.56,.64,1) both;
+    position: relative;
+    user-select: none;
+  }
+  .game-el:hover:not(.hit):not(.miss) { transform: scale(1.1) translateY(-2px); }
+
+  .game-el.shape-circle  { border-radius: 50%; }
+  .game-el.shape-square  { border-radius: 6px; }
+  .game-el.shape-triangle {
+    clip-path: polygon(50% 8%, 96% 92%, 4% 92%);
+    border-radius: 0;
+    border: none;
+  }
+  .game-el.shape-diamond {
+    border-radius: 4px;
+    transform: rotate(45deg);
+  }
+  .game-el.shape-diamond:hover:not(.hit):not(.miss) {
+    transform: rotate(45deg) scale(1.1) translateY(-2px);
+  }
+
+  @keyframes elPop {
+    from { opacity:0; transform:scale(0.5); }
+    to   { opacity:1; transform:scale(1); }
+  }
+  .game-el.shape-diamond { animation: elPopDiamond 0.3s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes elPopDiamond {
+    from { opacity:0; transform:rotate(45deg) scale(0.5); }
+    to   { opacity:1; transform:rotate(45deg) scale(1); }
+  }
+
+  @keyframes elHit {
+    0%   { transform:scale(1);    opacity:1; }
+    50%  { transform:scale(1.3);  opacity:0.8; }
+    100% { transform:scale(0.5);  opacity:0; }
+  }
+  @keyframes elHitDiamond {
+    0%   { transform:rotate(45deg) scale(1);   opacity:1; }
+    50%  { transform:rotate(45deg) scale(1.3); opacity:0.8; }
+    100% { transform:rotate(45deg) scale(0.5); opacity:0; }
+  }
+  @keyframes elMiss {
+    0%,100% { filter:brightness(1); }
+    30%     { filter:brightness(0.35) saturate(0.2); transform:scale(0.9); }
+    60%     { filter:brightness(1.2); transform:scale(1.05); }
+  }
+
+  /* ── OVERLAYS ── */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 16px;
+    z-index: 10;
+    background: rgba(8,8,18,0.92);
+    backdrop-filter: blur(4px);
+    padding: 20px;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .overlay-title  { font-size: 22px; font-weight: 600; color: var(--neon-purple); }
+  .overlay-sub    { font-size: 13px; color: var(--text-2); text-align: center; line-height: 1.6; }
+  .overlay-stats  { display: flex; gap: 20px; margin: 8px 0; }
+  .ov-stat        { text-align: center; }
+  .ov-stat .v     { font-size: 26px; font-weight: 600; font-family: var(--font-mono); color: var(--neon-purple); }
+  .ov-stat .l     { font-size: 10px; font-family: var(--font-mono); color: var(--text-3); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+  .ov-stat .v.teal  { color: var(--neon-teal); }
+  .ov-stat .v.amber { color: var(--neon-amber); }
+  .ov-stat .v.blue  { color: var(--neon-blue); }
+  .pause-label { font-size: 15px; color: var(--text-3); letter-spacing: 0.12em; font-family: var(--font-mono); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: absolute;
+    pointer-events: none;
+    z-index: 20;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    animation: toastRise 0.75s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes toastRise {
+    0%  { opacity:0; transform:translateY(0)   scale(0.8); }
+    25% { opacity:1; transform:translateY(-12px) scale(1.05); }
+    70% { opacity:1; transform:translateY(-28px) scale(1); }
+    100%{ opacity:0; transform:translateY(-44px) scale(0.95); }
+  }
+
+  /* ── COMBO FLASH ── */
+  .combo-badge {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--neon-amber);
+    background: rgba(240,168,64,0.12);
+    border: 1px solid rgba(240,168,64,0.3);
+    border-radius: 6px;
+    padding: 3px 8px;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+  .combo-badge.show { opacity: 1; }
+
+  /* ── REACTION ROW ── */
+  .reaction-row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 2px;
+    margin-bottom: 10px;
+    min-height: 16px;
+  }
+  .reaction-label {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-3);
+  }
+
+  /* ── BUTTONS ── */
+  .btn-row {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .btn {
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: all 0.18s;
+    border: 1px solid;
+  }
+  .btn-primary {
+    background: rgba(155,143,255,0.15);
+    border-color: var(--neon-purple);
+    color: var(--neon-purple);
+  }
+  .btn-primary:hover { background: rgba(155,143,255,0.25); }
+  .btn-secondary {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text-2);
+  }
+  .btn-secondary:hover { border-color: var(--border-glow); color: var(--text-1); }
+
+  /* ── RING ANIMATION on correct answer ── */
+  @keyframes ring {
+    0%   { box-shadow: 0 0 0 0px rgba(68,217,184,0.6); }
+    100% { box-shadow: 0 0 0 16px rgba(68,217,184,0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:400px) {
+    .stats-bar { grid-template-columns: repeat(2,1fr); }
+    .stat-value { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-brand">
+      <div class="brand-name">Jogo do Foco</div>
+      <div class="brand-sub">MODO CONCENTRAÇÃO</div>
+    </div>
+    <div class="header-controls">
+      <button class="icon-btn active" id="soundBtn" title="Sons">🔊</button>
+      <button class="icon-btn" id="pauseBtn" title="Pausar" style="display:none">⏸</button>
+    </div>
+  </div>
+
+  <!-- LEVEL & XP -->
+  <div class="level-row">
+    <div class="level-tag">NV <span id="levelNum">1</span></div>
+    <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+    <div class="level-name" id="levelName">Iniciante</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">XP</div>
+      <div class="stat-value c-xp" id="xpVal">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Acertos</div>
+      <div class="stat-value c-hits" id="hitsVal">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Sequência</div>
+      <div class="stat-value c-streak" id="streakVal">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tempo</div>
+      <div class="stat-value c-time" id="timerVal">0:30</div>
+    </div>
+  </div>
+
+  <!-- DIFFICULTY -->
+  <div class="diff-row" id="diffRow">
+    <button class="diff-btn sel" data-d="easy">fácil</button>
+    <button class="diff-btn"    data-d="med">médio</button>
+    <button class="diff-btn"    data-d="hard">difícil</button>
+  </div>
+
+  <!-- RULE -->
+  <div class="rule-box" id="ruleBox">
+    Pressione <strong>Iniciar</strong> para começar
+  </div>
+
+  <!-- GAME AREA -->
+  <div class="game-area" id="gameArea">
+    <div class="elements-grid" id="elemGrid"></div>
+    <div class="combo-badge" id="comboBadge"></div>
+
+    <!-- Start Overlay -->
+    <div class="overlay" id="startOverlay">
+      <div class="overlay-title">Jogo do Foco</div>
+      <div class="overlay-sub">Leia a regra e clique<br>apenas nos elementos corretos.<br>Acertos dão XP · Erros passam sem punição.</div>
+    </div>
+  </div>
+
+  <!-- REACTION -->
+  <div class="reaction-row">
+    <div class="reaction-label" id="reactionLabel"></div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn btn-primary" id="startBtn">▶ Iniciar</button>
+    <button class="btn btn-secondary" id="restartBtn" style="display:none">↺ Reiniciar</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  /* ─── CONFIG ─────────────────────────────── */
+  const COLORS = {
+    azul:    { bg:'#0e1f4a', border:'#3060b8', glow:'rgba(48,96,184,0.4)',  label:'azuis'    },
+    roxo:    { bg:'#1c0f4a', border:'#7040c0', glow:'rgba(112,64,192,0.4)', label:'roxas'    },
+    verde:   { bg:'#0a2018', border:'#28906a', glow:'rgba(40,144,106,0.4)', label:'verdes'   },
+    laranja: { bg:'#2a1502', border:'#c06828', glow:'rgba(192,104,40,0.4)', label:'laranjas' },
+    rosa:    { bg:'#2a0818', border:'#b82870', glow:'rgba(184,40,112,0.4)', label:'rosas'    },
+    ciano:   { bg:'#031e2e', border:'#28a8b8', glow:'rgba(40,168,184,0.4)', label:'cianas'   },
+  };
+  const SHAPES = ['circle','square','triangle','diamond'];
+  const COLOR_KEYS = Object.keys(COLORS);
+  const DIFF = {
+    easy: { cols:3, rows:2, sec:30, label:'fácil'  },
+    med:  { cols:4, rows:3, sec:25, label:'médio'  },
+    hard: { cols:4, rows:4, sec:20, label:'difícil'},
+  };
+  const LEVEL_XP    = [0, 80, 200, 400, 700, 1100, 1700, 2500];
+  const LEVEL_NAMES = ['Iniciante','Focado','Atento','Concentrado','Preciso','Agudo','Expert','Mestre'];
+
+  /* ─── STATE ──────────────────────────────── */
+  let g = {
+    running:false, paused:false, diff:'easy',
+    xp:0, hits:0, streak:0, misses:0,
+    level:1, roundSec:30, elapsed:0,
+    rule:null, elements:[], soundOn:true,
+    reactionTimes:[], lastSpawn:0, combo:0,
+    ticker:null,
+  };
+
+  /* ─── AUDIO ──────────────────────────────── */
+  function tone(type) {
+    if(!g.soundOn) return;
+    try {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const o = ac.createOscillator(), gn = ac.createGain();
+      o.connect(gn); gn.connect(ac.destination);
+      if(type==='hit') {
+        o.type='sine';
+        o.frequency.setValueAtTime(550, ac.currentTime);
+        o.frequency.exponentialRampToValueAtTime(880, ac.currentTime+0.1);
+        gn.gain.setValueAtTime(0.15, ac.currentTime);
+        gn.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.28);
+        o.start(); o.stop(ac.currentTime+0.28);
+      } else {
+        o.type='triangle';
+        o.frequency.setValueAtTime(260, ac.currentTime);
+        o.frequency.exponentialRampToValueAtTime(170, ac.currentTime+0.22);
+        gn.gain.setValueAtTime(0.1, ac.currentTime);
+        gn.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.32);
+        o.start(); o.stop(ac.currentTime+0.32);
+      }
+    } catch(e){}
+  }
+
+  /* ─── RULE GENERATION ────────────────────── */
+  function genRule() {
+    const types = ['color_only','shape_only','not_color','odd_one_out'];
+    const t = types[Math.floor(Math.random()*types.length)];
+    if(t==='color_only') {
+      const c = COLOR_KEYS[Math.floor(Math.random()*COLOR_KEYS.length)];
+      return { type:'color_only', color:c,
+        text:`Clique apenas nas formas <strong>${COLORS[c].label}</strong>` };
+    } else if(t==='shape_only') {
+      const s = SHAPES[Math.floor(Math.random()*SHAPES.length)];
+      const n = {circle:'círculos',square:'quadrados',triangle:'triângulos',diamond:'losangos'}[s];
+      return { type:'shape_only', shape:s, text:`Clique apenas nos <strong>${n}</strong>` };
+    } else if(t==='not_color') {
+      const c = COLOR_KEYS[Math.floor(Math.random()*COLOR_KEYS.length)];
+      return { type:'not_color', color:c,
+        text:`Clique nas que <strong>NÃO</strong> são <strong>${COLORS[c].label}</strong>` };
+    } else {
+      return { type:'odd_one_out', text:'Clique na forma <strong>diferente</strong> das outras' };
+    }
+  }
+
+  function isCorrect(el) {
+    const r = g.rule;
+    if(!r) return false;
+    if(r.type==='color_only')  return el.color===r.color;
+    if(r.type==='shape_only')  return el.shape===r.shape;
+    if(r.type==='not_color')   return el.color!==r.color;
+    if(r.type==='odd_one_out') return el.isOdd===true;
+    return false;
+  }
+
+  function buildElements() {
+    const d = DIFF[g.diff];
+    const total = d.cols * d.rows;
+    const els = [];
+
+    if(g.rule.type==='odd_one_out') {
+      const bc = COLOR_KEYS[Math.floor(Math.random()*COLOR_KEYS.length)];
+      const bs = SHAPES[Math.floor(Math.random()*SHAPES.length)];
+      let oc; do { oc=COLOR_KEYS[Math.floor(Math.random()*COLOR_KEYS.length)]; } while(oc===bc);
+      let os; do { os=SHAPES[Math.floor(Math.random()*SHAPES.length)]; } while(os===bs);
+      const oi = Math.floor(Math.random()*total);
+      for(let i=0;i<total;i++)
+        els.push(i===oi
+          ? {id:i, color:oc, shape:os, isOdd:true}
+          : {id:i, color:bc, shape:bs, isOdd:false});
+    } else {
+      for(let i=0;i<total;i++)
+        els.push({id:i,
+          color: COLOR_KEYS[Math.floor(Math.random()*COLOR_KEYS.length)],
+          shape: SHAPES[Math.floor(Math.random()*SHAPES.length)],
+          isOdd: false});
+      if(!els.some(e=>isCorrect(e))) {
+        const i = Math.floor(Math.random()*els.length);
+        if(g.rule.type==='color_only')
+          els[i].color = g.rule.color;
+        else if(g.rule.type==='shape_only')
+          els[i].shape = g.rule.shape;
+        else if(g.rule.type==='not_color') {
+          let nc; do { nc=COLOR_KEYS[Math.floor(Math.random()*COLOR_KEYS.length)]; } while(nc===g.rule.color);
+          els[i].color = nc;
+        }
+      }
+    }
+    return els;
+  }
+
+  /* ─── RENDER ─────────────────────────────── */
+  const grid = document.getElementById('elemGrid');
+  const gameArea = document.getElementById('gameArea');
+
+  function renderGrid() {
+    const d = DIFF[g.diff];
+    grid.style.gridTemplateColumns = `repeat(${d.cols}, 1fr)`;
+    grid.innerHTML = '';
+    g.elements.forEach(el => {
+      const slot = document.createElement('div');
+      slot.className = 'el-slot';
+      const div = document.createElement('div');
+      const c = COLORS[el.color];
+      div.className = `game-el shape-${el.shape}`;
+      div.style.background = c.bg;
+      if(el.shape!=='triangle') {
+        div.style.borderColor = c.border;
+        div.style.boxShadow = `0 0 10px ${c.glow}, inset 0 0 12px ${c.glow}`;
+      } else {
+        div.style.background = `linear-gradient(180deg, ${c.bg} 0%, ${c.border}88 100%)`;
+        div.style.filter = `drop-shadow(0 0 5px ${c.border})`;
+      }
+      const delay = Math.random()*0.12;
+      div.style.animationDelay = delay+'s';
+      div.addEventListener('click', ()=> onClick(el, div));
+      slot.appendChild(div);
+      grid.appendChild(slot);
+    });
+    g.lastSpawn = Date.now();
+  }
+
+  /* ─── CLICK HANDLER ──────────────────────── */
+  function onClick(el, div) {
+    if(!g.running || g.paused) return;
+    const rt = Date.now() - g.lastSpawn;
+    g.reactionTimes.push(rt);
+
+    if(isCorrect(el)) {
+      g.hits++;
+      g.streak++;
+      g.combo++;
+      const bonus = g.combo>=5?3: g.combo>=3?2:1;
+      const xpGain = 10*bonus;
+      g.xp += xpGain;
+      tone('hit');
+      div.style.pointerEvents = 'none';
+      div.style.animation = `${el.shape==='diamond'?'elHitDiamond':'elHit'} 0.38s ease forwards`;
+      spawnToast('+'+xpGain, '#44d9b8', div);
+      if(g.combo>=3) showCombo(g.combo);
+      const avgRt = Math.round(g.reactionTimes.slice(-5).reduce((a,b)=>a+b,0)/Math.min(5,g.reactionTimes.length));
+      document.getElementById('reactionLabel').textContent = 'reação: '+avgRt+'ms';
+      setTimeout(refreshGrid, 360);
+    } else {
+      g.misses++;
+      g.streak=0; g.combo=0;
+      tone('miss');
+      div.style.animation = 'elMiss 0.4s ease';
+      spawnToast('ops', '#e05070', div);
+      setTimeout(()=>{ div.style.animation=''; }, 400);
+    }
+    updateUI();
+    checkLevel();
+  }
+
+  /* ─── TOAST ──────────────────────────────── */
+  function spawnToast(txt, color, anchor) {
+    const rect = anchor.getBoundingClientRect();
+    const areaRect = gameArea.getBoundingClientRect();
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = txt;
+    t.style.color = color;
+    t.style.left = (rect.left - areaRect.left + rect.width/2 - 20) + 'px';
+    t.style.top  = (rect.top  - areaRect.top) + 'px';
+    gameArea.appendChild(t);
+    setTimeout(()=>t.remove(), 750);
+  }
+
+  /* ─── COMBO ──────────────────────────────── */
+  function showCombo(n) {
+    const cb = document.getElementById('comboBadge');
+    cb.textContent = n+'x combo!';
+    cb.classList.add('show');
+    clearTimeout(cb._t);
+    cb._t = setTimeout(()=>cb.classList.remove('show'), 900);
+  }
+
+  /* ─── REFRESH ────────────────────────────── */
+  function refreshGrid() {
+    g.rule = genRule();
+    g.elements = buildElements();
+    document.getElementById('ruleBox').innerHTML = g.rule.text;
+    document.getElementById('ruleBox').classList.add('active');
+    renderGrid();
+  }
+
+  /* ─── UI UPDATE ──────────────────────────── */
+  function updateUI() {
+    document.getElementById('xpVal').textContent   = g.xp;
+    document.getElementById('hitsVal').textContent = g.hits;
+    document.getElementById('streakVal').textContent = g.streak;
+    const rem = Math.max(0, g.roundSec - g.elapsed);
+    const m=Math.floor(rem/60), s=rem%60;
+    document.getElementById('timerVal').textContent = m+':'+(s<10?'0':'')+s;
+    const lvlIdx = Math.min(g.level-1, LEVEL_XP.length-1);
+    const xpStart = LEVEL_XP[Math.max(0,g.level-1)];
+    const xpEnd   = LEVEL_XP[Math.min(g.level, LEVEL_XP.length-1)];
+    const pct = xpEnd>xpStart ? Math.min(100,((g.xp-xpStart)/(xpEnd-xpStart))*100) : 100;
+    document.getElementById('xpFill').style.width = Math.max(0,pct)+'%';
+  }
+
+  function checkLevel() {
+    for(let i=LEVEL_XP.length-1;i>=0;i--) {
+      if(g.xp>=LEVEL_XP[i] && (i+1)!==g.level) {
+        g.level = i+1;
+        document.getElementById('levelNum').textContent  = g.level;
+        document.getElementById('levelName').textContent = LEVEL_NAMES[Math.min(g.level-1,LEVEL_NAMES.length-1)];
+        break;
+      }
+    }
+  }
+
+  /* ─── GAME FLOW ──────────────────────────── */
+  function removeOverlays() {
+    document.querySelectorAll('.overlay').forEach(o=>o.remove());
+  }
+
+  function startGame() {
+    Object.assign(g, {
+      running:true, paused:false,
+      hits:0, streak:0, misses:0, elapsed:0,
+      reactionTimes:[], combo:0,
+      roundSec: DIFF[g.diff].sec, level:1
+    });
+    document.getElementById('startBtn').style.display   = 'none';
+    document.getElementById('restartBtn').style.display = 'inline-block';
+    document.getElementById('pauseBtn').style.display   = 'inline-block';
+    document.getElementById('pauseBtn').textContent     = '⏸';
+    document.getElementById('diffRow').style.pointerEvents = 'none';
+    document.getElementById('diffRow').style.opacity       = '0.4';
+    document.getElementById('reactionLabel').textContent   = '';
+    document.getElementById('levelNum').textContent  = '1';
+    document.getElementById('levelName').textContent = LEVEL_NAMES[0];
+    document.getElementById('xpFill').style.width    = '0%';
+    removeOverlays();
+    refreshGrid();
+    clearInterval(g.ticker);
+    g.ticker = setInterval(()=>{
+      if(g.paused || !g.running) return;
+      g.elapsed++;
+      updateUI();
+      if(g.elapsed>=g.roundSec) endGame();
+    }, 1000);
+    updateUI();
+  }
+
+  function endGame() {
+    g.running = false;
+    clearInterval(g.ticker);
+    document.getElementById('pauseBtn').style.display='none';
+    removeOverlays();
+    const total = g.hits+g.misses;
+    const pct   = total>0 ? Math.round(g.hits/total*100) : 0;
+    const avgRt = g.reactionTimes.length>0
+      ? Math.round(g.reactionTimes.reduce((a,b)=>a+b,0)/g.reactionTimes.length) : 0;
+    const msg = pct>=80?'Foco excelente!': pct>=60?'Bom desempenho!':'Continue praticando!';
+    const lvlName = LEVEL_NAMES[Math.min(g.level-1,LEVEL_NAMES.length-1)];
+    const ov = document.createElement('div');
+    ov.className='overlay'; ov.id='endOverlay';
+    ov.innerHTML=`
+      <div class="overlay-title">${msg}</div>
+      <div class="overlay-stats">
+        <div class="ov-stat"><div class="v">${g.hits}</div><div class="l">acertos</div></div>
+        <div class="ov-stat"><div class="v teal">${pct}%</div><div class="l">precisão</div></div>
+        <div class="ov-stat"><div class="v amber">${avgRt}ms</div><div class="l">reação</div></div>
+        <div class="ov-stat"><div class="v blue">${g.xp}</div><div class="l">XP total</div></div>
+      </div>
+      <div class="overlay-sub">Nível <strong style="color:var(--neon-purple)">${g.level}</strong> — ${lvlName}</div>
+    `;
+    gameArea.appendChild(ov);
+  }
+
+  /* ─── CONTROLS ───────────────────────────── */
+  document.getElementById('startBtn').addEventListener('click', startGame);
+  document.getElementById('restartBtn').addEventListener('click', ()=>{
+    clearInterval(g.ticker);
+    g.xp=0;
+    removeOverlays();
+    startGame();
+  });
+  document.getElementById('pauseBtn').addEventListener('click', ()=>{
+    g.paused = !g.paused;
+    document.getElementById('pauseBtn').textContent = g.paused?'▶':'⏸';
+    if(g.paused) {
+      const ov=document.createElement('div'); ov.className='overlay'; ov.id='pauseOverlay';
+      ov.innerHTML='<div class="pause-label">PAUSADO</div><div class="overlay-sub" style="font-size:12px">Pressione ▶ para continuar</div>';
+      gameArea.appendChild(ov);
+    } else {
+      const po=document.getElementById('pauseOverlay'); if(po) po.remove();
+    }
+  });
+  document.getElementById('soundBtn').addEventListener('click', ()=>{
+    g.soundOn=!g.soundOn;
+    const btn=document.getElementById('soundBtn');
+    btn.textContent = g.soundOn?'🔊':'🔇';
+    btn.classList.toggle('active', g.soundOn);
+  });
+  document.querySelectorAll('.diff-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      g.diff = btn.dataset.d;
+    });
+  });
+
+  updateUI();
+})();
+</script>
+</body>
+</html>

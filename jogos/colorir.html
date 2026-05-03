@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colorir Relaxante</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0d0d1a;font-family:system-ui,-apple-system,sans-serif;color:#e0e0ff}
+#app{min-height:100vh;background:linear-gradient(135deg,#0d0d1a 0%,#0f0f2e 50%,#0a0a1f 100%);padding:12px;display:flex;flex-direction:column;gap:10px}
+/* Header */
+#header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:14px;border:1px solid rgba(120,80,255,0.2)}
+#header h1{font-size:17px;font-weight:500;color:#c9b8ff;letter-spacing:1.5px}
+#status-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#xp-bar-wrap{width:80px;height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+#xp-bar{height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:4px;transition:width 0.5s ease}
+#xp-txt{font-size:11px;color:#a78bfa;min-width:44px;text-align:right}
+#progress-txt{font-size:11px;color:#7dd3fc;white-space:nowrap}
+#sound-btn{background:none;border:1px solid rgba(120,80,255,0.3);border-radius:8px;color:#c9b8ff;font-size:11px;padding:4px 10px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+#sound-btn:hover{background:rgba(120,80,255,0.15);border-color:#a78bfa}
+/* Drawing Picker */
+#drawing-picker{display:flex;gap:6px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+#drawing-picker::-webkit-scrollbar{display:none}
+.draw-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid rgba(120,80,255,0.3);background:rgba(255,255,255,0.03);color:#c4b5fd;font-size:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.draw-btn.active{background:rgba(120,80,255,0.25);border-color:#a78bfa;color:#e9d5ff;box-shadow:0 0 8px rgba(167,139,250,0.2)}
+.draw-btn:hover{background:rgba(120,80,255,0.12)}
+/* Canvas */
+#canvas-wrap{flex:1;display:flex;justify-content:center;align-items:center;background:rgba(255,255,255,0.02);border-radius:18px;border:1px solid rgba(120,80,255,0.15);min-height:300px;position:relative;overflow:hidden;padding:16px}
+#canvas-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(120,80,255,0.05) 0%,transparent 70%);pointer-events:none;border-radius:18px}
+#drawing-svg{width:100%;max-width:380px;height:auto;cursor:pointer;display:block}
+.region{transition:filter 0.25s ease,stroke 0.2s ease;stroke-width:1.5;stroke:#2a1f5c}
+.region:hover{filter:brightness(1.3);stroke:#9d7aff;stroke-width:2}
+.region.painted{stroke:#6d28d9;stroke-width:2}
+/* Palette */
+#palette-wrap{padding:12px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid rgba(120,80,255,0.15);display:flex;flex-direction:column;gap:10px}
+#palette-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.clr-mode{display:flex;gap:6px;justify-content:center}
+.mode-btn{padding:4px 12px;border-radius:14px;border:1px solid rgba(120,80,255,0.3);background:rgba(255,255,255,0.03);color:#c4b5fd;font-size:11px;cursor:pointer;transition:all 0.2s}
+.mode-btn.active{background:rgba(120,80,255,0.25);border-color:#a78bfa;box-shadow:0 0 6px rgba(167,139,250,0.2)}
+.swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.15s ease,box-shadow 0.2s,border-color 0.2s}
+.swatch:hover{transform:scale(1.15)}
+.swatch.selected{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,0.25),0 0 12px rgba(167,139,250,0.5);transform:scale(1.1)}
+/* Actions */
+#action-row{display:flex;gap:8px;justify-content:center}
+.act-btn{flex:1;max-width:120px;padding:9px 8px;border-radius:12px;border:1px solid rgba(120,80,255,0.25);background:rgba(255,255,255,0.03);color:#c4b5fd;font-size:13px;cursor:pointer;transition:all 0.2s;text-align:center}
+.act-btn:hover{background:rgba(120,80,255,0.15);border-color:#a78bfa;color:#e9d5ff}
+.act-btn:active{transform:scale(0.97)}
+/* Complete overlay */
+#complete-msg{display:none;position:absolute;inset:0;background:rgba(10,8,28,0.92);border-radius:17px;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:10;backdrop-filter:blur(4px)}
+#complete-msg.show{display:flex;animation:fadeIn 0.5s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#complete-msg .emoji-big{font-size:52px}
+#complete-msg p{font-size:22px;color:#e9d5ff;font-weight:500;text-align:center}
+#complete-msg small{font-size:13px;color:#a78bfa;text-align:center}
+#complete-msg button{padding:10px 26px;border-radius:14px;background:rgba(120,80,255,0.3);border:1px solid #a78bfa;color:#e9d5ff;font-size:14px;cursor:pointer;transition:all 0.2s}
+#complete-msg button:hover{background:rgba(120,80,255,0.5)}
+/* Toast */
+#unlock-toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(80,40,180,0.9);color:#e9d5ff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:200;pointer-events:none;border:1px solid rgba(167,139,250,0.4);backdrop-filter:blur(6px)}
+#unlock-toast.show{display:block;animation:slideUp 0.4s ease}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+/* Glow anim on paint */
+@keyframes glowIn{0%{filter:brightness(2.5) saturate(2)}60%{filter:brightness(1.4)}100%{filter:brightness(1) saturate(1)}}
+.glow-anim{animation:glowIn 0.7s ease forwards}
+/* Responsive */
+@media(max-width:400px){.swatch{width:30px;height:30px}#header h1{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Header -->
+  <div id="header">
+    <h1>✦ Colorir Relaxante</h1>
+    <div id="status-row">
+      <span id="progress-txt">0/0 áreas</span>
+      <div id="xp-bar-wrap"><div id="xp-bar"></div></div>
+      <span id="xp-txt">0 XP</span>
+      <button id="sound-btn">♪ Som: OFF</button>
+    </div>
+  </div>
+
+  <!-- Drawing Picker -->
+  <div id="drawing-picker"></div>
+
+  <!-- Canvas -->
+  <div id="canvas-wrap">
+    <svg id="drawing-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="complete-msg">
+      <div class="emoji-big">🌟</div>
+      <p>Desenho concluído!</p>
+      <small id="xp-reward-txt"></small>
+      <button id="next-draw-btn">Próximo desenho →</button>
+    </div>
+  </div>
+
+  <!-- Palette -->
+  <div id="palette-wrap">
+    <div class="clr-mode">
+      <button class="mode-btn active" data-mode="neon">Neon</button>
+      <button class="mode-btn" data-mode="soft">Suave</button>
+      <button class="mode-btn" data-mode="earth">Terra</button>
+    </div>
+    <div id="palette-row"></div>
+  </div>
+
+  <!-- Actions -->
+  <div id="action-row">
+    <button class="act-btn" id="undo-btn">↩ Desfazer</button>
+    <button class="act-btn" id="reset-btn">↺ Resetar</button>
+  </div>
+</div>
+
+<div id="unlock-toast"></div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const PALETTES = {
+  neon: ['#ff6eb4','#ff9f43','#ffd32a','#0be881','#00d2d3','#54a0ff','#a55eea','#ff4757','#eccc68','#1e90ff','#ff6b81','#5f27cd'],
+  soft: ['#f8c8d4','#fad6a5','#fef3c7','#bbf7d0','#b2f0f0','#bfdbfe','#ddd6fe','#fed7d7','#fef9c3','#e0f2fe','#fce7f3','#ede9fe'],
+  earth: ['#c8a97e','#b07d4a','#8b5e3c','#6b4226','#a8c090','#7a9a6a','#4a7c59','#d4a853','#e8c87a','#9e7b4a','#c9b89a','#6b8c6e']
+};
+
+const BASE = '#1a1040';
+
+const DRAWINGS = [
+  {
+    id:'mandala', name:'Mandala', xp:60, unlocked:true,
+    regions:[
+      // Outer ring segments (8 petals)
+      {id:'mo0',d:'M150,150 L150,85 A65,65 0 0,1 196,104 Z',fill:BASE},
+      {id:'mo1',d:'M150,150 L196,104 A65,65 0 0,1 215,150 Z',fill:BASE},
+      {id:'mo2',d:'M150,150 L215,150 A65,65 0 0,1 196,196 Z',fill:BASE},
+      {id:'mo3',d:'M150,150 L196,196 A65,65 0 0,1 150,215 Z',fill:BASE},
+      {id:'mo4',d:'M150,150 L150,215 A65,65 0 0,1 104,196 Z',fill:BASE},
+      {id:'mo5',d:'M150,150 L104,196 A65,65 0 0,1 85,150 Z',fill:BASE},
+      {id:'mo6',d:'M150,150 L85,150 A65,65 0 0,1 104,104 Z',fill:BASE},
+      {id:'mo7',d:'M150,150 L104,104 A65,65 0 0,1 150,85 Z',fill:BASE},
+      // Middle ring (8 segments)
+      {id:'mm0',d:'M150,150 L150,108 A42,42 0 0,1 180,121 Z',fill:BASE},
+      {id:'mm1',d:'M150,150 L180,121 A42,42 0 0,1 192,150 Z',fill:BASE},
+      {id:'mm2',d:'M150,150 L192,150 A42,42 0 0,1 180,179 Z',fill:BASE},
+      {id:'mm3',d:'M150,150 L180,179 A42,42 0 0,1 150,192 Z',fill:BASE},
+      {id:'mm4',d:'M150,150 L150,192 A42,42 0 0,1 120,179 Z',fill:BASE},
+      {id:'mm5',d:'M150,150 L120,179 A42,42 0 0,1 108,150 Z',fill:BASE},
+      {id:'mm6',d:'M150,150 L108,150 A42,42 0 0,1 120,121 Z',fill:BASE},
+      {id:'mm7',d:'M150,150 L120,121 A42,42 0 0,1 150,108 Z',fill:BASE},
+      // Center circle
+      {id:'mc',d:'M150,150 m-22,0 a22,22 0 1,1 44,0 a22,22 0 1,1 -44,0',fill:BASE},
+    ]
+  },
+  {
+    id:'butterfly', name:'Borboleta', xp:45, unlocked:true,
+    regions:[
+      {id:'bwul',d:'M150,90 Q105,40 72,78 Q58,118 95,142 Q128,158 150,150 Z',fill:BASE},
+      {id:'bwur',d:'M150,90 Q195,40 228,78 Q242,118 205,142 Q172,158 150,150 Z',fill:BASE},
+      {id:'bwll',d:'M150,150 Q112,162 92,192 Q86,224 122,214 Q144,198 150,180 Z',fill:BASE},
+      {id:'bwlr',d:'M150,150 Q188,162 208,192 Q214,224 178,214 Q156,198 150,180 Z',fill:BASE},
+      {id:'bspot1',d:'M108,95 a10,10 0 1,1 20,0 a10,10 0 1,1 -20,0',fill:BASE},
+      {id:'bspot2',d:'M172,95 a10,10 0 1,1 20,0 a10,10 0 1,1 -20,0',fill:BASE},
+      {id:'bbody',d:'M147,72 Q143,100 143,202 Q150,214 157,202 Q157,100 153,72 Z',fill:BASE},
+    ]
+  },
+  {
+    id:'star5', name:'Estrela', xp:35, unlocked:true,
+    regions:[
+      {id:'st0',d:'M150,50 L163,110 L220,95 L175,135 L198,192 L150,158 L102,192 L125,135 L80,95 L137,110 Z',fill:BASE},
+      {id:'stc',d:'M150,97 L158,122 L185,116 L165,132 L174,158 L150,142 L126,158 L135,132 L115,116 L142,122 Z',fill:BASE},
+    ]
+  },
+  {
+    id:'sun', name:'Sol', xp:50, unlocked:false,
+    regions:[
+      {id:'sc',d:'M150,150 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0',fill:BASE},
+      {id:'si',d:'M150,150 m-25,0 a25,25 0 1,1 50,0 a25,25 0 1,1 -50,0',fill:BASE},
+      {id:'sr0',d:'M147,80 L150,65 L153,80 Z',fill:BASE},
+      {id:'sr1',d:'M195,97 L207,88 L200,103 Z',fill:BASE},
+      {id:'sr2',d:'M220,147 L235,150 L220,153 Z',fill:BASE},
+      {id:'sr3',d:'M200,197 L207,212 L195,203 Z',fill:BASE},
+      {id:'sr4',d:'M153,220 L150,235 L147,220 Z',fill:BASE},
+      {id:'sr5',d:'M105,203 L93,212 L100,197 Z',fill:BASE},
+      {id:'sr6',d:'M80,153 L65,150 L80,147 Z',fill:BASE},
+      {id:'sr7',d:'M100,103 L93,88 L105,97 Z',fill:BASE},
+    ]
+  },
+  {
+    id:'house', name:'Casa', xp:40, unlocked:false,
+    regions:[
+      {id:'hroof',d:'M75,160 L150,68 L225,160 Z',fill:BASE},
+      {id:'hwall',d:'M92,160 L92,242 L208,242 L208,160 Z',fill:BASE},
+      {id:'hdoor',d:'M130,242 L130,196 L170,196 L170,242 Z',fill:BASE},
+      {id:'hwl',d:'M104,170 L104,190 L124,190 L124,170 Z',fill:BASE},
+      {id:'hwr',d:'M176,170 L176,190 L196,190 L196,170 Z',fill:BASE},
+      {id:'hchim',d:'M162,80 L162,60 L178,60 L178,88 Z',fill:BASE},
+      {id:'hsky',d:'M0,0 L300,0 L300,68 L225,68 L150,68 L75,68 L0,68 Z',fill:BASE},
+      {id:'hground',d:'M0,242 L300,242 L300,300 L0,300 Z',fill:BASE},
+    ]
+  },
+  {
+    id:'owl', name:'Coruja', xp:65, unlocked:false,
+    regions:[
+      {id:'owbody',d:'M150,230 Q105,225 92,185 Q80,148 92,118 Q105,88 150,80 Q195,88 208,118 Q220,148 208,185 Q195,225 150,230 Z',fill:BASE},
+      {id:'owel',d:'M110,82 Q105,58 118,55 Q130,52 128,78 Z',fill:BASE},
+      {id:'ower',d:'M190,82 Q195,58 182,55 Q170,52 172,78 Z',fill:BASE},
+      {id:'owol',d:'M128,138 a22,22 0 1,1 44,0 a22,22 0 1,1 -44,0',fill:BASE},
+      {id:'owil',d:'M136,138 a14,14 0 1,1 28,0 a14,14 0 1,1 -28,0',fill:BASE},
+      {id:'owbeak',d:'M143,160 L150,172 L157,160 Z',fill:BASE},
+      {id:'owwl',d:'M92,150 Q68,165 55,190 Q70,185 85,175 Q88,185 92,195 Z',fill:BASE},
+      {id:'owwr',d:'M208,150 Q232,165 245,190 Q230,185 215,175 Q212,185 208,195 Z',fill:BASE},
+      {id:'owft',d:'M125,228 Q120,245 112,250 L118,252 Q130,248 138,232 Z',fill:BASE},
+      {id:'owft2',d:'M175,228 Q180,245 188,250 L182,252 Q170,248 162,232 Z',fill:BASE},
+    ]
+  }
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentDrawingIdx = 0;
+let selectedColor = '#a55eea';
+let colorMode = 'neon';
+let paintHistory = [];
+let regionColors = {};
+let totalAreas = 0;
+let paintedCount = 0;
+let totalXP = 0;
+let soundOn = false;
+let audioCtx = null;
+let ambientNodes = [];
+let unlocked = DRAWINGS.map(d => d.unlocked);
+
+// ─── AUDIO ───────────────────────────────────────────────────────────────────
+function initAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+}
+
+function playPaintSound(){
+  if(!soundOn) return;
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = 350 + Math.random() * 250;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.07, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.35);
+  } catch(e){}
+}
+
+function startAmbient(){
+  if(!soundOn || ambientNodes.length) return;
+  try {
+    initAudio();
+    const master = audioCtx.createGain();
+    master.gain.value = 0.025;
+    master.connect(audioCtx.destination);
+    [55, 110, 165, 220, 275].forEach(freq => {
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.connect(master);
+      osc.start();
+      ambientNodes.push(osc);
+    });
+    ambientNodes.push(master);
+  } catch(e){}
+}
+
+function stopAmbient(){
+  ambientNodes.forEach(n => { try { n.stop ? n.stop() : n.disconnect(); } catch(e){} });
+  ambientNodes = [];
+}
+
+function toggleSound(){
+  soundOn = !soundOn;
+  document.getElementById('sound-btn').textContent = soundOn ? '♪ Som: ON' : '♪ Som: OFF';
+  if(soundOn){ initAudio(); startAmbient(); }
+  else stopAmbient();
+}
+
+// ─── UI BUILDERS ─────────────────────────────────────────────────────────────
+function buildPalette(){
+  const row = document.getElementById('palette-row');
+  row.innerHTML = '';
+  PALETTES[colorMode].forEach(c => {
+    const s = document.createElement('div');
+    s.className = 'swatch' + (c === selectedColor ? ' selected' : '');
+    s.style.background = c;
+    s.title = c;
+    s.addEventListener('click', () => {
+      selectedColor = c;
+      document.querySelectorAll('.swatch').forEach(el => el.classList.remove('selected'));
+      s.classList.add('selected');
+    });
+    row.appendChild(s);
+  });
+}
+
+function buildDrawingPicker(){
+  const picker = document.getElementById('drawing-picker');
+  picker.innerHTML = '';
+  DRAWINGS.forEach((d, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'draw-btn' + (i === currentDrawingIdx ? ' active' : '');
+    btn.textContent = (unlocked[i] ? '' : '🔒 ') + d.name;
+    btn.addEventListener('click', () => {
+      if(!unlocked[i]){ showToast('Complete mais desenhos para desbloquear!'); return; }
+      currentDrawingIdx = i;
+      paintHistory = [];
+      regionColors = {};
+      renderDrawing();
+      updatePicker();
+    });
+    picker.appendChild(btn);
+  });
+}
+
+function updatePicker(){
+  document.querySelectorAll('.draw-btn').forEach((b, i) => {
+    b.className = 'draw-btn' + (i === currentDrawingIdx ? ' active' : '');
+    b.textContent = (unlocked[i] ? '' : '🔒 ') + DRAWINGS[i].name;
+  });
+}
+
+// ─── DRAWING ─────────────────────────────────────────────────────────────────
+function renderDrawing(){
+  const svg = document.getElementById('drawing-svg');
+  const drawing = DRAWINGS[currentDrawingIdx];
+  svg.innerHTML = '';
+  const regions = drawing.regions;
+  totalAreas = regions.length;
+  paintedCount = Object.keys(regionColors).length;
+
+  regions.forEach(r => {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', r.d);
+    path.setAttribute('fill', regionColors[r.id] !== undefined ? regionColors[r.id] : r.fill);
+    path.setAttribute('class', 'region' + (regionColors[r.id] !== undefined ? ' painted' : ''));
+    path.dataset.id = r.id;
+    path.addEventListener('click', () => paintRegion(r.id, path));
+    svg.appendChild(path);
+  });
+
+  updateProgress();
+  document.getElementById('complete-msg').classList.remove('show');
+}
+
+function paintRegion(id, path){
+  const prevColor = path.getAttribute('fill');
+  const defaultColor = DRAWINGS[currentDrawingIdx].regions.find(r => r.id === id).fill;
+  
+  paintHistory.push({ id, prevColor, wasDefault: prevColor === defaultColor });
+  if(paintHistory.length > 80) paintHistory.shift();
+
+  path.setAttribute('fill', selectedColor);
+  path.setAttribute('class', 'region painted glow-anim');
+  regionColors[id] = selectedColor;
+
+  setTimeout(() => {
+    path.setAttribute('class', 'region painted');
+  }, 700);
+
+  playPaintSound();
+  paintedCount = Object.keys(regionColors).length;
+  updateProgress();
+
+  if(paintedCount >= totalAreas) setTimeout(completeDrawing, 500);
+}
+
+function completeDrawing(){
+  const drawing = DRAWINGS[currentDrawingIdx];
+  const earned = drawing.xp;
+  totalXP += earned;
+  document.getElementById('xp-reward-txt').textContent = `+${earned} XP ganhos! Total: ${totalXP} XP`;
+  document.getElementById('complete-msg').classList.add('show');
+
+  const next = currentDrawingIdx + 1;
+  if(next < DRAWINGS.length && !unlocked[next]){
+    unlocked[next] = true;
+    updatePicker();
+    setTimeout(() => showToast('Novo desenho desbloqueado: ' + DRAWINGS[next].name + '! 🎉'), 900);
+  }
+  document.getElementById('xp-txt').textContent = totalXP + ' XP';
+}
+
+function updateProgress(){
+  document.getElementById('progress-txt').textContent = `${paintedCount}/${totalAreas} áreas`;
+  const pct = totalAreas > 0 ? (paintedCount / totalAreas) * 100 : 0;
+  document.getElementById('xp-bar').style.width = Math.round(pct) + '%';
+  document.getElementById('xp-txt').textContent = totalXP + ' XP';
+}
+
+function showToast(msg){
+  const t = document.getElementById('unlock-toast');
+  t.textContent = msg;
+  t.classList.remove('show');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── EVENTS ──────────────────────────────────────────────────────────────────
+document.getElementById('sound-btn').addEventListener('click', toggleSound);
+
+document.getElementById('undo-btn').addEventListener('click', () => {
+  if(!paintHistory.length) return;
+  const last = paintHistory.pop();
+  const path = document.querySelector(`[data-id="${last.id}"]`);
+  if(!path) return;
+  if(last.wasDefault){
+    const defaultColor = DRAWINGS[currentDrawingIdx].regions.find(r => r.id === last.id).fill;
+    path.setAttribute('fill', defaultColor);
+    path.setAttribute('class', 'region');
+    delete regionColors[last.id];
+  } else {
+    path.setAttribute('fill', last.prevColor);
+    regionColors[last.id] = last.prevColor;
+    path.setAttribute('class', 'region painted');
+  }
+  paintedCount = Object.keys(regionColors).length;
+  updateProgress();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  paintHistory = [];
+  regionColors = {};
+  renderDrawing();
+});
+
+document.getElementById('next-draw-btn').addEventListener('click', () => {
+  let next = (currentDrawingIdx + 1) % DRAWINGS.length;
+  let tries = 0;
+  while(!unlocked[next] && tries < DRAWINGS.length){ next = (next + 1) % DRAWINGS.length; tries++; }
+  if(!unlocked[next]){ showToast('Ainda não há próximo disponível!'); return; }
+  currentDrawingIdx = next;
+  paintHistory = [];
+  regionColors = {};
+  renderDrawing();
+  updatePicker();
+});
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    colorMode = btn.dataset.mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    buildPalette();
+  });
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+buildPalette();
+buildDrawingPicker();
+renderDrawing();
+</script>
+</body>
+</html>

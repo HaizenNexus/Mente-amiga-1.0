@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mente Jogos 🎮</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    /* ─── Hub de jogos ─── */
+    .hub-hero {
+      padding: 90px 1.5rem 2rem;
+      text-align: center;
+      background: var(--bg-secondary);
+    }
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1.25rem;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+    .hub-card {
+      border-radius: var(--r-xl);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      text-decoration: none;
+      display: flex; flex-direction: column; align-items: center; gap: .75rem;
+      transition: all var(--t-slow);
+      position: relative; overflow: hidden;
+    }
+    .hub-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: var(--shadow-xl); }
+    .hub-card-icon { font-size: 3.5rem; animation: iconBounce 3s ease infinite; }
+    .hub-card-name { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; }
+    .hub-card-xp   { font-size: .75rem; font-weight: 800; color: var(--c-purple);
+      background: var(--c-purple-light); padding: 4px 14px; border-radius: 999px; }
+    .hub-card-desc { font-size: .8rem; color: var(--text-secondary); }
+
+    .hc-1 { background: linear-gradient(145deg,#FFF0E0,#FFE0C0); border-color:rgba(255,140,66,.3); }
+    .hc-2 { background: linear-gradient(145deg,#EDE9F8,#DDD5F5); border-color:rgba(124,92,191,.3); }
+    .hc-3 { background: linear-gradient(145deg,#E0F5F2,#C8EEE9); border-color:rgba(43,181,160,.3); }
+    .hc-4 { background: linear-gradient(145deg,#E8F3FD,#D0E8FA); border-color:rgba(74,144,217,.3); }
+    .hc-5 { background: linear-gradient(145deg,#FCE4F3,#F8C9E8); border-color:rgba(233,30,140,.3); }
+    .hc-6 { background: linear-gradient(145deg,#E8F5E9,#D0EDD1); border-color:rgba(76,175,80,.3); }
+    [data-theme="dark"] .hc-1 { background: linear-gradient(145deg,#2A1A0F,#1F1308); }
+    [data-theme="dark"] .hc-2 { background: linear-gradient(145deg,#231849,#180F35); }
+    [data-theme="dark"] .hc-3 { background: linear-gradient(145deg,#0A2420,#061A16); }
+    [data-theme="dark"] .hc-4 { background: linear-gradient(145deg,#0D1828,#080F1E); }
+    [data-theme="dark"] .hc-5 { background: linear-gradient(145deg,#2A0A1E,#1E0614); }
+    [data-theme="dark"] .hc-6 { background: linear-gradient(145deg,#0A1E0A,#061406); }
+
+    @keyframes iconBounce {
+      0%,100% { transform:translateY(0) rotate(0deg); }
+      50%      { transform:translateY(-8px) rotate(5deg); }
+    }
+
+    /* ─── JOGO DAS CORES ─── */
+    .color-question {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem,4vw,1.8rem);
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+    .color-preview {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      box-shadow: var(--shadow-lg);
+      transition: all .4s cubic-bezier(0.34,1.56,0.64,1);
+      border: 4px solid rgba(255,255,255,.4);
+    }
+    .color-options {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: .875rem;
+    }
+    .color-option {
+      border: 3px solid transparent;
+      border-radius: var(--r-lg);
+      padding: 1.25rem .75rem;
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 800;
+      color: #fff;
+      transition: all var(--t-slow);
+      text-shadow: 0 1px 3px rgba(0,0,0,.3);
+      box-shadow: var(--shadow-sm);
+      min-height: 64px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .color-option:hover { transform: translateY(-4px) scale(1.04); box-shadow: var(--shadow-md); }
+    .color-option:active { transform: scale(.96); }
+    .color-option.correct-ans { border-color: #fff; box-shadow: 0 0 0 4px rgba(76,175,80,.5), var(--shadow-lg); }
+    .color-option.wrong-ans   { opacity: .5; filter: saturate(.3); }
+
+    /* ─── JOGO DA MEMÓRIA ─── */
+    .memory-grid {
+      display: grid;
+      gap: .625rem;
+      margin: 0 auto;
+    }
+    .memory-card {
+      aspect-ratio: 1;
+      border-radius: var(--r-md);
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .5s cubic-bezier(0.34,1.56,0.64,1);
+      border: 2px solid var(--border);
+    }
+    .memory-card.flipped  { transform: rotateY(180deg); }
+    .memory-card.matched  { transform: rotateY(180deg); border-color: var(--c-teal);
+      box-shadow: 0 0 0 3px rgba(43,181,160,.35); }
+    .memory-card-front, .memory-card-back {
+      position: absolute; inset: 0;
+      border-radius: calc(var(--r-md) - 2px);
+      display: flex; align-items: center; justify-content: center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      font-size: clamp(1.5rem,5vw,2.5rem);
+    }
+    .memory-card-front {
+      background: linear-gradient(145deg,var(--c-purple),var(--c-blue));
+      font-size: 1.5rem; color: rgba(255,255,255,.3);
+    }
+    .memory-card-back {
+      background: var(--bg-primary);
+      transform: rotateY(180deg);
+    }
+
+    /* ─── RESPIRAÇÃO GUIADA ─── */
+    .breath-circle-wrap {
+      display: flex; align-items: center; justify-content: center;
+      margin: 1rem 0;
+    }
+    .breath-circle {
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(43,181,160,.6) 0%, rgba(74,144,217,.4) 60%, transparent 100%);
+      border: 3px solid rgba(43,181,160,.5);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 4px;
+      transition: transform 0s;
+      box-shadow: 0 0 40px rgba(43,181,160,.3), inset 0 0 30px rgba(43,181,160,.2);
+    }
+    .breath-circle.inhale  { animation: breatheIn  4s ease forwards; }
+    .breath-circle.hold    { animation: pulse 1s ease infinite; }
+    .breath-circle.exhale  { animation: breatheOut 4s ease forwards; }
+    @keyframes breatheIn  { from{transform:scale(.7)} to{transform:scale(1.3)} }
+    @keyframes breatheOut { from{transform:scale(1.3)} to{transform:scale(.7)} }
+    .breath-label {
+      font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+      color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.3);
+    }
+    .breath-count { font-size: 2rem; font-weight: 800; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.3); }
+    .breath-phase-indicator {
+      display: flex; gap: 8px; justify-content: center; margin-top: 1rem;
+    }
+    .bpi-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--border); transition: all .3s;
+    }
+    .bpi-dot.active { background: var(--c-teal); transform: scale(1.3); }
+    .breath-tips {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem;
+      margin-top: 1.5rem;
+    }
+    .breath-tip {
+      background: var(--bg-secondary); border-radius: var(--r-md);
+      padding: .875rem; text-align: center; border: 1px solid var(--border);
+    }
+    .breath-tip-icon { font-size: 1.5rem; margin-bottom: .25rem; }
+    .breath-tip-text { font-size: .72rem; color: var(--text-secondary); line-height: 1.5; }
+
+    /* ─── JOGO DO FOCO ─── */
+    .focus-arena {
+      position: relative;
+      width: 100%; max-width: 560px;
+      margin: 0 auto;
+      background: var(--bg-secondary);
+      border-radius: var(--r-xl);
+      border: 2px dashed var(--border-strong);
+      overflow: hidden;
+      user-select: none;
+    }
+    .focus-target {
+      position: absolute;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform .1s;
+      box-shadow: var(--shadow-md);
+      animation: targetAppear .3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .focus-target:active { transform: scale(.9); }
+    @keyframes targetAppear {
+      from { transform: scale(0) rotate(-30deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg);  opacity: 1; }
+    }
+    .focus-decoy {
+      position: absolute;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      animation: targetAppear .3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .focus-question {
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: clamp(1rem,3.5vw,1.4rem);
+      font-weight: 800;
+      padding: 1rem;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border);
+    }
+    .combo-display {
+      position: absolute; top: .5rem; right: .75rem;
+      font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+      color: var(--c-orange); background: rgba(255,140,66,.12);
+      border-radius: 999px; padding: 4px 12px;
+      display: none;
+    }
+
+    /* ─── JOGO DE COLORIR ─── */
+    .paint-area {
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+    .paint-canvas-wrap {
+      width: 100%; max-width: 420px;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      border: 3px solid var(--border-strong);
+      box-shadow: var(--shadow-lg);
+      background: #fff;
+      cursor: crosshair;
+    }
+    #paint-canvas { display: block; width: 100%; touch-action: none; }
+    .paint-palette {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      justify-content: center;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: .875rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .paint-color {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all var(--t-slow);
+      box-shadow: var(--shadow-sm);
+    }
+    .paint-color:hover  { transform: scale(1.2); box-shadow: var(--shadow-md); }
+    .paint-color.active { border-color: var(--text-primary); transform: scale(1.25);
+      box-shadow: 0 0 0 3px var(--bg-primary), 0 0 0 5px currentColor; }
+    .paint-tools {
+      display: flex; gap: .5rem; align-items: center;
+    }
+    .paint-tool-btn {
+      width: 40px; height: 40px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      cursor: pointer; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .paint-tool-btn:hover { background: var(--bg-tertiary); transform: scale(1.08); }
+    .paint-tool-btn.active { background: var(--c-purple-light); border-color: var(--c-purple); }
+    .brush-size-range { width: 100px; }
+
+    /* ─── JOGO DE CORRIDA ─── */
+    .race-canvas-wrap {
+      width: 100%; max-width: 560px;
+      margin: 0 auto;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      border: 3px solid var(--border-strong);
+      box-shadow: var(--shadow-xl);
+      background: #1a1a2e;
+      position: relative;
+    }
+    #race-canvas { display: block; width: 100%; }
+    .race-controls {
+      display: flex; justify-content: center; gap: 1rem;
+      margin-top: 1rem; flex-wrap: wrap;
+    }
+    .race-btn {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      border: none; cursor: pointer;
+      font-size: 1.75rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-md);
+      transition: all .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .race-btn:active { transform: scale(.88); }
+    .race-btn-left  { background: linear-gradient(135deg,#4A90D9,#7C5CBF); }
+    .race-btn-right { background: linear-gradient(135deg,#FF8C42,#FFD600); }
+    .race-btn-boost { background: linear-gradient(135deg,#E91E8C,#7C5CBF); }
+    .race-stats {
+      display: flex; gap: .75rem; justify-content: center;
+      margin-top: .75rem; flex-wrap: wrap;
+    }
+
+    /* ─── Responsivo ─── */
+    @media (max-width:768px) {
+      .hub-grid { grid-template-columns: repeat(2,1fr); }
+      .color-options { grid-template-columns: repeat(2,1fr); }
+      .breath-tips { grid-template-columns: 1fr; }
+    }
+    @media (max-width:480px) {
+      .hub-grid { grid-template-columns: 1fr 1fr; gap: .75rem; }
+      .hub-card { padding: 1.25rem .875rem; }
+      .hub-card-icon { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body class="game-page">
+
+<!-- TOP BAR -->
+<div class="game-topbar">
+  <div class="game-topbar-left">
+   <button onclick="goBack()" class="btn btn-ghost btn-sm" style="min-height:36px;padding:6px 14px">
+  ← Voltar
+</button>
+
+<script id="b7t29x">
+function goBack() {
+  if (history.length > 1) {
+    history.back();
+  } else {
+    window.location.href = "index.html"; // fallback
+  }
+}
+</script>
+
+    <span class="game-title-bar" id="game-title-bar">🎮 Jogos</span>
+  </div>
+  <div class="game-topbar-right">
+    <div class="game-chip chip-score" id="chip-score" style="display:none">⭐ <span id="score-display">0</span></div>
+    <div class="game-chip chip-timer" id="chip-timer" style="display:none">⏱ <span id="timer-display">60</span>s</div>
+    <div class="game-chip chip-lives" id="chip-lives" style="display:none">❤️ <span id="lives-display">3</span></div>
+    <button class="sound-toggle" id="sound-btn" title="Sons" onclick="toggleSound()">🔊</button>
+    <button class="btn-theme" id="btn-theme">🌙</button>
+  </div>
+</div>
+
+<!-- ═══ HUB (tela inicial de jogos) ═══ -->
+<div id="view-hub">
+  <div class="hub-hero">
+    <div style="font-size:3rem;margin-bottom:.5rem">🎮</div>
+    <h1 style="font-family:var(--font-display);margin-bottom:.5rem">Mini <span class="text-gradient">Jogos</span></h1>
+    <p style="color:var(--text-secondary);max-width:420px;margin:0 auto 2rem">Escolha um jogo e vamos nos divertir!</p>
+  </div>
+  <div class="hub-grid">
+    <a href="../jogos/cores.html"      class="hub-card hc-1"><span class="hub-card-icon">🎨</span><span class="hub-card-name">Jogo das Cores</span><span class="hub-card-desc">Descubra a cor certa!</span><span class="hub-card-xp">+180 XP</span></a>
+    <a href="../jogos/memorianeon.html"    class="hub-card hc-2"><span class="hub-card-icon">🃏</span><span class="hub-card-name">Jogo da Memória</span><span class="hub-card-desc">Encontre os pares!</span><span class="hub-card-xp">+200 XP</span></a>
+    <a href="../jogos/respiracao-guiada.html" class="hub-card hc-3"><span class="hub-card-icon">🫧</span><span class="hub-card-name">Respiração</span><span class="hub-card-desc">Respira fundo!</span><span class="hub-card-xp">+5 XP</span></a>
+    <a href="../jogos/foco.html"       class="hub-card hc-4"><span class="hub-card-icon">🎯</span><span class="hub-card-name">Jogo do Foco</span><span class="hub-card-desc">Clique no objeto certo!</span><span class="hub-card-xp">+12 XP</span></a>
+    <a href="../jogos/colorir.html"    class="hub-card hc-5"><span class="hub-card-icon">🖍️</span><span class="hub-card-name">Colorir</span><span class="hub-card-desc">Pinte à vontade!</span><span class="hub-card-xp">+8 XP</span></a>
+    <a href="../jogos/corrida.html"    class="hub-card hc-6"><span class="hub-card-icon">🏎️</span><span class="hub-card-name">Corrida</span><span class="hub-card-desc">Acelera e vença!</span><span class="hub-card-xp">+20 XP</span></a>
+  </div>
+</div>
+
+<!-- ═══ JOGO DAS CORES ═══ -->
+<div id="view-cores" style="display:none">
+  <div class="game-stage">
+    <div style="width:100%;max-width:480px">
+      <div class="game-progress-bar"><div class="game-progress-fill" id="cores-progress" style="width:0%;background:linear-gradient(90deg,#FF8C42,#FFD600)"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">
+        <span id="cores-round-label">Rodada 1 de 10</span>
+        <span id="cores-streak">🔥 0</span>
+      </div>
+    </div>
+    <div class="game-card" style="max-width:480px">
+      <div class="color-preview" id="color-preview"></div>
+      <p class="color-question" id="color-question">Qual é essa cor?</p>
+      <div class="color-options" id="color-options"></div>
+    </div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center">
+      <button class="game-btn game-btn-restart" onclick="initCores()">🔄 Recomeçar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ JOGO DA MEMÓRIA ═══ -->
+<div id="view-memoria" style="display:none">
+  <div class="game-stage">
+    <div style="width:100%;max-width:520px">
+      <div class="game-progress-bar"><div class="game-progress-fill" id="mem-progress" style="width:0%;background:linear-gradient(90deg,var(--c-purple),var(--c-blue))"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">
+        <span>Pares: <strong id="mem-pairs">0</strong>/<span id="mem-total-pairs">8</span></span>
+        <span>Tentativas: <strong id="mem-attempts">0</strong></span>
+      </div>
+    </div>
+    <div class="game-card" style="max-width:520px;padding:1.25rem">
+      <div class="memory-grid" id="memory-grid"></div>
+    </div>
+    <button class="game-btn game-btn-restart" onclick="initMemoria()">🔄 Novo Jogo</button>
+  </div>
+</div>
+
+<!-- ═══ RESPIRAÇÃO GUIADA ═══ -->
+<div id="view-respiracao" style="display:none">
+  <div class="game-stage">
+    <div class="game-card" style="max-width:520px;text-align:center">
+      <h2 style="font-family:var(--font-display);margin-bottom:.5rem">Respiração <span class="text-gradient">Guiada</span> 🫧</h2>
+      <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:1.5rem">Siga o círculo e respire no ritmo.</p>
+
+      <div class="breath-circle-wrap">
+        <div class="breath-circle" id="breath-circle">
+          <span class="breath-label" id="breath-label">Pronto?</span>
+          <span class="breath-count" id="breath-count"></span>
+        </div>
+      </div>
+
+      <div class="breath-phase-indicator">
+        <div class="bpi-dot" id="bpi-0"></div>
+        <div class="bpi-dot" id="bpi-1"></div>
+        <div class="bpi-dot" id="bpi-2"></div>
+        <div class="bpi-dot" id="bpi-3"></div>
+        <div class="bpi-dot" id="bpi-4"></div>
+      </div>
+
+      <div id="breath-progress-bar" style="margin:1.25rem 0;display:none">
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-muted);margin-bottom:4px">
+          <span>Ciclo <span id="breath-cycle">0</span> de <span id="breath-total">5</span></span>
+          <span id="breath-phase-name" style="font-weight:700;color:var(--c-teal)">Inspirar</span>
+        </div>
+        <div class="game-progress-bar"><div class="game-progress-fill" id="breath-prog-fill" style="width:0%;background:linear-gradient(90deg,var(--c-teal),var(--c-blue))"></div></div>
+      </div>
+
+      <div id="breath-btn-wrap">
+        <button class="game-btn game-btn-start" onclick="startBreath()">Começar Respiração 🫧</button>
+      </div>
+      <div id="breath-stop-wrap" style="display:none">
+        <button class="game-btn game-btn-restart" onclick="stopBreath()">Pausar</button>
+      </div>
+
+      <div class="breath-tips">
+        <div class="breath-tip"><div class="breath-tip-icon">😮‍💨</div><div class="breath-tip-text">Inspire pelo nariz lentamente</div></div>
+        <div class="breath-tip"><div class="breath-tip-icon">⏸️</div><div class="breath-tip-text">Segure o ar por um momento</div></div>
+        <div class="breath-tip"><div class="breath-tip-icon">💨</div><div class="breath-tip-text">Solte pelo boca devagar</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ JOGO DO FOCO ═══ -->
+<div id="view-foco" style="display:none">
+  <div class="game-stage">
+    <div style="width:100%;max-width:560px">
+      <div class="game-progress-bar"><div class="game-progress-fill" id="foco-progress" style="width:0%;background:linear-gradient(90deg,var)(--c-blue)"></div>
+      
+      <script src="../js/app.js"></script>
+      
+</body>
+</html>
