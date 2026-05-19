@@ -8,17 +8,16 @@
   <title>Mente Amiga</title>
 
   <!-- Favicon (logo como emoji fallback) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 
   
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="css/animations.css" />
 
   <!-- Fonts pré-carregadas -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 </head>
 <body>
 
@@ -287,19 +286,19 @@
         </p>
         <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem">
           <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
-            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="width:24px;height:24px;background: rgb(8, 0, 61);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
             <span style="color:var(--text-secondary)">Configure horários de estudo, almoço, leitura e dormir</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
-            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="width:24px;height:24px;background: rgb(8, 0, 61);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
             <span style="color:var(--text-secondary)">Seu filho ganha recompensas ao seguir a rotina</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
-            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="width:24px;height:24px;background: rgb(8, 0, 61);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
             <span style="color:var(--text-secondary)">Veja o progresso nos jogos e na educação</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:0.925rem">
-            <span style="width:24px;height:24px;background:var(--c-teal-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
+            <span style="max-width:450px;height:24px;background: rgb(8, 0, 61);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem">✓</span>
             <span style="color:var(--text-secondary)">100% seguro, sem anúncios, sem dados vendidos</span>
           </div>
         </div>
@@ -308,102 +307,198 @@
         </a>
       </div>
 
-      <!-- Mockup visual da rotina -->
+   <!-- Mockup visual da rotina -->
+
       <div class="reveal reveal-delay-2" style="perspective:1000px">
+
         <div style="background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem;box-shadow:var(--shadow-xl);transform:rotateY(-6deg) rotateX(2deg);transition:transform 0.4s ease"
+
              onmouseenter="this.style.transform='rotateY(0deg) rotateX(0deg)'"
+
              onmouseleave="this.style.transform='rotateY(-6deg) rotateX(2deg)'">
+
+
 
           <div style="font-weight:800;font-size:1rem;margin-bottom:1rem;font-family:var(--font-display)">📅 Rotina do João — Hoje</div>
 
+
+
           <div style="display:flex;flex-direction:column;gap:0.6rem">
+
             <!-- Itens da rotina mockup -->
+
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-teal-light);border-radius:var(--r-md)">
+
               <span>☀️</span>
+
               <div style="flex:1">
+
                 <div style="font-size:0.85rem;font-weight:700;color:#085041">Acordar e tomar café</div>
+
                 <div style="font-size:0.75rem;color:#0F6E56">07:00</div>
+
               </div>
+
               <span style="font-size:1rem">✅</span>
+
             </div>
+
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-blue-light);border-radius:var(--r-md)">
+
               <span>📚</span>
+
               <div style="flex:1">
+
                 <div style="font-size:0.85rem;font-weight:700;color:#0C447C">Hora de estudar</div>
+
                 <div style="font-size:0.75rem;color:#185FA5">09:00 – 10:30</div>
+
               </div>
+
               <span style="font-size:1rem">✅</span>
+
             </div>
+
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-orange-light);border-radius:var(--r-md)">
+
               <span>🍽️</span>
+
               <div style="flex:1">
+
                 <div style="font-size:0.85rem;font-weight:700;color:#854F0B">Almoço em família</div>
+
                 <div style="font-size:0.75rem;color:#BA7517">12:00</div>
+
               </div>
+
               <span style="font-size:1rem;color:var(--text-muted)">○</span>
+
             </div>
+
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-purple-light);border-radius:var(--r-md)">
+
               <span>📖</span>
+
               <div style="flex:1">
+
                 <div style="font-size:0.85rem;font-weight:700;color:#3C3489">Ler um livro</div>
+
                 <div style="font-size:0.75rem;color:#534AB7">14:00 – 14:30</div>
+
               </div>
+
               <span style="font-size:1rem;color:var(--text-muted)">○</span>
+
             </div>
+
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--c-pink-light);border-radius:var(--r-md)">
+
               <span>🌙</span>
+
               <div style="flex:1">
+
                 <div style="font-size:0.85rem;font-weight:700;color:#72243E">Hora de dormir</div>
+
                 <div style="font-size:0.75rem;color:#993556">21:00</div>
+
               </div>
+
               <span style="font-size:1rem;color:var(--text-muted)">○</span>
+
             </div>
+
           </div>
+
+
 
           <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+
             <span style="font-size:0.8rem;color:var(--text-muted)">Progresso de hoje</span>
+
             <div style="display:flex;align-items:center;gap:8px">
-              <div style="width:120px;height:6px;background:var(--border);border-radius:999px;overflow:hidden">
+
+              <div style="max-width:450px;height:6px;background:var(--border);border-radius:999px;overflow:hidden">
+
                 <div style="width:40%;height:100%;background:linear-gradient(90deg,var(--c-teal),var(--c-blue));border-radius:999px"></div>
+
               </div>
+
               <span style="font-size:0.8rem;font-weight:700;color:var(--c-teal)">40%</span>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
 
+
+
     </div>
+
   </div>
+
 </section>
 
+
+
 <!-- ═══════════════════════════════════════
+
      BANNER CTA FINAL
+
 ═══════════════════════════════════════ -->
+
 <section style="padding:5rem 2rem;background:var(--bg-primary)" aria-labelledby="cta-title">
+
   <div class="container">
+
     <div style="background:var(--grad-hero);border-radius:var(--r-2xl);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;max-width:900px;margin:0 auto" class="reveal">
+
       <!-- Orbs decorativos dentro do banner -->
+
       <div style="position:absolute;width:300px;height:300px;background:rgba(255,255,255,0.1);border-radius:50%;top:-100px;left:-80px;pointer-events:none"></div>
+
       <div style="position:absolute;width:250px;height:250px;background:rgba(255,255,255,0.08);border-radius:50%;bottom:-80px;right:-60px;pointer-events:none"></div>
 
+
+
       <div style="position:relative;z-index:1">
+
         <div style="font-size:3.5rem;margin-bottom:1rem">🧠✨</div>
+
         <h2 id="cta-title" style="color:#fff;margin-bottom:1rem;font-size:clamp(1.5rem,4vw,2.5rem)">
+
           Pronto para começar sua jornada?
+
         </h2>
+
         <p style="color:rgba(255,255,255,0.85);max-width:500px;margin:0 auto 2rem;font-size:1.05rem">
+
           Junte-se a nós e transforme o aprendizado em uma aventura cheia de descobertas e alegria!
+
         </p>
+
         <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+
           <a href="#escolha" style="background:#fff;color:var(--c-purple);border-radius:999px;padding:16px 36px;font-weight:800;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.2)"
+
              onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(0,0,0,0.3)'"
+
              onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.2)'">
+
             <span>Entrar Agora</span><span>🚀</span>
+
           </a>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
 
 <!-- ═══════════════════════════════════════

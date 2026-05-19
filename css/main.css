@@ -2,12 +2,18 @@
    MENTE AMIGA — Sistema de Design Principal
    CEO: Pedro Henrique © 2026
    ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap');
+
+
 html, body {
   overflow-x: hidden;
   max-width: 100%;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
 
 /* ─── Reset & Base ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -116,7 +122,8 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 
 /* ─── Botões base ─── */
 .btn {
-  display: inline-flex;
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -136,7 +143,10 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 }
 .btn::after {
   content: '';
-  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
   inset: 0;
   background: rgba(255,255,255,0);
   transition: background var(--t-fast);
@@ -196,11 +206,16 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 
 /* ─── Navbar ─── */
 .navbar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+justify-content: center;
+  top: 0;
+   left: 0; 
+   right: 0;
+  z-index: 120;
   padding: 0 2rem;
-  height: 72px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -209,6 +224,7 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   transition: all var(--t-normal);
+  min-height: 72px;
 }
 [data-theme="dark"] .navbar {
   background: rgba(15,10,30,0.85);
@@ -239,6 +255,7 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 }
 .nav-links {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 2rem;
   list-style: none;
@@ -264,7 +281,13 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 .nav-links a:hover { color: var(--c-purple); }
 .nav-links a:hover::after { transform: scaleX(1); }
 
-.nav-actions { display: flex; align-items: center; gap: 12px; }
+.nav-actions { 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  flex-direction: row; 
+  gap: 12px;
+}
 
 .btn-theme {
   width: 44px; height: 44px;
@@ -294,7 +317,8 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 }
 .hamburger span {
   display: block;
-  width: 26px; height: 2px;
+  width: 26px; 
+  height: 2px;
   background: var(--text-primary);
   border-radius: var(--r-full);
   transition: all var(--t-normal);
@@ -306,8 +330,8 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 /* Mobile nav drawer */
 .nav-drawer {
   display: none;
-  position: fixed;
-  top: 72px; left: 0; right: 0;
+  top: 0; left: 0; right: 0;
+  padding: 80px;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border);
   padding: 1.5rem 2rem;
@@ -688,7 +712,12 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 2.5rem;
 }
-.footer-brand {}
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
 .footer-logo {
   display: flex;
   align-items: center;
@@ -754,7 +783,7 @@ p  { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.7; }
 .heart { color: #E91E8C; animation: heartbeat 1.5s ease infinite; }
 @keyframes heartbeat {
   0%,100% { transform: scale(1); }
-  50% { transform: scale} 
+  50% { transform: scale(1.15);} 
 }
 
 
@@ -1207,7 +1236,7 @@ button:focus-visible, a:focus-visible { outline-color: var(--c-purple); }
 @media print {
   .navbar, .footer, .btn, .fab, .scroll-top-btn { display: none !important; }
   body { background: #fff !important; }
-  .level-card { -webkit-print-color-adjust: exact; }
+  .level-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 /*_____ Imagem app / logo ____ */
 
@@ -1350,4 +1379,127 @@ button:focus-visible, a:focus-visible { outline-color: var(--c-purple); }
   height: 180px;
   object-fit: cover;
   display: block;
+}
+
+/* button-rotine */
+
+.button-on-hover{
+    width: 220px;
+    height: 50px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+.button-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.button-on-hover:active {
+    color: #000
+}
+
+.button-on-hover:active:after {
+    background: transparent;
+}
+
+.button-on-hover:hover:before {
+    opacity: 1;
+}
+
+.button-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+/* Mobile kids */
+
+@media (max-width:768px){
+
+   .navbar{
+      padding: 1rem;
+      flex-direction: column;
+      gap: 1rem;
+      height: auto;
+   }
+
+   .nav-links{
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+   }
+
+   .nav-actions{
+      width:100%;
+      justify-content:center;
+   }
+
+}
+
+@media (max-width:768px){
+
+   .navbar{
+      flex-direction:column;
+      padding:1rem;
+   }
+
+}
+
+@media (max-width:768px){
+
+  .pc-tab{
+     padding:8px 12px;
+     font-size:0.7rem;
+  }
+
+}
+
+/* dashboard teens */
+
+.pc-tabs{
+   display:flex;
+   overflow-x:auto;
+   scrollbar-width:none;
+}
+
+.pc-tab{
+   flex-shrink:0;
+}
+
+@media(max-width:768px){
+
+   .pc-tab{
+      padding:8px 12px;
+      font-size:0.7rem;
+   }
+
+   .yt-header{
+      flex-wrap:wrap;
+   }
+
 }

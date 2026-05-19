@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Espaço dos Adolescentes 🧑</title>
+  <title>Espaço dos Adolescentes</title>
+<link rel="shortcut icon" href="../assets/favicon.ico" type="image/x-icon">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧑</text></svg>"/>
   <link rel="stylesheet" href="../css/main.css"/>
+  <link rel="shortcut icon" href="../assets/favicon.ico" type="image/x-icon">
   <style>
     /* ─── Teen Hero ─── */
     .teen-hero {
@@ -62,7 +64,8 @@
     .pc-dot-yell  { background:#FEBC2E; }
     .pc-dot-green { background:#28C840; }
     .pc-url-bar {
-      flex:1; margin:0 12px;
+      flex:1;
+      margin:0 12px;
       background:rgba(255,255,255,0.08);
       border:1px solid rgba(255,255,255,0.12);
       border-radius:999px;
@@ -71,7 +74,9 @@
       color:rgba(255,255,255,0.6);
       font-family:var(--font-mono,monospace);
       cursor:pointer;
-      display:flex;align-items:center;gap:6px;
+      display:flex;
+      align-items:center;
+      gap:6px;
     }
     .pc-url-bar:hover { background:rgba(255,255,255,0.12); }
     .pc-apps { display:flex;gap:6px; }
@@ -92,7 +97,7 @@
       display:flex;
       background: var(--bg-secondary);
       border-bottom:1px solid var(--border);
-      overflow-x:auto;
+      overflow-x:scroll;
       scrollbar-width:none;
     }
     .pc-tabs::-webkit-scrollbar { display:none; }
@@ -101,15 +106,31 @@
       font-size:0.8rem;
       font-weight:600;
       cursor:pointer;
-      white-space:nowrap;
+      white-space:normal;
       color:var(--text-muted);
       border-bottom:2px solid transparent;
       transition:all 0.2s;
-      display:flex;align-items:center;gap:6px;
-      flex-shrink:0;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      min-width: fit-content;
     }
+
+    .pc-tabs::after{
+   content:"";
+   min-width:20px;
+}
+
+    @media(max-width:768px){
+
+   .pc-tab{
+      padding:8px 12px;
+      font-size:0.7rem;
+   }
+
+}
     .pc-tab.active { color:var(--c-blue);border-bottom-color:var(--c-blue); }
-    .pc-tab:hover:not(.active) { color:var(--text-primary); }
+    .pc-tab:hover:not(.active) { color:var(--text_primary); }
 
     /* PC content panels */
     .pc-panel { display:none;padding:0; }
@@ -119,7 +140,10 @@
     .yt-header {
       background: #FF0000;
       padding: 12px 16px;
-      display:flex;align-items:center;gap:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap: wrap;
     }
     .yt-logo { font-size:1.5rem; }
     .yt-title { color:#fff;font-weight:700;font-size:1rem; }
@@ -241,7 +265,7 @@
   <a class="nav-logo" href="../index.html">
     <img src="../assets/adolescentes.png" alt="logoadolescentes">
     <span class="nav-logo-text">Mente Amiga</span>
-  </a>""
+  </a>
   <div style="display:flex;align-items:center;gap:8px;background:rgba(74,144,217,0.15);border:1px solid rgba(74,144,217,0.25);border-radius:999px;padding:6px 14px">
     <span id="nav-hero-icon">🦸</span>
     <span id="nav-hero-name" style="font-size:0.8rem;font-weight:700;color:#90C0F0">Meu Herói</span>

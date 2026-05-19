@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mente Amiga — Minhas Conquistas 🏆</title>
+  <title>Minhas Conquistas 🏆</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>"/>
   <link rel="stylesheet" href="../css/main.css"/>
+  <link rel="shortcut icon" href="../assets/favicon.ico" type="image/x-icon">
   <style>
     /* ─── Hero de progresso ─── */
     .prog-hero {
@@ -468,5 +469,116 @@ function renderProgresso() {
   for (let i = 13; i >= 0; i--) {
     const d = new Date(today); d.setDate(today.getDate() - i);
     const key = d.toISOString().split('T')[0];
-    const done = localStorage}
+        // verifica se o dia foi concluído
+    const done = localStorage.getItem('ma-day-' + key);
+
+    const isToday =
+      key === new Date().toISOString().split('T')[0];
+
+    let cls = 'missed';
+
+    if (done) cls = 'done';
+    if (isToday) cls = 'today';
+
+    cal.innerHTML += `
+      <div class="cal-day ${cls}">
+        ${d.getDate()}
+      </div>
+    `;
   }
+
+  // Histórico de jogos
+  const history = document.getElementById('games-history');
+
+  const activities = prog.activities || [];
+
+  if (activities.length === 0) {
+    history.innerHTML = `
+      <div style="
+        text-align:center;
+        padding:2rem;
+        color:var(--text-muted);
+      ">
+        🎮 Nenhuma atividade registrada ainda.
+      </div>
+    `;
+  } else {
+    history.innerHTML = activities
+      .slice()
+      .reverse()
+      .map(act => `
+        <div class="game-hist-row">
+          <div class="ghicon">${act.icon || '🎮'}</div>
+
+          <div class="ghinfo">
+            <div class="ghname">
+              ${act.name || 'Atividade'}
+            </div>
+
+            <div class="ghscore">
+              ${act.date || ''}
+            </div>
+          </div>
+
+          <div class="ghxp">
+            +${act.xp || 0} XP
+          </div>
+        </div>
+      `).join('');
+  }
+}
+
+/* ─── Compartilhar progresso ─── */
+function compartilharProgresso() {
+  const prog = JSON.parse(
+    localStorage.getItem('ma-progress') || '{}'
+  );
+
+  const texto = `
+🏆 Meu progresso no Mente Amiga!
+
+⭐ XP Total: ${prog.xp || 0}
+🎮 Jogos Jogados: ${prog.games_played || 0}
+🔥 Sequência: ${prog.streak || 0} dias
+🏅 Medalhas: ${(prog.medals || []).length}
+
+✨ Estou evoluindo cada dia mais no Mente Amiga!
+`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Mente Amiga',
+      text: texto
+    });
+  } else {
+    navigator.clipboard.writeText(texto);
+
+    alert(
+      '📋 Progresso copiado para a área de transferência!'
+    );
+  }
+}
+
+/* ─── Resetar progresso ─── */
+function resetarProgresso() {
+  const confirmar = confirm(
+    'Tem certeza que deseja apagar todo o progresso?'
+  );
+
+  if (!confirmar) return;
+
+  localStorage.removeItem('ma-progress');
+
+  alert('🔄 Progresso reiniciado!');
+
+  location.reload();
+}
+
+/* ─── Inicialização ─── */
+document.addEventListener('DOMContentLoaded', () => {
+  renderProgresso();
+});
+</script>
+
+</body>
+</html>

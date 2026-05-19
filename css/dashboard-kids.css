@@ -5,10 +5,10 @@
 
 /* ─── Hero Kids ─── */
 .kids-hero {
-  min-height: 280px;
-  padding: 100px 1.5rem 2rem;
+  min-height: auto;
+  padding: 120px 1rem 2rem;
   position: relative;
-  overflow: hidden;
+  overflow:hidden;
   background: linear-gradient(145deg, #FFF8F0 0%, #FFF0E0 50%, #E8F5E9 100%);
   display: flex;
   align-items: center;
@@ -127,10 +127,12 @@
 .medal-empty { font-size: 0.8rem; color: var(--text-muted); }
 
 /* ─── Games Grid ─── */
+
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
+  width: 100%;
 }
 
 .game-card {
@@ -215,10 +217,12 @@
 [data-theme="dark"] .game-card-xp { background: rgba(0,0,0,0.3); }
 
 /* ─── Edu Grid ─── */
+
 .edu-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 0.75rem;
+  width: 100%;
 }
 .edu-card {
   border-radius: var(--r-md);
@@ -249,7 +253,7 @@
   .game-card-icon { font-size: 2rem; }
   .game-card-title { font-size: 0.875rem; }
   .edu-grid { grid-template-columns: repeat(3, 1fr); }
-  .kids-hero { min-height: auto; padding: 88px 1rem 1.5rem; }
+  .kids-hero { min-height: auto; padding: 150px 1rem 1.5rem; }
   .kids-welcome-card { padding: 1rem; }
 }
 
