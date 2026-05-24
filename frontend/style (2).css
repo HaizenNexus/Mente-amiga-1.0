@@ -568,19 +568,35 @@ body {
     max-width: 100%;
     max-height: 100dvh;
     height: 100dvh;
-    border-radius: 24px 24px 0 0;
+    border-radius: 18px 18px 0 0;
     border-bottom: none;
   }
 
   .bg-blobs { display: none; }
 
-  .header-name { font-size: 1.35rem; }
+  /* Cabeçalho mais compacto pra caber tudo sem quebrar */
+  .chat-header { gap: 10px; padding: 14px; }
+  .header-name { font-size: 1.3rem; }
+  .header-stars { display: none; }              /* estrelinha é decorativa: libera espaço */
+  .button-85 { padding: 0.5em 1.1em; font-size: 0.82rem; }
 
-  .message { max-width: 85%; font-size: 0.9rem; }
+  .message { max-width: 85%; font-size: 0.92rem; }
 
   .chat-messages { padding: 14px 12px 8px; }
-  .chat-input-area { padding: 10px 12px 14px; }
+  /* o env(safe-area-inset-bottom) respeita a barra de gestos do iPhone */
+  .chat-input-area { padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px)); }
   .typing-area { padding: 0 12px 8px; }
+}
+
+/* Telas bem pequenas (ex.: iPhone SE, ~360px) */
+@media (max-width: 380px) {
+  .chat-header { gap: 8px; padding: 12px; }
+  .header-name { font-size: 1.15rem; }
+  .header-status { font-size: 0.72rem; }
+  .avatar-ring, .avatar-inner { width: 46px; height: 46px; }
+  .message-avatar, .typing-avatar { width: 42px; height: 42px; }
+  .button-85 { padding: 0.45em 0.9em; font-size: 0.78rem; }
+  .message { font-size: 0.9rem; padding: 11px 14px; }
 }
 
 @media (min-width: 561px) and (max-width: 720px) {

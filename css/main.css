@@ -1503,3 +1503,36 @@ button:focus-visible, a:focus-visible { outline-color: var(--c-purple); }
    }
 
 }
+
+/* ===========================================================
+   REFORÇO DE RESPONSIVIDADE — Mente Amiga
+   Regras aditivas para celular e tablet. Ficam por ÚLTIMO de
+   propósito: assim ajustam/corrigem o que vem antes no arquivo.
+   =========================================================== */
+
+/* Nada de imagem/vídeo/canvas estourando a largura da tela */
+img, video, canvas, svg { max-width: 100%; height: auto; }
+
+/* Tablet e celular (≤ 768px) */
+@media (max-width: 768px) {
+  /* Navbar em LINHA com quebra, em vez de empilhar tudo na vertical
+     (corrige os blocos antigos que forçavam flex-direction: column) */
+  .navbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    height: auto;
+    row-gap: 0.5rem;
+    padding: 0.55rem 1rem;
+  }
+  /* Seção "Para Pais" do index: 2 colunas viram 1 no celular/tablet */
+  .parents-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+/* Celular (≤ 560px): respiro nas laterais */
+@media (max-width: 560px) {
+  .container { padding: 0 1rem; }
+}
