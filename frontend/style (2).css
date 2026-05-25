@@ -689,3 +689,14 @@ body {
   position: sticky;
   bottom: 0;
 }
+
+/* =====================================================
+   REDE DE SEGURANÇA — o chat da Luna é tela cheia.
+   A barra de navegação inferior (criada pelo nav.js)
+   NUNCA deve aparecer aqui dentro. Se, por causa de uma
+   versão antiga publicada, ela ainda for injetada, estas
+   regras a escondem e devolvem o espaço que ela reservava
+   no rodapé — assim o cabeçalho da Luna não fica cortado.
+   ===================================================== */
+.ma-bottomnav { display: none !important; }
+html body.ma-has-bottomnav { padding-bottom: 0 !important; }

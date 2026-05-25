@@ -58,7 +58,7 @@
   var path      = location.pathname.toLowerCase();
   var current   = (path.split('/').pop() || 'index.html');
   var inGame    = /\/jogos\//.test(path);
-  var isLuna    = current === 'ia.html';
+  var isLuna    = current === 'ia.html' || current === 'ia' || /\/frontend\//.test(path);
   var isLanding = current === 'index.html' && !/\/pages\//.test(path) && !inGame;
 
   /* 3) Paleta de cores da borda RGB POR PÁGINA.
