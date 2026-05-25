@@ -339,10 +339,14 @@
 
 <script id="b7t29x">
 function goBack() {
-  if (history.length > 1) {
-    history.back();
+  // Volta pro painel do perfil (evita o history.back cair num jogo anterior).
+  const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
+  if (prog.profile === 'teen') {
+    window.location.href = 'dashboard-adolescente.html';
+  } else if (prog.profile === 'kids') {
+    window.location.href = 'dashboard-crianca.html';
   } else {
-    window.location.href = "index.html"; // fallback
+    window.location.href = '../index.html';
   }
 }
 </script>

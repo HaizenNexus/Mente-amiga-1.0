@@ -42,7 +42,8 @@
       font-size:3.5rem;
       position:relative;
     }
-    .char-avatar-img { width:100%;height:100%;object-fit:contain;border-radius:50%; }
+    .char-avatar-wrap { overflow:hidden; }
+    .char-avatar-img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%; }
     .char-badge { display:inline-block;padding:4px 14px;border-radius:999px;font-size:0.75rem;font-weight:700;margin-bottom:0.75rem; }
     .cb-kids   { background:var(--c-orange-light);color:#B05B00; }
     .cb-teen   { background:var(--c-blue-light);color:#185FA5; }
@@ -241,7 +242,7 @@
 
 <footer class="footer" role="contentinfo">
   <div class="footer-bottom" style="max-width:1000px;margin:0 auto;padding:1.5rem 0 0">
-    <p class="footer-copy">© Direitos autorais — <strong>CEO Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
+    <p class="footer-copy">© Direitos autorais — <strong>Mente Amiga - Desenvolvido por Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
     <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
   </div>
 </footer>
@@ -269,6 +270,15 @@ function selectChar(id, card) {
   data.character = id;
   localStorage.setItem('ma-progress', JSON.stringify(data));
 
+  // Se veio de um painel (?voltar=teen|kids), volta automaticamente pra lá.
+  const voltar = new URLSearchParams(location.search).get('voltar');
+  if (voltar === 'teen' || voltar === 'kids') {
+    window.MA?.Toast?.show(`${name} selecionado(a)! Voltando ao painel... ✨`, 'success');
+    const dest = voltar === 'teen' ? 'dashboard-adolescente.html' : 'dashboard-crianca.html';
+    setTimeout(() => { window.location.href = dest; }, 1000);
+    return;
+  }
+
   document.getElementById('selected-banner').style.display = 'block';
   document.getElementById('selected-msg').textContent = `Você escolheu ${name}! Agora é hora de jogar!`;
   window.scrollTo({ top: document.getElementById('selected-banner').offsetTop - 80, behavior: 'smooth' });
@@ -278,6 +288,20 @@ function selectChar(id, card) {
 
 // Marcar personagem já selecionado
 document.addEventListener('DOMContentLoaded', () => {
+  // Coloca a FOTO de cada personagem (../assets/personagens/<id>.png).
+  // Se a foto ainda não existir, a imagem é removida e o emoji continua (reserva).
+  document.querySelectorAll('.char-card[data-id]').forEach(card => {
+    const id = card.getAttribute('data-id');
+    const wrap = card.querySelector('.char-avatar-wrap');
+    if (!wrap) return;
+    const img = document.createElement('img');
+    img.className = 'char-avatar-img';
+    img.src = `../assets/personagens/${id}.webp`;
+    img.alt = card.querySelector('.char-name')?.textContent || id;
+    img.onerror = () => img.remove();   // sem foto ainda → mantém o emoji
+    wrap.appendChild(img);
+  });
+
   const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
   if (prog.character) {
     document.querySelector(`[data-id="${prog.character}"]`)?.classList.add('selected');

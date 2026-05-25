@@ -42,6 +42,11 @@
     .teen-xp-val { font-size:0.8rem;font-weight:700;color:#90C0F0; }
     .teen-xp-track { height:8px;background:rgba(255,255,255,0.1);border-radius:999px;overflow:hidden; }
     .teen-xp-fill { height:100%;background:linear-gradient(90deg,#4A90D9,#7C5CBF,#E91E8C);border-radius:999px;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1); }
+    .teen-hero-btn { display:inline-flex;align-items:center;gap:8px;margin-top:1.25rem;
+      background:linear-gradient(135deg,#4A90D9,#7C5CBF);color:#fff;text-decoration:none;
+      padding:10px 22px;border-radius:999px;font-weight:700;font-size:0.9rem;
+      box-shadow:0 4px 16px rgba(74,144,217,0.4);transition:transform .2s ease; }
+    .teen-hero-btn:hover { transform:translateY(-2px); }
 
     /* ─── Mini PC ─── */
     .mini-pc {
@@ -106,7 +111,7 @@
       font-size:0.8rem;
       font-weight:600;
       cursor:pointer;
-      white-space:normal;
+      white-space:nowrap;
       color:var(--text-muted);
       border-bottom:2px solid transparent;
       transition:all 0.2s;
@@ -257,6 +262,34 @@
     @media (max-width:400px) {
       .heroes-grid { grid-template-columns:repeat(2,1fr); }
     }
+
+    /* ── Avatar dos heróis (foto .webp com emoji de reserva) ── */
+    .hero-avatar { width:76px;height:76px;margin:0 auto 8px;border-radius:50%;overflow:hidden;
+      background:rgba(124,92,191,0.15);display:flex;align-items:center;justify-content:center;
+      font-size:2.3rem;position:relative; }
+    .hero-avatar img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%; }
+    .hero-card-item { position:relative; }
+    .hero-card-item.selected::after { content:'✓';position:absolute;top:8px;right:8px;width:22px;height:22px;
+      border-radius:50%;background:var(--c-blue);color:#fff;font-size:0.72rem;display:flex;
+      align-items:center;justify-content:center;font-weight:800; }
+
+    /* ── Mini PC responsivo no celular ── */
+    @media (max-width:600px){
+      .teen-section-title{ font-size:1.2rem; }
+      .pc-topbar{ padding:8px 10px;gap:6px; }
+      .pc-url-bar{ margin:0 6px;font-size:0.66rem;padding:4px 8px; }
+      .pc-apps{ gap:4px; }
+      .pc-app-btn{ width:26px;height:26px;font-size:0.8rem; }
+      .chat-panel{ height:320px; }
+      /* As abas quebram em 2 linhas no celular, pra TODAS aparecerem
+         (antes "Estudar" e "Rotina" ficavam cortadas na borda). */
+      .pc-tabs{ flex-wrap:wrap; overflow-x:visible; }
+      .pc-tabs::after{ display:none; }
+      .pc-tab{ flex:1 1 auto; justify-content:center; padding:8px 10px; }
+    }
+    @media (max-width:380px){
+      .pc-url-bar{ display:none; }
+    }
   </style>
 </head>
 <body>
@@ -282,7 +315,7 @@
 </nav>
 <div class="nav-drawer">
   <a href="#teen-pc">💻 Mini PC</a>
-  <a href="#teen-herois">🦸 Heróis</a>
+  <a href="personagens.html">🦸 Heróis</a>
   <a href="#teen-jogos">🎮 Jogos</a>
   <a href="rotina.html">📅 Rotina</a>
   <a href="biblioteca-mente-amiga.html">📚 Estudar</a>
@@ -306,6 +339,7 @@
       </div>
       <div class="teen-xp-track"><div class="teen-xp-fill" id="teen-xp-fill" style="width:0%"></div></div>
     </div>
+    <a href="personagens.html?voltar=teen" class="teen-hero-btn">🦸 Escolher meu herói</a>
   </div>
 </section>
 
@@ -418,9 +452,81 @@
     </div>
   </section>
 
+  <!-- JOGOS -->
+  <section id="teen-jogos" class="teen-section">
+    <h2 class="teen-section-title">🎮 Jogos</h2>
+    <div class="teen-games-grid">
+      <a href="../jogos/memorianeon.html" class="teen-game-card"><span class="tgc-icon">🃏</span><span class="tgc-name">Memória</span><span class="tgc-xp">+15 XP</span></a>
+      <a href="../jogos/foco.html" class="teen-game-card"><span class="tgc-icon">🎯</span><span class="tgc-name">Foco</span><span class="tgc-xp">+12 XP</span></a>
+      <a href="../jogos/corrida.html" class="teen-game-card"><span class="tgc-icon">🏎️</span><span class="tgc-name">Corrida</span><span class="tgc-xp">+20 XP</span></a>
+      <a href="../jogos/cores.html" class="teen-game-card"><span class="tgc-icon">🎨</span><span class="tgc-name">Cores</span><span class="tgc-xp">+10 XP</span></a>
+      <a href="../jogos/respiracao-guiada.html" class="teen-game-card"><span class="tgc-icon">🫧</span><span class="tgc-name">Respiração</span><span class="tgc-xp">+5 XP</span></a>
+      <a href="../jogos/colorir.html" class="teen-game-card"><span class="tgc-icon">🖍️</span><span class="tgc-name">Colorir</span><span class="tgc-xp">+8 XP</span></a>
+    </div>
+  </section>
+
+</main>
+
             <script src="../js/app.js"> </script>
-  
-  
+
+  <script>
+  // ===== Dados dos personagens (nome + emoji de reserva) =====
+  const TEEN_CHARS = {
+    prof_conceicao: { name: 'Prof. Conceição', emoji: '👩‍🏫' },
+    ingrid: { name: 'Ingrid', emoji: '👧' },
+    tryannaxx: { name: 'Tryannaxx', emoji: '👓' },
+    geovania: { name: 'Geovania', emoji: '🖤' },
+    heitozin: { name: 'Heitozin', emoji: '🎒' },
+    henrique: { name: 'Henrique', emoji: '🎧' },
+    codigo_fantasma: { name: 'Código Fantasma', emoji: '🥷' },
+    vibora_noturna: { name: 'Víbora Noturna', emoji: '🐍' },
+    feiticeira_escalate: { name: 'Feiticeira Escalate', emoji: '🔮' },
+    lamina_fantasma: { name: 'Lâmina Fantasma', emoji: '⚔️' },
+    dama_da_luz: { name: 'Dama da Luz', emoji: '🗡️' },
+    aurora_da_luz: { name: 'Aurora da Luz', emoji: '✨' }
+  };
+
+  // Coloca a foto (.webp) num elemento, com emoji de reserva.
+  function teenPhoto(el, id, emoji, size, radius) {
+    if (!el) return;
+    el.textContent = '';
+    const img = document.createElement('img');
+    img.src = `../assets/personagens/${id}.webp`;
+    img.alt = '';
+    img.style.cssText = `width:${size};height:${size};object-fit:cover;object-position:center 20%;border-radius:${radius};display:block`;
+    img.onerror = () => { img.remove(); el.textContent = emoji; };
+    el.appendChild(img);
+  }
+
+  // Aplica o personagem escolhido no perfil (nome no hero + foto na navbar).
+  function applyTeenCharacter(id) {
+    const c = TEEN_CHARS[id];
+    if (!c) return;
+    const setText = (eid, val) => { const e = document.getElementById(eid); if (e) e.textContent = val; };
+    setText('teen-name', c.name);
+    setText('nav-hero-name', c.name);
+    teenPhoto(document.getElementById('nav-hero-icon'), id, '🦸', '26px', '50%');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
+    const xp = prog.xp || 0;
+    const level = prog.level || 1;
+    const xpInLevel = xp % 100;
+
+    const setText = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+    setText('nav-xp-teen', xp + ' XP');
+    setText('teen-level', level);
+    setText('teen-xp-cur', xpInLevel);
+    const fill = document.getElementById('teen-xp-fill');
+    if (fill) fill.style.width = xpInLevel + '%';
+
+    // Aplica o personagem escolhido (na página de personagens) ao perfil.
+    if (prog.character && TEEN_CHARS[prog.character]) {
+      applyTeenCharacter(prog.character);
+    }
+  });
+  </script>
 
 <script src="../js/nav.js"></script>
 </body>

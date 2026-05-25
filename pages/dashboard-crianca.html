@@ -234,7 +234,7 @@
 <!-- FOOTER -->
 <footer class="footer" role="contentinfo">
   <div class="footer-bottom" style="max-width:1100px;margin:0 auto;padding:1.5rem 0 0">
-    <p class="footer-copy">© Direitos autorais — <strong>CEO Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
+    <p class="footer-copy">© Direitos autorais — <strong>Mente Amiga - Desenvolvido por Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
     <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
   </div>
 </footer>
@@ -263,13 +263,27 @@ document.addEventListener('DOMContentLoaded', () => {
     'henrique':  { icon: '👦', name: 'Henrique', color: '#FF8C42' },
     'prof_conceicao': { icon: '👩', name: 'Prof. Conceição', color: '#2BB5A0' },
   };
+  // Helper: coloca a foto do personagem (../assets/personagens/<id>.png) num elemento.
+  // Se a foto ainda não existir, mostra o emoji de reserva.
+  function setCharPhoto(el, id, emoji, radius, size) {
+    if (!el) return;
+    size = size || '100%';
+    el.textContent = '';
+    const img = document.createElement('img');
+    img.src = `../assets/personagens/${id}.webp`;
+    img.alt = '';
+    img.style.cssText = `width:${size};height:${size};object-fit:cover;object-position:center 20%;border-radius:${radius};display:block`;
+    img.onerror = () => { img.remove(); el.textContent = emoji; };
+    el.appendChild(img);
+  }
+
   if (prog.character && charMap[prog.character]) {
     const c = charMap[prog.character];
-    document.getElementById('kids-avatar').textContent = c.icon;
+    setCharPhoto(document.getElementById('kids-avatar'), prog.character, c.icon, '50%');
     document.getElementById('kids-avatar').style.background = c.color + '22';
-    document.getElementById('nav-char-icon').textContent = c.icon;
+    setCharPhoto(document.getElementById('nav-char-icon'), prog.character, c.icon, '50%', '28px');
     document.getElementById('nav-char-name').textContent = c.name;
-    document.getElementById('char-avatar-big').textContent = c.icon;
+    setCharPhoto(document.getElementById('char-avatar-big'), prog.character, c.icon, 'var(--r-md)');
     document.getElementById('char-name-big').textContent = c.name;
     document.getElementById('kids-greeting').textContent = `Olá, ${c.name}! 👋`;
   }

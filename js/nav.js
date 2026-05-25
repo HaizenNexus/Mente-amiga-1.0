@@ -91,6 +91,11 @@
   function injectCSS() {
     if (document.getElementById('ma-nav-css')) return;
     var css =
+      /* ---- Tira o "flash azul" de toque (tap highlight) e o contorno azul
+             de foco ao clicar; mantém um foco roxo discreto pro teclado ---- */
+      '*{-webkit-tap-highlight-color:transparent;}' +
+      '*:focus{outline:none;}' +
+      '*:focus-visible{outline:2px solid #7C5CBF;outline-offset:2px;border-radius:4px;}' +
       /* ---- Botão "Voltar" com borda RGB animada (modelo da Luna) ---- */
       '.ma-btn-voltar{position:relative;z-index:0;display:inline-flex;align-items:center;gap:6px;' +
         'padding:0.55em 1.4em;border:none;outline:none;border-radius:10px;' +
