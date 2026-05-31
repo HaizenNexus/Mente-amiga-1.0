@@ -39,7 +39,7 @@
 <div class="nav-drawer">
   <a href="#secao-jogos">🎮 Jogos</a>
   <a href="#secao-ia">🤖 IA Amiga</a>
-  <a href="rotina.html">📅 Rotina</a>
+  <a href="rotina.html?perfil=crianca">📅 Rotina</a>
   <a href="#secao-educacao">📚 Estudar</a>
   <a href="personagens.html">🦸 Personagens</a>
 </div>
@@ -167,7 +167,7 @@
     <div id="rotina-preview" style="background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem">
       <div id="rotina-items" style="display:flex;flex-direction:column;gap:0.6rem"></div>
       <div style="margin-top:1rem;text-align:center">
-        <a href="rotina.html" class="btn btn-secondary btn-sm">Ver Rotina Completa →</a>
+        <a href="rotina.html?perfil=crianca" class="btn btn-secondary btn-sm">Ver Rotina Completa →</a>
       </div>
     </div>
   </section>
@@ -291,20 +291,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('kids-greeting').textContent = `Olá, ${c.name}! 👋`;
   }
 
-  // Rotina preview
-  const rotina = JSON.parse(localStorage.getItem('ma-rotina') || '[]');
+  // Rotina preview — lê o MESMO armazenamento da página de rotina (perfil criança),
+  // já com o reinício diário aplicado, para refletir o que falta concluir hoje.
+  let rotinaStore = {};
+  try { rotinaStore = JSON.parse(localStorage.getItem('ma_rotina_crianca_v4') || '{}') || {}; } catch (e) {}
+  const rotina = Array.isArray(rotinaStore.tasks)
+    ? rotinaStore.tasks.slice().sort((a, b) => a.time.localeCompare(b.time))
+    : [];
   const container = document.getElementById('rotina-items');
   if (rotina.length === 0) {
     container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:1rem">Nenhuma rotina configurada. Peça aos seus pais para criar! 😊</p>';
   } else {
     rotina.slice(0, 4).forEach(item => {
-      const done = prog.rotina_done?.includes(item.id);
+      const done = !!item.done;
       container.innerHTML += `
         <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:${done ? 'var(--c-teal-light)' : 'var(--bg-secondary)'};border-radius:var(--r-md);border:1px solid var(--border)">
-          <span>${item.icon || '📌'}</span>
+          <span>${item.emoji || '📌'}</span>
           <div style="flex:1">
-            <div style="font-size:0.875rem;font-weight:700">${item.nome}</div>
-            <div style="font-size:0.75rem;color:var(--text-muted)">${item.hora}</div>
+            <div style="font-size:0.875rem;font-weight:700">${item.name}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">${item.time} · ${item.period || ''}</div>
           </div>
           <span>${done ? '✅' : '○'}</span>
         </div>`;

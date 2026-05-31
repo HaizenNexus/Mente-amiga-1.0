@@ -12,7 +12,7 @@
 :root{
   --bg:#0a0a14;--bg2:#0f0f20;--bg3:#14142a;--bg4:#1a1a35;
   --neon-green:#00ff88;--neon-blue:#00c8ff;--neon-purple:#b44fff;
-  --neon-pink:#ff4fa3;--neon-yellow:#ffe066;
+  --neon-pink:#ff4fa3;--neon-yellow:#ffe066;--neon-orange:#ff9f43;
   --text:#e8e8ff;--text2:#9090cc;--border:#2a2a50;
   --card:#141428;--card2:#1c1c38;
   --radius:16px;--radius-sm:10px;
@@ -32,6 +32,15 @@ body{display:flex;justify-content:center;padding:0 0 60px;}
 .header::before{content:'';display:block;width:200px;height:2px;
   background:linear-gradient(90deg,transparent,var(--neon-purple),var(--neon-blue),transparent);
   margin:0 auto 16px;border-radius:2px;}
+
+/* PROFILE PILLS */
+.pill-row{display:flex;gap:8px;justify-content:center;margin:0 20px 14px;}
+.pill{flex:1;max-width:170px;padding:9px 8px;border-radius:40px;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;transition:all .25s;
+  background:var(--bg3);color:var(--text2);border:1.5px solid var(--border);text-align:center;}
+.pill.active{color:#0a0a14;border-color:transparent;}
+.pill.active[data-perfil="crianca"]{background:var(--neon-blue);box-shadow:0 0 18px rgba(0,200,255,.45);}
+.pill.active[data-perfil="jovem"]{background:var(--neon-orange);color:#1a0d00;box-shadow:0 0 18px rgba(255,159,67,.45);}
 
 /* MODE TOGGLE */
 .mode-toggle{display:flex;background:var(--bg3);border-radius:50px;
@@ -134,6 +143,47 @@ body{display:flex;justify-content:center;padding:0 0 60px;}
 .empty-text{font-size:15px;font-weight:700;color:var(--text);}
 .empty-sub{font-size:13px;margin-top:6px;}
 
+/* PARENT SUMMARY CARD */
+.summary-card{margin:0 20px 16px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:16px 18px;}
+.summary-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.streak-badge{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:64px;height:64px;border-radius:16px;background:rgba(255,159,67,.1);
+  border:1.5px solid rgba(255,159,67,.3);}
+.streak-num{font-size:22px;font-weight:900;color:var(--neon-orange);line-height:1;}
+.streak-lbl{font-size:9px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-top:2px;letter-spacing:.5px;}
+.summary-name-wrap{flex:1;min-width:0;}
+.summary-name-lbl{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:block;}
+.summary-name-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:10px;padding:9px 12px;color:var(--text);font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:700;outline:none;transition:border .2s;}
+.summary-name-input:focus{border-color:var(--neon-purple);box-shadow:0 0 12px rgba(180,79,255,.22);}
+.pending-title{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:9px;}
+.pending-list{display:flex;flex-wrap:wrap;gap:7px;}
+.pending-chip{font-size:12px;font-weight:700;padding:6px 11px;border-radius:20px;
+  background:rgba(255,224,102,.1);color:var(--neon-yellow);border:1px solid rgba(255,224,102,.25);}
+.pending-all-done{font-size:13px;font-weight:700;color:var(--neon-green);
+  background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);
+  border-radius:10px;padding:11px 14px;text-align:center;}
+
+/* HISTORY STRIP */
+.history-card{margin:0 20px 16px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 18px;}
+.history-title{font-size:12px;font-weight:800;color:var(--neon-blue);
+  margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase;}
+.history-list{display:flex;justify-content:space-between;gap:6px;align-items:flex-end;}
+.hist-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.hist-bar{width:100%;max-width:26px;height:54px;background:var(--bg3);border-radius:6px;
+  overflow:hidden;display:flex;align-items:flex-end;border:1px solid var(--border);}
+.hist-fill{width:100%;background:linear-gradient(180deg,var(--neon-green),var(--neon-blue));
+  transition:height .6s ease;border-radius:0 0 5px 5px;}
+.hist-day.complete .hist-fill{background:linear-gradient(180deg,var(--neon-yellow),var(--neon-orange));}
+.hist-dow{font-size:10px;font-weight:700;color:var(--text2);}
+.hist-day.today .hist-dow{color:var(--neon-green);}
+.hist-num{font-size:9px;font-weight:700;color:var(--text2);}
+.hist-day.complete .hist-num{color:var(--neon-orange);}
+
 /* ADD TASK FORM */
 .add-section{margin:0 20px 0;background:var(--card);
   border:1.5px solid var(--neon-purple);border-radius:var(--radius);
@@ -225,14 +275,20 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
    </div>
   <div class="header">
     <div class="header-logo">✦ Mente Amiga</div>
-    <div class="header-title">Minha Rotina</div>
+    <div class="header-title" id="header-title">Minha Rotina</div>
     <div class="header-subtitle" id="header-sub">Hoje vai ser incrível! 🌟</div>
+  </div>
+
+  <!-- PROFILE PILLS (quem segue a rotina) -->
+  <div class="pill-row">
+    <div class="pill" data-perfil="crianca" id="pill-crianca" onclick="setPerfil('crianca')">👦 Criança</div>
+    <div class="pill" data-perfil="jovem" id="pill-jovem" onclick="setPerfil('jovem')">🧑 Jovem</div>
   </div>
 
   <!-- MODE TOGGLE -->
   <div class="mode-toggle">
-    <button class="mode-btn active-child" id="btn-child" onclick="setMode('child')">👦 Modo Criança</button>
-    <button class="mode-btn" id="btn-parent" onclick="setMode('parent')">👨‍👩‍👧 Modo Pais</button>
+    <button class="mode-btn active-child" id="btn-child" onclick="setMode('child')">🙋 Eu</button>
+    <button class="mode-btn" id="btn-parent" onclick="setMode('parent')">👨‍👩‍👧 Pais</button>
   </div>
 
   <!-- DATE BAR -->
@@ -280,6 +336,29 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
       <div class="progress-msg" id="parent-prog-msg">Acompanhe a rotina do seu filho 💜</div>
     </div>
 
+    <!-- SUMMARY: nome + sequência + o que falta -->
+    <div class="summary-card">
+      <div class="summary-top">
+        <div class="streak-badge">
+          <span class="streak-num" id="streak-num">0</span>
+          <span class="streak-lbl">🔥 dias</span>
+        </div>
+        <div class="summary-name-wrap">
+          <label class="summary-name-lbl">Nome de quem segue a rotina</label>
+          <input class="summary-name-input" id="child-name" maxlength="20"
+                 placeholder="Nome" onchange="updateChildName(this.value)" />
+        </div>
+      </div>
+      <div class="pending-title">⏳ O que falta hoje</div>
+      <div class="pending-list" id="pending-list"></div>
+    </div>
+
+    <!-- HISTORY (últimos 7 dias) -->
+    <div class="history-card">
+      <div class="history-title">📈 Últimos 7 dias</div>
+      <div class="history-list" id="history-list"></div>
+    </div>
+
     <!-- ADD FORM -->
     <div class="add-section" id="add-section">
       <div class="add-title">✨ <span id="form-title">Criar nova tarefa</span></div>
@@ -290,9 +369,11 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
           <div class="emoji-opt selected" data-e="🦷" onclick="selectEmoji(this)">🦷</div>
           <div class="emoji-opt" data-e="🚿" onclick="selectEmoji(this)">🚿</div>
           <div class="emoji-opt" data-e="🛁" onclick="selectEmoji(this)">🛁</div>
+          <div class="emoji-opt" data-e="🛏️" onclick="selectEmoji(this)">🛏️</div>
           <div class="emoji-opt" data-e="👕" onclick="selectEmoji(this)">👕</div>
           <div class="emoji-opt" data-e="🍳" onclick="selectEmoji(this)">🍳</div>
           <div class="emoji-opt" data-e="🥗" onclick="selectEmoji(this)">🥗</div>
+          <div class="emoji-opt" data-e="💧" onclick="selectEmoji(this)">💧</div>
           <div class="emoji-opt" data-e="📚" onclick="selectEmoji(this)">📚</div>
           <div class="emoji-opt" data-e="🎒" onclick="selectEmoji(this)">🎒</div>
           <div class="emoji-opt" data-e="🏃" onclick="selectEmoji(this)">🏃</div>
@@ -356,49 +437,141 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
 /* ============================
    STATE
 ============================ */
-let mode = 'child';
+let mode = 'child';          // 'child' (quem segue) | 'parent' (quem gerencia)
+let perfil = 'crianca';      // 'crianca' | 'jovem'
 let tasks = [];
 let activityLog = [];
+let history = {};            // { 'YYYY-MM-DD': {done, total} }
+let childName = 'João';
 let selectedEmoji = '🦷';
 let editingId = null;
 
-const STORAGE_TASKS = 'mente_amiga_tasks_v3';
-const STORAGE_LOG   = 'mente_amiga_log_v3';
+/* ============================
+   DEFAULTS POR PERFIL
+============================ */
+const PROFILE_DEFAULTS = {
+  crianca: {
+    label: 'Criança', name: 'João',
+    tasks: [
+      {id:1, name:'Escovar os dentes',   time:'07:00', period:'🌅 Manhã', emoji:'🦷', done:false},
+      {id:2, name:'Tomar banho',         time:'07:20', period:'🌅 Manhã', emoji:'🚿', done:false},
+      {id:3, name:'Se vestir',           time:'07:35', period:'🌅 Manhã', emoji:'👕', done:false},
+      {id:4, name:'Tomar café da manhã', time:'07:50', period:'🌅 Manhã', emoji:'🍳', done:false},
+      {id:5, name:'Pegar a mochila',     time:'08:05', period:'🌅 Manhã', emoji:'🎒', done:false},
+      {id:6, name:'Almoçar',             time:'12:00', period:'☀️ Tarde', emoji:'🥗', done:false},
+      {id:7, name:'Hora de dormir',      time:'21:00', period:'🌙 Noite', emoji:'😴', done:false},
+    ]
+  },
+  jovem: {
+    label: 'Jovem', name: 'Ana',
+    tasks: [
+      {id:1, name:'Arrumar a cama',            time:'06:50', period:'🌅 Manhã', emoji:'🛏️', done:false},
+      {id:2, name:'Higiene e banho',           time:'07:00', period:'🌅 Manhã', emoji:'🚿', done:false},
+      {id:3, name:'Tomar café da manhã',       time:'07:30', period:'🌅 Manhã', emoji:'🍳', done:false},
+      {id:4, name:'Ir para a escola',          time:'07:50', period:'🌅 Manhã', emoji:'🎒', done:false},
+      {id:5, name:'Fazer a lição de casa',     time:'15:00', period:'☀️ Tarde', emoji:'📚', done:false},
+      {id:6, name:'Atividade física',          time:'17:00', period:'☀️ Tarde', emoji:'🏃', done:false},
+      {id:7, name:'Organizar o quarto',        time:'19:00', period:'🌙 Noite', emoji:'🧹', done:false},
+      {id:8, name:'Tempo de tela controlado',  time:'20:00', period:'🌙 Noite', emoji:'🎮', done:false},
+      {id:9, name:'Dormir cedo',               time:'22:00', period:'🌙 Noite', emoji:'😴', done:false},
+    ]
+  }
+};
 
 /* ============================
-   PERSISTENCE
+   DATAS
 ============================ */
-function loadData() {
-  try {
-    const t = localStorage.getItem(STORAGE_TASKS);
-    if (t) tasks = JSON.parse(t);
-    const l = localStorage.getItem(STORAGE_LOG);
-    if (l) activityLog = JSON.parse(l);
-  } catch(e) {}
+function dateKey(d) {
+  return d.getFullYear() + '-' +
+         String(d.getMonth()+1).padStart(2,'0') + '-' +
+         String(d.getDate()).padStart(2,'0');
+}
+function todayStr(){ return dateKey(new Date()); }
+function fmtShort(d){
+  return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
+}
+function shortDow(d){
+  return ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][d.getDay()];
+}
 
-  if (!tasks.length) {
-    tasks = [
-      {id:1, name:'Escovar os dentes',       time:'07:00', period:'🌅 Manhã', emoji:'🦷', done:false},
-      {id:2, name:'Tomar banho',              time:'07:20', period:'🌅 Manhã', emoji:'🚿', done:false},
-      {id:3, name:'Se vestir',                time:'07:35', period:'🌅 Manhã', emoji:'👕', done:false},
-      {id:4, name:'Tomar café da manhã',      time:'07:50', period:'🌅 Manhã', emoji:'🍳', done:false},
-      {id:5, name:'Pegar a mochila',          time:'08:05', period:'🌅 Manhã', emoji:'🎒', done:false},
-      {id:6, name:'Almoçar',                  time:'12:00', period:'☀️ Tarde', emoji:'🥗', done:false},
-      {id:7, name:'Hora de dormir',           time:'21:00', period:'🌙 Noite', emoji:'😴', done:false},
-    ];
-    save();
+/* ============================
+   PERSISTÊNCIA (por perfil)
+============================ */
+function storeKey(){ return 'ma_rotina_' + perfil + '_v4'; }
+
+function loadProfile() {
+  let raw = {};
+  try { raw = JSON.parse(localStorage.getItem(storeKey()) || '{}') || {}; } catch(e) {}
+
+  const def = PROFILE_DEFAULTS[perfil];
+  tasks       = Array.isArray(raw.tasks) && raw.tasks.length
+                ? raw.tasks
+                : def.tasks.map(t => ({...t}));
+  activityLog = Array.isArray(raw.log) ? raw.log : [];
+  history     = (raw.history && typeof raw.history === 'object') ? raw.history : {};
+  childName   = raw.name || def.name;
+
+  /* --- REINÍCIO DIÁRIO --- */
+  const today = todayStr();
+  if (raw.lastDate && raw.lastDate !== today) {
+    // O histórico do dia anterior já foi salvo a cada conclusão.
+    tasks.forEach(t => t.done = false);
+    activityLog.push('🔄 ' + fmtDateLabel(today) + ' — novo dia! Rotina reiniciada.');
   }
+
+  save(); // grava lastDate de hoje + snapshot do histórico de hoje
+}
+
+function fmtDateLabel(key){
+  const p = key.split('-');
+  return p[2] + '/' + p[1];
 }
 
 function save() {
+  // snapshot do dia atual sempre atualizado (alimenta histórico e sequência)
+  const today = todayStr();
+  const done  = tasks.filter(t => t.done).length;
+  history[today] = { done, total: tasks.length };
+  trimHistory();
+
   try {
-    localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
-    localStorage.setItem(STORAGE_LOG,   JSON.stringify(activityLog.slice(-30)));
+    localStorage.setItem(storeKey(), JSON.stringify({
+      tasks,
+      log: activityLog.slice(-40),
+      history,
+      name: childName,
+      lastDate: today
+    }));
+    localStorage.setItem('ma_rotina_perfil', perfil);
   } catch(e) {}
 }
 
+function trimHistory(){
+  const keys = Object.keys(history).sort();
+  if (keys.length > 30) keys.slice(0, keys.length - 30).forEach(k => delete history[k]);
+}
+
 /* ============================
-   MODE
+   PERFIL (criança / jovem)
+============================ */
+function setPerfil(p) {
+  if (p !== 'crianca' && p !== 'jovem') return;
+  if (p === perfil) return;
+  perfil = p;
+  editingId = null;
+  loadProfile();
+  updatePills();
+  setFormDefault();
+  render();
+}
+
+function updatePills() {
+  document.getElementById('pill-crianca').className = 'pill' + (perfil === 'crianca' ? ' active' : '');
+  document.getElementById('pill-jovem').className   = 'pill' + (perfil === 'jovem'   ? ' active' : '');
+}
+
+/* ============================
+   MODO (eu / pais)
 ============================ */
 function setMode(m) {
   mode = m;
@@ -406,10 +579,19 @@ function setMode(m) {
   document.getElementById('parent-view').style.display = m === 'parent' ? 'block' : 'none';
   document.getElementById('btn-child').className  = 'mode-btn' + (m === 'child'  ? ' active-child'  : '');
   document.getElementById('btn-parent').className = 'mode-btn' + (m === 'parent' ? ' active-parent' : '');
-  document.getElementById('header-sub').textContent = m === 'child'
-    ? 'Hoje vai ser incrível! 🌟'
-    : 'Gerencie a rotina com carinho 💜';
   render();
+}
+
+function updateHeader() {
+  const sub = document.getElementById('header-sub');
+  const title = document.getElementById('header-title');
+  if (mode === 'child') {
+    title.textContent = 'Rotina de ' + childName;
+    sub.textContent = 'Hoje vai ser incrível, ' + childName + '! 🌟';
+  } else {
+    title.textContent = 'Painel dos Pais';
+    sub.textContent = 'Gerencie a rotina de ' + childName + ' com carinho 💜';
+  }
 }
 
 /* ============================
@@ -434,13 +616,35 @@ function motivational(pct) {
   return '🎉 PARABÉNS! Você completou tudo hoje!';
 }
 
+function computeStreak() {
+  let streak = 0;
+  const d = new Date();
+  // se hoje ainda não está 100%, a contagem começa de ontem
+  const th = history[dateKey(d)];
+  if (!(th && th.total > 0 && th.done === th.total)) d.setDate(d.getDate() - 1);
+  for (;;) {
+    const h = history[dateKey(d)];
+    if (h && h.total > 0 && h.done === h.total) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+  return streak;
+}
+
 /* ============================
    RENDER
 ============================ */
 function render() {
   renderProgress();
   if (mode === 'child')  renderChildTasks();
-  if (mode === 'parent') { renderParentTasks(); renderActivityLog(); }
+  if (mode === 'parent') {
+    renderParentTasks();
+    renderPending();
+    renderHistory();
+    renderStreak();
+    renderNameInput();
+    renderActivityLog();
+  }
+  updateHeader();
 }
 
 function renderProgress() {
@@ -456,9 +660,9 @@ function renderProgress() {
   document.getElementById('parent-prog-text').textContent  = fmt;
   document.getElementById('parent-prog-bar').style.width   = pct + '%';
   document.getElementById('parent-prog-msg').textContent   =
-    pct === 100 ? '🎉 Seu filho completou toda a rotina hoje!' :
+    pct === 100 ? '🎉 ' + childName + ' completou toda a rotina hoje!' :
     pct > 0     ? '✅ ' + done + ' de ' + total + ' tarefas concluídas' :
-                  'Acompanhe a rotina do seu filho 💜';
+                  'Acompanhe a rotina de ' + childName + ' 💜';
 }
 
 function renderChildTasks() {
@@ -537,6 +741,54 @@ function renderParentTasks() {
   });
 }
 
+function renderPending() {
+  const el = document.getElementById('pending-list');
+  const pend = getSorted().filter(t => !t.done);
+  if (!tasks.length) {
+    el.innerHTML = `<div class="pending-chip">Nenhuma tarefa criada ainda</div>`;
+    return;
+  }
+  if (!pend.length) {
+    el.innerHTML = `<div class="pending-all-done">🎉 Tudo concluído hoje! Parabéns, ${esc(childName)}!</div>`;
+    return;
+  }
+  el.innerHTML = pend.map(t =>
+    `<div class="pending-chip">${t.emoji} ${esc(t.name)} · ${t.time}</div>`
+  ).join('');
+}
+
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  const today = todayStr();
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d);
+  }
+  el.innerHTML = days.map(d => {
+    const k = dateKey(d);
+    const h = history[k] || { done: 0, total: 0 };
+    const complete = h.total > 0 && h.done === h.total;
+    const pct = h.total ? Math.round(h.done / h.total * 100) : 0;
+    const cls = 'hist-day' + (complete ? ' complete' : '') + (k === today ? ' today' : '');
+    return `<div class="${cls}" title="${fmtShort(d)} — ${h.done}/${h.total}">
+        <div class="hist-bar"><div class="hist-fill" style="height:${pct}%"></div></div>
+        <span class="hist-dow">${shortDow(d)}</span>
+        <span class="hist-num">${h.done}/${h.total}</span>
+      </div>`;
+  }).join('');
+}
+
+function renderStreak() {
+  document.getElementById('streak-num').textContent = computeStreak();
+}
+
+function renderNameInput() {
+  const input = document.getElementById('child-name');
+  if (document.activeElement !== input) input.value = childName;
+}
+
 function renderActivityLog() {
   const sec = document.getElementById('activity-section');
   const log = document.getElementById('activity-log');
@@ -544,38 +796,51 @@ function renderActivityLog() {
   if (!activityLog.length) { sec.style.display = 'none'; return; }
 
   sec.style.display = 'block';
-  log.innerHTML = activityLog.slice().reverse().slice(0, 10).map(a =>
+  log.innerHTML = activityLog.slice().reverse().slice(0, 12).map(a =>
     `<div class="activity-item"><div class="activity-dot"></div>${esc(a)}</div>`
   ).join('');
 }
 
 /* ============================
-   ACTIONS
+   AÇÕES
 ============================ */
+function timeNow() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
 function toggleTask(id) {
   const task = tasks.find(x => x.id === id);
   if (!task) return;
   task.done = !task.done;
+
+  if (task.done) {
+    activityLog.push(timeNow() + ' ✅ ' + childName + ' concluiu: ' + task.name);
+  }
   save();
   renderProgress();
   renderChildTasks();
 
   if (task.done) {
-    const log = '✅ João concluiu: ' + task.name;
-    activityLog.push(log);
-    save();
-
     showToast('📩 Notificação enviada para os pais!', false);
-
-    setTimeout(() => {
-      if (mode === 'parent') showToast(log, true);
-    }, 2200);
-
     const { pct } = getProgress();
     if (pct === 100) {
-      setTimeout(() => showToast('🎉 Incrível! Você completou toda a rotina de hoje!', false), 1500);
+      activityLog.push(timeNow() + ' 🎉 ' + childName + ' completou TODA a rotina de hoje!');
+      save();
+      setTimeout(() => showToast('🎉 Incrível! Você completou toda a rotina de hoje!', false), 1400);
     }
   }
+}
+
+function updateChildName(val) {
+  const name = (val || '').trim();
+  childName = name || PROFILE_DEFAULTS[perfil].name;
+  save();
+  renderNameInput();
+  updateHeader();
+  renderProgress();
+  renderPending();
+  showToast('💜 Nome atualizado para ' + childName + '!', true);
 }
 
 function selectEmoji(el) {
@@ -680,7 +945,7 @@ function showToast(msg, isParent) {
 }
 
 /* ============================
-   DATE
+   DATA (cabeçalho)
 ============================ */
 function updateDate() {
   const days   = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
@@ -694,15 +959,27 @@ function updateDate() {
    ESCAPE HTML
 ============================ */
 function esc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 /* ============================
    INIT
 ============================ */
-loadData();
-updateDate();
-render();
+(function init(){
+  // perfil vem da URL (?perfil=crianca|jovem), senão do último salvo, senão criança
+  const urlPerfil = new URLSearchParams(location.search).get('perfil');
+  if (urlPerfil === 'crianca' || urlPerfil === 'jovem') {
+    perfil = urlPerfil;
+  } else {
+    const saved = localStorage.getItem('ma_rotina_perfil');
+    perfil = (saved === 'crianca' || saved === 'jovem') ? saved : 'crianca';
+  }
+
+  loadProfile();
+  updatePills();
+  updateDate();
+  render();
+})();
 </script>
 <script src="../js/nav.js"></script>
 </body>
