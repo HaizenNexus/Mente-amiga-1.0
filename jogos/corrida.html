@@ -444,6 +444,14 @@ function gameOver(){
   cancelAnimationFrame(raf);
   hi=Math.max(hi,score);
   localStorage.setItem('focusRaceHi',hi);
+  // Conecta ao sistema de progresso/medalhas (flag race = recorde para a medalha "Piloto de Elite").
+  if (window.MAProgress) {
+    MAProgress.recordGame({
+      name: 'Corrida', icon: '🏎️',
+      xp: MAProgress.clamp(Math.round(score / 3), 10, 200),
+      score: score, flags: { race: score }
+    });
+  }
   const msgs=[
     [200,'🔥 Incrível! Reflexos afiados!'],
     [100,'👏 Muito bom! Continue assim!'],
@@ -524,6 +532,7 @@ window.addEventListener('resize',()=>{
 resize();
 })();
 </script>
+<script src="../js/progress.js"></script>
 <script src="../js/nav.js"></script>
 </body>
 </html>

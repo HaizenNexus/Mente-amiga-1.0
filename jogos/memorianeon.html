@@ -723,6 +723,15 @@ function showVictory() {
   state.totalXp += timeBonus;
   localStorage.setItem('memoryXP', state.totalXp);
 
+  // Conecta ao sistema de progresso/medalhas.
+  if (window.MAProgress) {
+    MAProgress.recordGame({
+      name: 'Jogo da Memória', icon: '🃏',
+      xp: MAProgress.clamp(totalXpGained, 20, 200),
+      score: state.matched.length / 2
+    });
+  }
+
   const m = String(Math.floor(state.seconds / 60)).padStart(2, '0');
   const s = String(state.seconds % 60).padStart(2, '0');
   
@@ -811,6 +820,7 @@ function spawnParticles() {
 
 </script>
 
+  <script src="../js/progress.js"></script>
   <script src="../js/nav.js"></script>
   </body>
 </html>

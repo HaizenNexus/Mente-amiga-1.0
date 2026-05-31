@@ -801,6 +801,14 @@
     const avgRt = g.reactionTimes.length>0
       ? Math.round(g.reactionTimes.reduce((a,b)=>a+b,0)/g.reactionTimes.length) : 0;
     const msg = pct>=80?'Foco excelente!': pct>=60?'Bom desempenho!':'Continue praticando!';
+    // Conecta ao sistema de progresso/medalhas.
+    if (window.MAProgress) {
+      MAProgress.recordGame({
+        name: 'Jogo do Foco', icon: '🎯',
+        xp: MAProgress.clamp(Math.round(g.xp), 10, 200),
+        score: g.hits
+      });
+    }
     const lvlName = LEVEL_NAMES[Math.min(g.level-1,LEVEL_NAMES.length-1)];
     const ov = document.createElement('div');
     ov.className='overlay'; ov.id='endOverlay';
@@ -853,6 +861,7 @@
   updateUI();
 })();
 </script>
+<script src="../js/progress.js"></script>
 <script src="../js/nav.js"></script>
 </body>
 </html>

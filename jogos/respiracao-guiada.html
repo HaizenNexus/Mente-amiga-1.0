@@ -715,6 +715,20 @@ let state = 'idle';
 let running = false;
 let cycles = 0;
 let xp = 0;
+let breathRecorded = 0;   // ciclos já enviados ao progresso (evita contar 2x)
+
+// Registra no sistema de progresso os ciclos ainda não contabilizados.
+function recordBreath() {
+  const novos = cycles - breathRecorded;
+  if (novos <= 0 || !window.MAProgress) return;
+  MAProgress.recordGame({
+    name: 'Respiração Guiada', icon: '🫧',
+    xp: MAProgress.clamp(novos * 8, 8, 120),
+    score: cycles, flags: { breath: 1 },
+    countAsGame: breathRecorded === 0   // conta como 1 jogo só na 1ª vez da sessão
+  });
+  breathRecorded = cycles;
+}
 let sessionSeconds = 0;
 let clockInterval = null;
 let phaseTimeout = null;
@@ -966,6 +980,7 @@ function startSession() {
 
 function pauseSession() {
   running = false;
+  recordBreath();   // salva os ciclos feitos até aqui
   clearTimeout(phaseTimeout);
   clearInterval(progressInterval);
   breathCircle.className = 'breath-circle';
@@ -982,12 +997,14 @@ function pauseSession() {
 
 document.getElementById('btnReset').addEventListener('click', () => {
   running = false;
+  recordBreath();   // salva o que já foi feito antes de zerar
   clearTimeout(phaseTimeout);
   clearInterval(progressInterval);
   stopClock();
   stopAmbient();
   sessionSeconds = 0;
   cycles = 0; xp = 0;
+  breathRecorded = 0;
   statCycles.textContent = '0';
   statMinutes.textContent = '0:00';
   statXP.textContent = '0';
@@ -1005,6 +1022,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
   soundOpen = false;
 });
 </script>
+<script src="../js/progress.js"></script>
 <script src="../js/nav.js"></script>
 </body>
 </html>

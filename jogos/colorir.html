@@ -375,6 +375,14 @@ function completeDrawing(){
   document.getElementById('xp-reward-txt').textContent = `+${earned} XP ganhos! Total: ${totalXP} XP`;
   document.getElementById('complete-msg').classList.add('show');
 
+  // Conecta ao sistema de progresso/medalhas (flag draw = medalha "Artista!").
+  if (window.MAProgress) {
+    MAProgress.recordGame({
+      name: 'Colorir: ' + drawing.name, icon: '🖍️',
+      xp: earned, flags: { draw: 1 }
+    });
+  }
+
   const next = currentDrawingIdx + 1;
   if(next < DRAWINGS.length && !unlocked[next]){
     unlocked[next] = true;
@@ -454,6 +462,7 @@ buildPalette();
 buildDrawingPicker();
 renderDrawing();
 </script>
+<script src="../js/progress.js"></script>
 <script src="../js/nav.js"></script>
 </body>
 </html>

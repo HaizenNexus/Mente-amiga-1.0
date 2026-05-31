@@ -153,10 +153,18 @@ const Engine = (() => {
 
   function endGame() {
     clearInterval(timerInterval);
-    const { score } = State.get();
+    const { score, correct } = State.get();
     const best = parseInt(localStorage.getItem('jdc_best') || '0', 10);
     const newRecord = score > best;
     if (newRecord) localStorage.setItem('jdc_best', score);
+    // Conecta ao sistema de progresso/medalhas (XP proporcional à pontuação).
+    if (window.MAProgress) {
+      MAProgress.recordGame({
+        name: 'Jogo das Cores', icon: '🎨',
+        xp: MAProgress.clamp(Math.round(score / 12), 20, 200),
+        score: score, flags: { cores: correct }
+      });
+    }
     UI.showResult(newRecord);
     UI.showScreen('result');
   }

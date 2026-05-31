@@ -329,33 +329,12 @@
 
 <div class="toast-container"></div>
 <script src="../js/app.js"></script>
+<script src="../js/progress.js"></script>
 <script>
-/* ─── Definição de todas as medalhas ─── */
-const ALL_MEDALS = [
-  { id:'primeiro-jogo',   icon:'🎮', name:'Primeiro Jogo!',       cond:'Jogue 1 jogo',           req:{ games:1 } },
-  { id:'cinco-jogos',     icon:'🕹️', name:'Jogador!',             cond:'Jogue 5 jogos',          req:{ games:5 } },
-  { id:'dez-jogos',       icon:'🏆', name:'Gamer Incrível!',      cond:'Jogue 10 jogos',         req:{ games:10} },
-  { id:'nivel-5',         icon:'⭐', name:'Nível 5!',             cond:'Alcance o nível 5',      req:{ level:5 } },
-  { id:'nivel-10',        icon:'🌟', name:'Nível 10!',            cond:'Alcance o nível 10',     req:{ level:10} },
-  { id:'xp-100',          icon:'💎', name:'100 XP!',              cond:'Ganhe 100 XP',           req:{ xp:100  } },
-  { id:'xp-500',          icon:'👑', name:'500 XP!',              cond:'Ganhe 500 XP',           req:{ xp:500  } },
-  { id:'streak-3',        icon:'🔥', name:'Em Chama!',            cond:'3 dias seguidos',        req:{ streak:3} },
-  { id:'streak-7',        icon:'🌈', name:'Uma Semana!',          cond:'7 dias seguidos',        req:{ streak:7} },
-  { id:'rotina-completa', icon:'🏅', name:'Dia Perfeito!',        cond:'Complete a rotina',      req:{ rotina:1} },
-  { id:'ia-conversa',     icon:'🤖', name:'Amigo da Luna!',       cond:'Converse com a Luna',    req:{ ia:1    } },
-  { id:'educacao-5',      icon:'📚', name:'Estudioso!',           cond:'5 aulas',                req:{ edu:5   } },
-  { id:'respiracao',      icon:'🫧', name:'Zen Mestre!',          cond:'Complete respiração',    req:{ breath:1} },
-  { id:'coloriu',         icon:'🎨', name:'Artista!',             cond:'Salve um desenho',       req:{ draw:1  } },
-  { id:'personagem',      icon:'🦸', name:'Herói Escolhido!',     cond:'Escolha um personagem',  req:{ char:1  } },
-  { id:'corrida-100',     icon:'🏎️', name:'Piloto de Elite!',    cond:'100 pts na corrida',     req:{ race:100} },
-];
-
-/* ─── Nomes de nível ─── */
-const LEVEL_NAMES = [
-  '', 'Explorador Iniciante', 'Aventureiro Curioso', 'Herói em Formação',
-  'Guardião do Saber', 'Campeão do Coração', 'Mestre da Mente',
-  'Lenda Viva', 'Superstar', 'Ícone Épico', 'Lenda Suprema 🌟'
-];
+/* ─── Medalhas e nomes de nível vêm da camada central (js/progress.js),
+     a MESMA fonte que os jogos usam para conceder as medalhas. ─── */
+const ALL_MEDALS  = MAProgress.MEDALS;
+const LEVEL_NAMES = MAProgress.LEVEL_NAMES;
 
 const CHAR_MAP = {
   ingrid:'👧', tryannaxx:'👓', geovania:'🖤', heitozin:'🎒', henrique:'🎧',
@@ -363,37 +342,13 @@ const CHAR_MAP = {
   feiticeira_escalate:'🔮', lamina_fantasma:'⚔️', dama_da_luz:'🗡️', aurora_da_luz:'✨',
 };
 
-/* ─── Verificar e conceder medalhas automaticamente ─── */
-function checkAndAwardMedals(prog) {
-  const earned = (prog.medals || []).map(m => m.id);
-  const newOnes = [];
-
-  ALL_MEDALS.forEach(m => {
-    if (earned.includes(m.id)) return;
-    const r = m.req;
-    let shouldAward = false;
-    if (r.games  !== undefined && (prog.games_played||0)  >= r.games)  shouldAward = true;
-    if (r.level  !== undefined && (prog.level||1)          >= r.level)  shouldAward = true;
-    if (r.xp     !== undefined && (prog.xp||0)             >= r.xp)     shouldAward = true;
-    if (r.streak !== undefined && (prog.streak||0)         >= r.streak) shouldAward = true;
-    if (r.char   !== undefined && prog.character)                        shouldAward = true;
-    if (r.rotina !== undefined) {
-      const done = JSON.parse(localStorage.getItem('ma-rotina-done-' + new Date().toISOString().split('T')[0]) || '[]');
-      const rotina = JSON.parse(localStorage.getItem('ma-rotina') || '[]');
-      if (rotina.length > 0 && done.length >= rotina.length) shouldAward = true;
-    }
-    if (shouldAward) {
-      newOnes.push(m);
-      (prog.medals || (prog.medals=[])).push({ id:m.id, icon:m.icon, desc:m.name, new:true });
-    }
-  });
-
-  if (newOnes.length) localStorage.setItem('ma-progress', JSON.stringify(prog));
-  return newOnes;
-}
-
 /* ─── Renderizar tudo ─── */
 function renderProgresso() {
+  // Concede medalhas pendentes (nível, XP, sequência, personagem, rotina…)
+  // ANTES de ler — a camada central cobre todos os critérios, inclusive
+  // corrida/respiração/colorir.
+  MAProgress.checkMedals();
+
   const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
   const xp       = prog.xp || 0;
   const level    = prog.level || 1;
@@ -403,9 +358,6 @@ function renderProgresso() {
   const xpInLvl  = xp % 100;
   const charIcon = CHAR_MAP[prog.character] || '🧒';
   const lvlName  = LEVEL_NAMES[Math.min(level, LEVEL_NAMES.length-1)] || 'Herói';
-
-  // Verificar novas medalhas
-  checkAndAwardMedals(prog);
 
   // Nível card
   document.getElementById('level-char').textContent   = charIcon;
@@ -525,6 +477,13 @@ function renderProgresso() {
           </div>
         </div>
       `).join('');
+  }
+
+  // Limpa o selo "NOVO!" depois de exibido uma vez nesta visita.
+  if (medals.some(m => m.new)) {
+    medals.forEach(m => { delete m.new; });
+    prog.medals = medals;
+    localStorage.setItem('ma-progress', JSON.stringify(prog));
   }
 }
 
