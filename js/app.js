@@ -273,16 +273,33 @@ document.addEventListener('DOMContentLoaded', () => {
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
   `;
   document.head.appendChild(style);
-
-  // Expor globalmente para uso nos jogos
-  window.MA = {
-    Toast,
-    Progress: ProgressManager,
-    Victory: VictoryAnimation,
-    Router,
-    Theme: ThemeManager
-  };
 });
+
+/* Expor globalmente IMEDIATAMENTE (fora do DOMContentLoaded).
+   Assim o window.MA já existe no momento do clique nos cards de perfil
+   do index — antes era criado só depois do DOMContentLoaded e, se algum
+   init() acima falhasse, o setProfile('kids'/'teen') não salvava o perfil
+   e a navegação "Início/Voltar" caía sempre no index. */
+window.MA = {
+  Toast,
+  Progress: ProgressManager,
+  Victory: VictoryAnimation,
+  Router,
+  Theme: ThemeManager
+};
+
+/* Salva o perfil (kids|teen) DIRETO no localStorage. É o que os cards de
+   perfil do index chamam no clique. Gravação síncrona e sem dependências:
+   garante que, ao escolher "Crianças"/"Adolescentes", o perfil fique salvo
+   ANTES de navegar — assim "Início" e "Voltar" levam ao painel certo
+   (dashboard-crianca / dashboard-adolescente) em vez de cair no index. */
+window.maSetProfile = function (profile) {
+  try {
+    var d = JSON.parse(localStorage.getItem('ma-progress') || '{}');
+    d.profile = profile;
+    localStorage.setItem('ma-progress', JSON.stringify(d));
+  } catch (e) { /* localStorage indisponível: navega mesmo assim */ }
+};
 
 /* ─── Loading screen global ─── */
 const LoadingScreen = {

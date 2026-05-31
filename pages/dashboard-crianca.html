@@ -243,6 +243,9 @@
 <script src="../js/app.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Reforça o perfil "kids" ao abrir este painel, para que "Início" e
+  // "Voltar" (barra inferior / jogos) sempre retornem para cá.
+  if (window.maSetProfile) maSetProfile('kids');
   // Carregar dados do usuário
   const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
   const xp = prog.xp || 0;

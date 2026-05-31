@@ -273,16 +273,54 @@
     }
 
     /* ============================================================
-       RESPONSIVO (celular e tablet)
+       RESPONSIVO (todos os dispositivos: do celular pequeno
+       até telas grandes / desktop)
        ============================================================ */
+
+    /* Imagens, canvas etc. nunca estouram a largura da tela */
+    img, canvas, svg { max-width: 100%; height: auto; }
+    /* fontes fluidas: acompanham o tamanho da tela suavemente */
+    .about-hero h1 { font-size: clamp(1.7rem, 5vw, 2.6rem); }
+    .about-hero p  { font-size: clamp(0.9rem, 2.5vw, 1.05rem); }
+    .team-title    { font-size: clamp(1.4rem, 4vw, 2rem); }
+
+    /* ---- Telas grandes (desktop largo): cards um pouco maiores ---- */
+    @media (min-width: 1200px) {
+      .team-grid { gap: 2rem; max-width: 1100px; }
+    }
+
+    /* ---- Tablet (≤ 992px): 3 colunas continuam, com menos respiro ---- */
+    @media (max-width: 992px) {
+      .team-grid { gap: 1.25rem; }
+    }
+
+    /* ---- Tablet retrato / celular grande (≤ 768px): 2 colunas ---- */
     @media (max-width: 768px) {
       .team-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
       .member-card { padding: 1.75rem 1rem 1.4rem; }
       .member-avatar { width: 90px; height: 90px; font-size: 2.6rem; }
+      main { padding: 0 1rem 3rem; }
     }
-    @media (max-width: 480px) {
-      .team-grid { grid-template-columns: 1fr; }
+
+    /* ---- Celular (≤ 560px): 1 coluna, tudo centralizado ---- */
+    @media (max-width: 560px) {
+      .team-grid { grid-template-columns: 1fr; max-width: 420px; }
       .about-hero { padding-top: 2rem; }
+      .member-bio { -webkit-line-clamp: 5; line-clamp: 5; }
+    }
+
+    /* ---- Celular pequeno (≤ 360px): encaixa sem cortar nada ---- */
+    @media (max-width: 360px) {
+      .about-hero { padding: 1.5rem 1rem 1.5rem; }
+      .member-card { padding: 1.5rem 0.9rem 1.25rem; }
+      .member-avatar { width: 80px; height: 80px; font-size: 2.3rem; }
+      .member-name { font-size: 1.05rem; }
+    }
+
+    /* ---- Celular deitado (paisagem, pouca altura): menos espaço vertical ---- */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .about-hero { padding: 1.5rem 1rem 1rem; }
+      .about-hero .about-emoji { font-size: 2.4rem; }
     }
   </style>
 </head>
@@ -306,7 +344,7 @@
   </a>
   <div class="nav-actions">
     <button class="btn-theme" id="btn-theme" aria-label="Alternar modo escuro/claro" title="Mudar tema">🌙</button>
-    <button onclick="history.back()" class="ma-btn-voltar">← Voltar</button>
+    <a href="../index.html" class="ma-btn-voltar">← Voltar</a>
     <button class="hamburger" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -345,7 +383,7 @@
       <div class="member-avatar">👨‍💻</div>
       <span class="member-role">Fundador &amp; CEO</span>
       <h3 class="member-name">Pedro Henrique</h3>
-      <p class="member-bio">Meu nome é Pedro Henrique, tenho 16 anos e sou um jovem programador apaixonado por tecnologia, criatividade e desenvolvimento de projetos. Este aplicativo nasceu da união das minhas ideias, da colaboração dos meus amigos e dos conselhos de mentores que sempre acreditaram no nosso potencial e apoiaram nossa caminhada.<br><br>Gosto muito de ler, refletir e explorar novas ideias. Acredito que a maior força de uma pessoa não está apenas no físico, mas principalmente na mente, na determinação e na capacidade de continuar evoluindo todos os dias. Tenho fé em Deus e acredito que, com foco, disciplina e persistência, é possível alcançar grandes objetivos.<br><br>Sou muito grato aos meus pais, que sempre me apoiaram, e também aos meus amigos e pessoas que fizeram parte da minha trajetória, tanto no lado pessoal quanto profissional. Cada pessoa teve um papel importante na construção da minha história.<br><br>Na área da tecnologia, agradeço especialmente ao Gabriel e ao Josué, que contribuíram bastante para minha decisão de seguir carreira nesse caminho e fortaleceram ainda mais minha paixão pela programação e inovação.<br><br>O desenvolvimento deste aplicativo começou de forma simples: em um quarto, utilizando apenas um celular Moto G60s e muita vontade de vencer. Mais tarde, consegui conquistar um notebook, o que permitiu evoluir ainda mais o projeto. Desde o início, esse sonho representava mais do que apenas criar um aplicativo — era a oportunidade de abrir portas para o meu futuro e mostrar que nada é impossível para quem possui dedicação, sonhos e coragem para continuar tentando. ✨</p>
+      <p class="member-bio">Meu nome é Pedro Henrique, tenho 16 anos e sou um jovem programador apaixonado por tecnologia, criatividade e desenvolvimento de projetos. Este aplicativo nasceu da união das minhas ideias, da colaboração dos meus amigos e dos conselhos de mentores que sempre acreditaram no nosso potencial e apoiaram nossa caminhada.<br><br>Gosto muito de ler, refletir e explorar novas ideias. Acredito que a maior força de uma pessoa não está apenas no físico, mas principalmente na mente, na determinação e na capacidade de continuar evoluindo todos os dias. Tenho fé em Deus e acredito que, com foco, disciplina e persistência, é possível alcançar grandes objetivos.<br><br>Sou muito grato aos meus pais, que sempre me apoiaram, e também aos meus amigos e pessoas que fizeram parte da minha trajetória, tanto no lado pessoal quanto profissional. Cada pessoa teve um papel importante na construção da minha história.<br><br>Na área da tecnologia, agradeço especialmente ao Gabriel e ao Josué, que contribuíram bastante para minha decisão de seguir carreira nesse caminho e fortaleceram ainda mais minha paixão pela programação e inovação<br><br>Entre essas pessoas, gostaria de destacar minha melhor amiga, Maysa Eidler, que sempre esteve presente me apoiando, incentivando e acreditando em mim. Sua amizade tem um valor enorme na minha vida, e sou muito grato por poder contar com ela em diversos momentos da minha trajetória. Ela é uma pessoa especial que considero como uma irmã, alguém que faz parte da minha história e do meu crescimento pessoal. <br><br>O desenvolvimento deste aplicativo começou de forma simples: em um quarto, utilizando apenas um celular Moto G60s e muita vontade de vencer. Mais tarde, consegui conquistar um notebook, o que permitiu evoluir ainda mais o projeto. Desde o início, esse sonho representava mais do que apenas criar um aplicativo — era a oportunidade de abrir portas para o meu futuro e mostrar que nada é impossível para quem possui dedicação, sonhos e coragem para continuar tentando. ✨</p>
     </article>
 
     <!-- ✏️ PESSOA 2 -->
@@ -365,19 +403,19 @@
     </article>
 
     <!-- ✏️ PESSOA 4 -->
-    <article class="member-card m-pink" data-id="responsavel_4">
-      <div class="member-avatar">🎨</div>
-      <span class="member-role">Design &amp; Experiência</span>
-      <h3 class="member-name">Nome do Responsável</h3>
-      <p class="member-bio">Dá vida às cores, aos personagens e às telas, deixando tudo bonito, claro e gostoso de usar.</p>
+    <article class="member-card m-pink" data-id="heitor" data-foto="../assets/personagens/japa.webp">
+      <div class="member-avatar">⚽</div>
+      <span class="member-role">Membro da Equipe</span>
+      <h3 class="member-name">Heitor Lorenzo Reis Santos Silva</h3>
+      <p class="member-bio">Olá, meu nome é Heitor Lorenzo Reis Santos Silva, tenho 13 anos e atualmente estou cursando o 8º ano do Ensino Fundamental. Sou um dos desenvolvedores do projeto Mente Amiga, uma iniciativa que busca gerar impacto positivo por meio da tecnologia e da colaboração entre jovens estudantes.<br><br>Um dos meus maiores objetivos é transformar a vida da minha família, proporcionando oportunidades, conquistas e um futuro melhor para as pessoas que amo. Acredito que, com dedicação, esforço e aprendizado constante, é possível alcançar grandes realizações.<br><br>Gosto muito de estudar e estou sempre buscando desenvolver novos conhecimentos. Atualmente, faço curso de inglês e procuro aproveitar cada oportunidade para aprender algo novo e evoluir pessoalmente.<br><br>Nos momentos livres, gosto de jogar futebol, acompanhar partidas esportivas e conhecer diferentes modalidades de esportes. Tenho uma grande admiração pelo Neymar Jr., não apenas pelo seu talento dentro de campo, mas também por sua determinação, dedicação e trajetória de superação. Sua história me inspira a acreditar nos meus sonhos e a continuar trabalhando para alcançar meus objetivos.<br><br>Acredito que cada experiência traz novos aprendizados e contribui para o nosso crescimento, tanto no esporte quanto na vida.<br><br>Essa é uma pequena parte da minha história, construída com sonhos, dedicação, inspiração e a vontade de conquistar um futuro cada vez melhor. ✨⚽💙</p>
     </article>
 
     <!-- ✏️ PESSOA 5 -->
-    <article class="member-card m-orange" data-id="responsavel_5">
-      <div class="member-avatar">💛</div>
-      <span class="member-role">Psicologia &amp; Acolhimento</span>
-      <h3 class="member-name">Nome do Responsável</h3>
-      <p class="member-bio">Garante que cada interação respeite o bem-estar emocional das crianças, com feedbacks sempre positivos.</p>
+    <article class="member-card m-orange" data-id="vera_geovania" data-foto="../assets/personagens/geovania.webp">
+      <div class="member-avatar">⚖️</div>
+      <span class="member-role">Membro da Equipe</span>
+      <h3 class="member-name">Vera Geovania</h3>
+      <p class="member-bio">Olá, meu nome é Vera Geovania, tenho 13 anos e atualmente estou cursando o 8º ano do Ensino Fundamental, além de estudar Informática Básica, buscando desenvolver cada vez mais meus conhecimentos e habilidades.<br><br>Nas minhas horas vagas, gosto muito de assistir conteúdos sobre casos criminais, mistérios e investigações de crimes sem solução. Também adoro ler livros de suspense e histórias investigativas, pois esses temas despertam minha curiosidade e ampliam meu interesse pelo mundo jurídico.<br><br>Além dos estudos e da leitura, gosto de praticar atividades recreativas com minhas colegas, como jogar futebol e poker, que estão entre os meus passatempos favoritos. Também gosto de assistir séries e filmes, especialmente os gêneros de suspense, terror e investigação criminal.<br><br>Desde pequena, meu maior sonho é me tornar uma Advogada Criminalista, com o objetivo de defender crianças e mulheres, contribuindo para a justiça e ajudando pessoas que precisam de apoio e proteção. Acredito que essa profissão me permitirá fazer a diferença na vida de muitas pessoas.<br><br>Entre meus sonhos pessoais, também desejo conquistar minha primeira moto, de preferência uma BMW S1000 preta com detalhes roxos, e ter a oportunidade de viajar pelo mundo ao lado da minha família, criando memórias e experiências inesquecíveis.<br><br>Essa é uma pequena parte da minha história, construída com dedicação, sonhos e a vontade de alcançar grandes objetivos no futuro. ✨⚖️🏍️🌍</p>
     </article>
 
     <!-- ✏️ PESSOA 6 -->

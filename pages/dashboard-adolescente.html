@@ -509,6 +509,9 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    // Reforça o perfil "teen" ao abrir este painel, para que "Início" e
+    // "Voltar" (barra inferior / jogos) sempre retornem para cá.
+    if (window.maSetProfile) maSetProfile('teen');
     const prog = JSON.parse(localStorage.getItem('ma-progress') || '{}');
     const xp = prog.xp || 0;
     const level = prog.level || 1;
