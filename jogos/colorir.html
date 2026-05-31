@@ -22,13 +22,15 @@ html,body{height:100%;background:#0d0d1a;font-family:system-ui,-apple-system,san
 /* Drawing Picker */
 #drawing-picker{display:flex;gap:6px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
 #drawing-picker::-webkit-scrollbar{display:none}
-.draw-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid rgba(120,80,255,0.3);background:rgba(255,255,255,0.03);color:#c4b5fd;font-size:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.draw-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid rgba(120,80,255,0.3);background:rgba(255,255,255,0.03);color:#c4b5fd;font-size:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;position:relative}
 .draw-btn.active{background:rgba(120,80,255,0.25);border-color:#a78bfa;color:#e9d5ff;box-shadow:0 0 8px rgba(167,139,250,0.2)}
 .draw-btn:hover{background:rgba(120,80,255,0.12)}
+.draw-btn .done-tick{color:#34d399;margin-left:3px}
 /* Canvas */
 #canvas-wrap{flex:1;display:flex;justify-content:center;align-items:center;background:rgba(255,255,255,0.02);border-radius:18px;border:1px solid rgba(120,80,255,0.15);min-height:300px;position:relative;overflow:hidden;padding:16px}
 #canvas-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(120,80,255,0.05) 0%,transparent 70%);pointer-events:none;border-radius:18px}
 #drawing-svg{width:100%;max-width:380px;height:auto;cursor:pointer;display:block}
+#drawing-svg.eyedrop{cursor:crosshair}
 .region{transition:filter 0.25s ease,stroke 0.2s ease;stroke-width:1.5;stroke:#2a1f5c}
 .region:hover{filter:brightness(1.3);stroke:#9d7aff;stroke-width:2}
 .region.painted{stroke:#6d28d9;stroke-width:2}
@@ -41,20 +43,26 @@ html,body{height:100%;background:#0d0d1a;font-family:system-ui,-apple-system,san
 .swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.15s ease,box-shadow 0.2s,border-color 0.2s}
 .swatch:hover{transform:scale(1.15)}
 .swatch.selected{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,0.25),0 0 12px rgba(167,139,250,0.5);transform:scale(1.1)}
-/* Actions */
-#action-row{display:flex;gap:8px;justify-content:center}
-.act-btn{flex:1;max-width:120px;padding:9px 8px;border-radius:12px;border:1px solid rgba(120,80,255,0.25);background:rgba(255,255,255,0.03);color:#c4b5fd;font-size:13px;cursor:pointer;transition:all 0.2s;text-align:center}
-.act-btn:hover{background:rgba(120,80,255,0.15);border-color:#a78bfa;color:#e9d5ff}
-.act-btn:active{transform:scale(0.97)}
+/* Tools */
+#tool-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.tool-btn{flex:1;min-width:64px;max-width:110px;padding:9px 6px;border-radius:12px;border:1px solid rgba(120,80,255,0.25);background:rgba(255,255,255,0.03);color:#c4b5fd;font-size:12px;cursor:pointer;transition:all 0.2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.1}
+.tool-btn .ic{font-size:16px}
+.tool-btn:hover{background:rgba(120,80,255,0.15);border-color:#a78bfa;color:#e9d5ff}
+.tool-btn:active{transform:scale(0.96)}
+.tool-btn.active{background:rgba(120,80,255,0.3);border-color:#a78bfa;color:#e9d5ff;box-shadow:0 0 8px rgba(167,139,250,0.3)}
+.tool-btn:disabled{opacity:0.35;cursor:not-allowed}
 /* Complete overlay */
 #complete-msg{display:none;position:absolute;inset:0;background:rgba(10,8,28,0.92);border-radius:17px;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:10;backdrop-filter:blur(4px)}
 #complete-msg.show{display:flex;animation:fadeIn 0.5s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-#complete-msg .emoji-big{font-size:52px}
+#complete-msg .emoji-big{font-size:52px;animation:popBig 0.6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popBig{from{transform:scale(0) rotate(-30deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
 #complete-msg p{font-size:22px;color:#e9d5ff;font-weight:500;text-align:center}
 #complete-msg small{font-size:13px;color:#a78bfa;text-align:center}
-#complete-msg button{padding:10px 26px;border-radius:14px;background:rgba(120,80,255,0.3);border:1px solid #a78bfa;color:#e9d5ff;font-size:14px;cursor:pointer;transition:all 0.2s}
+#complete-msg .cbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#complete-msg button{padding:10px 22px;border-radius:14px;background:rgba(120,80,255,0.3);border:1px solid #a78bfa;color:#e9d5ff;font-size:14px;cursor:pointer;transition:all 0.2s}
 #complete-msg button:hover{background:rgba(120,80,255,0.5)}
+#complete-msg button.ghost{background:transparent}
 /* Toast */
 #unlock-toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(80,40,180,0.9);color:#e9d5ff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:200;pointer-events:none;border:1px solid rgba(167,139,250,0.4);backdrop-filter:blur(6px)}
 #unlock-toast.show{display:block;animation:slideUp 0.4s ease}
@@ -62,8 +70,13 @@ html,body{height:100%;background:#0d0d1a;font-family:system-ui,-apple-system,san
 /* Glow anim on paint */
 @keyframes glowIn{0%{filter:brightness(2.5) saturate(2)}60%{filter:brightness(1.4)}100%{filter:brightness(1) saturate(1)}}
 .glow-anim{animation:glowIn 0.7s ease forwards}
+/* Sparkles + confetti */
+.spark{position:absolute;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:30;transform:translate(-50%,-50%);animation:sparkFly 0.6s ease-out forwards}
+@keyframes sparkFly{0%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0.3)}}
+.confetti{position:absolute;width:9px;height:14px;border-radius:2px;pointer-events:none;z-index:20;top:-20px;animation:confFall linear forwards}
+@keyframes confFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0.9;transform:translateY(var(--fall)) rotate(var(--spin))}}
 /* Responsive */
-@media(max-width:400px){.swatch{width:30px;height:30px}#header h1{font-size:14px}}
+@media(max-width:400px){.swatch{width:30px;height:30px}#header h1{font-size:14px}.tool-btn{font-size:11px}}
 </style>
 </head>
 <body>
@@ -89,7 +102,10 @@ html,body{height:100%;background:#0d0d1a;font-family:system-ui,-apple-system,san
       <div class="emoji-big">🌟</div>
       <p>Desenho concluído!</p>
       <small id="xp-reward-txt"></small>
-      <button id="next-draw-btn">Próximo desenho →</button>
+      <div class="cbtns">
+        <button id="save-png-btn" class="ghost">💾 Baixar</button>
+        <button id="next-draw-btn">Próximo →</button>
+      </div>
     </div>
   </div>
 
@@ -103,10 +119,14 @@ html,body{height:100%;background:#0d0d1a;font-family:system-ui,-apple-system,san
     <div id="palette-row"></div>
   </div>
 
-  <!-- Actions -->
-  <div id="action-row">
-    <button class="act-btn" id="undo-btn">↩ Desfazer</button>
-    <button class="act-btn" id="reset-btn">↺ Resetar</button>
+  <!-- Tools -->
+  <div id="tool-row">
+    <button class="tool-btn" id="bucket-btn"><span class="ic">🪣</span>Balde</button>
+    <button class="tool-btn" id="eyedrop-btn"><span class="ic">💧</span>Conta-gotas</button>
+    <button class="tool-btn" id="random-btn"><span class="ic">🎲</span>Aleatória</button>
+    <button class="tool-btn" id="undo-btn"><span class="ic">↩</span>Desfazer</button>
+    <button class="tool-btn" id="reset-btn"><span class="ic">↺</span>Resetar</button>
+    <button class="tool-btn" id="download-btn"><span class="ic">💾</span>Baixar</button>
   </div>
 </div>
 
@@ -126,7 +146,6 @@ const DRAWINGS = [
   {
     id:'mandala', name:'Mandala', xp:60, unlocked:true,
     regions:[
-      // Outer ring segments (8 petals)
       {id:'mo0',d:'M150,150 L150,85 A65,65 0 0,1 196,104 Z',fill:BASE},
       {id:'mo1',d:'M150,150 L196,104 A65,65 0 0,1 215,150 Z',fill:BASE},
       {id:'mo2',d:'M150,150 L215,150 A65,65 0 0,1 196,196 Z',fill:BASE},
@@ -135,7 +154,6 @@ const DRAWINGS = [
       {id:'mo5',d:'M150,150 L104,196 A65,65 0 0,1 85,150 Z',fill:BASE},
       {id:'mo6',d:'M150,150 L85,150 A65,65 0 0,1 104,104 Z',fill:BASE},
       {id:'mo7',d:'M150,150 L104,104 A65,65 0 0,1 150,85 Z',fill:BASE},
-      // Middle ring (8 segments)
       {id:'mm0',d:'M150,150 L150,108 A42,42 0 0,1 180,121 Z',fill:BASE},
       {id:'mm1',d:'M150,150 L180,121 A42,42 0 0,1 192,150 Z',fill:BASE},
       {id:'mm2',d:'M150,150 L192,150 A42,42 0 0,1 180,179 Z',fill:BASE},
@@ -144,7 +162,6 @@ const DRAWINGS = [
       {id:'mm5',d:'M150,150 L120,179 A42,42 0 0,1 108,150 Z',fill:BASE},
       {id:'mm6',d:'M150,150 L108,150 A42,42 0 0,1 120,121 Z',fill:BASE},
       {id:'mm7',d:'M150,150 L120,121 A42,42 0 0,1 150,108 Z',fill:BASE},
-      // Center circle
       {id:'mc',d:'M150,150 m-22,0 a22,22 0 1,1 44,0 a22,22 0 1,1 -44,0',fill:BASE},
     ]
   },
@@ -209,8 +226,76 @@ const DRAWINGS = [
       {id:'owft',d:'M125,228 Q120,245 112,250 L118,252 Q130,248 138,232 Z',fill:BASE},
       {id:'owft2',d:'M175,228 Q180,245 188,250 L182,252 Q170,248 162,232 Z',fill:BASE},
     ]
+  },
+  {
+    id:'flower', name:'Flor', xp:55, unlocked:false,
+    regions:[
+      {id:'fp0',d:'M150,98 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0',fill:BASE},
+      {id:'fp1',d:'M195,124 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0',fill:BASE},
+      {id:'fp2',d:'M195,176 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0',fill:BASE},
+      {id:'fp3',d:'M150,202 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0',fill:BASE},
+      {id:'fp4',d:'M105,176 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0',fill:BASE},
+      {id:'fp5',d:'M105,124 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0',fill:BASE},
+      {id:'fcenter',d:'M150,150 m-30,0 a30,30 0 1,1 60,0 a30,30 0 1,1 -60,0',fill:BASE},
+      {id:'fstem',d:'M146,200 L146,272 L154,272 L154,200 Z',fill:BASE},
+      {id:'fleaf',d:'M154,238 Q188,222 198,250 Q172,260 154,250 Z',fill:BASE},
+    ]
+  },
+  {
+    id:'heart', name:'Coração', xp:40, unlocked:false,
+    regions:[
+      {id:'hl',d:'M150,95 C142,72 125,58 105,58 C78,58 58,78 58,105 C58,150 110,185 150,212 Z',fill:BASE},
+      {id:'hr',d:'M150,95 C158,72 175,58 195,58 C222,58 242,78 242,105 C242,150 190,185 150,212 Z',fill:BASE},
+      {id:'hhi',d:'M120,98 a12,12 0 1,1 24,0 a12,12 0 1,1 -24,0',fill:BASE},
+      {id:'hsp',d:'M205,120 L210,132 L215,120 L210,108 Z',fill:BASE},
+    ]
+  },
+  {
+    id:'fish', name:'Peixinho', xp:50, unlocked:false,
+    regions:[
+      {id:'fibody',d:'M135,150 m-68,0 a68,42 0 1,1 136,0 a68,42 0 1,1 -136,0',fill:BASE},
+      {id:'fitail',d:'M201,150 L248,112 L242,150 L248,188 Z',fill:BASE},
+      {id:'fifin1',d:'M115,110 Q138,82 162,108 Q140,118 115,110 Z',fill:BASE},
+      {id:'fifin2',d:'M115,190 Q138,218 162,192 Q140,182 115,190 Z',fill:BASE},
+      {id:'fieye',d:'M92,140 a9,9 0 1,1 18,0 a9,9 0 1,1 -18,0',fill:BASE},
+      {id:'fib1',d:'M60,108 a7,7 0 1,1 14,0 a7,7 0 1,1 -14,0',fill:BASE},
+      {id:'fib2',d:'M42,84 a5,5 0 1,1 10,0 a5,5 0 1,1 -10,0',fill:BASE},
+    ]
+  },
+  {
+    id:'moon', name:'Lua', xp:60, unlocked:false,
+    regions:[
+      {id:'mncres',d:'M178,52 A98,98 0 1,0 178,248 A74,74 0 1,1 178,52 Z',fill:BASE},
+      {id:'mns1',d:'M95,92 L100,110 L118,115 L100,120 L95,138 L90,120 L72,115 L90,110 Z',fill:BASE},
+      {id:'mns2',d:'M110,188 L114,200 L126,204 L114,208 L110,220 L106,208 L94,204 L106,200 Z',fill:BASE},
+      {id:'mns3',d:'M70,140 L73,150 L83,153 L73,156 L70,166 L67,156 L57,153 L67,150 Z',fill:BASE},
+    ]
+  },
+  {
+    id:'tree', name:'Árvore', xp:45, unlocked:false,
+    regions:[
+      {id:'tf0',d:'M150,118 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0',fill:BASE},
+      {id:'tf1',d:'M112,158 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0',fill:BASE},
+      {id:'tf2',d:'M188,158 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0',fill:BASE},
+      {id:'ttrunk',d:'M138,190 L138,262 L162,262 L162,190 Z',fill:BASE},
+      {id:'tground',d:'M0,255 L300,255 L300,300 L0,300 Z',fill:BASE},
+    ]
   }
 ];
+
+// ─── PERSISTÊNCIA ──────────────────────────────────────────────────────────────
+const SKEY = 'ma-colorir';
+function loadSave(){ try { return JSON.parse(localStorage.getItem(SKEY)||'{}') || {}; } catch(e){ return {}; } }
+let store = loadSave();
+let allArt = store.art || {};                 // { drawingId: { regionId: color } }
+let completed = store.completed || {};         // { drawingId: true }
+function persist(){
+  try {
+    localStorage.setItem(SKEY, JSON.stringify({
+      art: allArt, completed: completed, totalXP: totalXP, unlocked: unlocked
+    }));
+  } catch(e){}
+}
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let currentDrawingIdx = 0;
@@ -220,63 +305,71 @@ let paintHistory = [];
 let regionColors = {};
 let totalAreas = 0;
 let paintedCount = 0;
-let totalXP = 0;
+let totalXP = store.totalXP || 0;
 let soundOn = false;
 let audioCtx = null;
 let ambientNodes = [];
-let unlocked = DRAWINGS.map(d => d.unlocked);
+let eyedropOn = false;
+let unlocked = Array.isArray(store.unlocked) && store.unlocked.length === DRAWINGS.length
+  ? store.unlocked.slice()
+  : DRAWINGS.map(d => d.unlocked);
+// reconcilia desbloqueios a partir do que já foi concluído (sobrevive a mudanças no catálogo)
+DRAWINGS.forEach((d, i) => { if(completed[d.id] && i + 1 < DRAWINGS.length) unlocked[i + 1] = true; });
 
 // ─── AUDIO ───────────────────────────────────────────────────────────────────
-function initAudio(){
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-}
-
+function initAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
 function playPaintSound(){
   if(!soundOn) return;
   try {
     initAudio();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    osc.connect(gain); gain.connect(audioCtx.destination);
     osc.frequency.value = 350 + Math.random() * 250;
     osc.type = 'sine';
     gain.gain.setValueAtTime(0.07, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.35);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.35);
   } catch(e){}
 }
-
+function playCompleteSound(){
+  if(!soundOn) return;
+  try {
+    initAudio();
+    [523,659,784,1047].forEach((f,i)=>{
+      const osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type='sine'; osc.frequency.value=f;
+      const t=audioCtx.currentTime+i*0.12;
+      gain.gain.setValueAtTime(0.0001,t);
+      gain.gain.exponentialRampToValueAtTime(0.12,t+0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.4);
+      osc.start(t); osc.stop(t+0.4);
+    });
+  } catch(e){}
+}
 function startAmbient(){
   if(!soundOn || ambientNodes.length) return;
   try {
     initAudio();
     const master = audioCtx.createGain();
-    master.gain.value = 0.025;
-    master.connect(audioCtx.destination);
+    master.gain.value = 0.025; master.connect(audioCtx.destination);
     [55, 110, 165, 220, 275].forEach(freq => {
       const osc = audioCtx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      osc.connect(master);
-      osc.start();
-      ambientNodes.push(osc);
+      osc.type = 'sine'; osc.frequency.value = freq;
+      osc.connect(master); osc.start(); ambientNodes.push(osc);
     });
     ambientNodes.push(master);
   } catch(e){}
 }
-
 function stopAmbient(){
   ambientNodes.forEach(n => { try { n.stop ? n.stop() : n.disconnect(); } catch(e){} });
   ambientNodes = [];
 }
-
 function toggleSound(){
   soundOn = !soundOn;
   document.getElementById('sound-btn').textContent = soundOn ? '♪ Som: ON' : '♪ Som: OFF';
-  if(soundOn){ initAudio(); startAmbient(); }
-  else stopAmbient();
+  if(soundOn){ initAudio(); startAmbient(); } else stopAmbient();
 }
 
 // ─── UI BUILDERS ─────────────────────────────────────────────────────────────
@@ -287,13 +380,17 @@ function buildPalette(){
     const s = document.createElement('div');
     s.className = 'swatch' + (c === selectedColor ? ' selected' : '');
     s.style.background = c;
+    s.dataset.color = c;
     s.title = c;
-    s.addEventListener('click', () => {
-      selectedColor = c;
-      document.querySelectorAll('.swatch').forEach(el => el.classList.remove('selected'));
-      s.classList.add('selected');
-    });
+    s.addEventListener('click', () => selectColor(c));
     row.appendChild(s);
+  });
+}
+
+function selectColor(c){
+  selectedColor = c;
+  document.querySelectorAll('.swatch').forEach(el => {
+    el.classList.toggle('selected', el.dataset.color === c);
   });
 }
 
@@ -303,24 +400,31 @@ function buildDrawingPicker(){
   DRAWINGS.forEach((d, i) => {
     const btn = document.createElement('button');
     btn.className = 'draw-btn' + (i === currentDrawingIdx ? ' active' : '');
-    btn.textContent = (unlocked[i] ? '' : '🔒 ') + d.name;
+    btn.innerHTML = pickerLabel(i);
     btn.addEventListener('click', () => {
       if(!unlocked[i]){ showToast('Complete mais desenhos para desbloquear!'); return; }
-      currentDrawingIdx = i;
-      paintHistory = [];
-      regionColors = {};
-      renderDrawing();
-      updatePicker();
+      switchDrawing(i);
     });
     picker.appendChild(btn);
   });
 }
-
+function pickerLabel(i){
+  const lock = unlocked[i] ? '' : '🔒 ';
+  const tick = completed[DRAWINGS[i].id] ? '<span class="done-tick">✓</span>' : '';
+  return lock + DRAWINGS[i].name + tick;
+}
 function updatePicker(){
   document.querySelectorAll('.draw-btn').forEach((b, i) => {
     b.className = 'draw-btn' + (i === currentDrawingIdx ? ' active' : '');
-    b.textContent = (unlocked[i] ? '' : '🔒 ') + DRAWINGS[i].name;
+    b.innerHTML = pickerLabel(i);
   });
+}
+
+function switchDrawing(i){
+  currentDrawingIdx = i;
+  paintHistory = [];
+  renderDrawing();
+  updatePicker();
 }
 
 // ─── DRAWING ─────────────────────────────────────────────────────────────────
@@ -328,6 +432,8 @@ function renderDrawing(){
   const svg = document.getElementById('drawing-svg');
   const drawing = DRAWINGS[currentDrawingIdx];
   svg.innerHTML = '';
+  // a arte salva deste desenho é a fonte das cores (referência viva em allArt)
+  regionColors = allArt[drawing.id] || (allArt[drawing.id] = {});
   const regions = drawing.regions;
   totalAreas = regions.length;
   paintedCount = Object.keys(regionColors).length;
@@ -338,7 +444,7 @@ function renderDrawing(){
     path.setAttribute('fill', regionColors[r.id] !== undefined ? regionColors[r.id] : r.fill);
     path.setAttribute('class', 'region' + (regionColors[r.id] !== undefined ? ' painted' : ''));
     path.dataset.id = r.id;
-    path.addEventListener('click', () => paintRegion(r.id, path));
+    path.addEventListener('click', (ev) => onRegionClick(r.id, path, ev));
     svg.appendChild(path);
   });
 
@@ -346,50 +452,191 @@ function renderDrawing(){
   document.getElementById('complete-msg').classList.remove('show');
 }
 
-function paintRegion(id, path){
+function onRegionClick(id, path, ev){
+  if(eyedropOn){
+    selectColor(path.getAttribute('fill'));
+    setEyedrop(false);
+    showToast('Cor capturada! 💧');
+    return;
+  }
+  paintRegion(id, path, ev);
+}
+
+function paintRegion(id, path, ev){
   const prevColor = path.getAttribute('fill');
   const defaultColor = DRAWINGS[currentDrawingIdx].regions.find(r => r.id === id).fill;
-  
-  paintHistory.push({ id, prevColor, wasDefault: prevColor === defaultColor });
+  if(prevColor === selectedColor) return; // já está nessa cor
+
+  pushHistory([{ id, prevColor, wasDefault: prevColor === defaultColor }]);
+
+  applyColor(path, id, selectedColor, true);
+  playPaintSound();
+  if(ev) sparkle(ev.clientX, ev.clientY, selectedColor);
+
+  paintedCount = Object.keys(regionColors).length;
+  updateProgress();
+  persist();
+
+  if(paintedCount >= totalAreas) setTimeout(completeDrawing, 450);
+}
+
+function applyColor(path, id, color, animate){
+  path.setAttribute('fill', color);
+  path.setAttribute('class', 'region painted' + (animate ? ' glow-anim' : ''));
+  regionColors[id] = color;
+  if(animate) setTimeout(() => path.setAttribute('class', 'region painted'), 700);
+}
+
+function pushHistory(items){
+  paintHistory.push(items);
   if(paintHistory.length > 80) paintHistory.shift();
+}
 
-  path.setAttribute('fill', selectedColor);
-  path.setAttribute('class', 'region painted glow-anim');
-  regionColors[id] = selectedColor;
-
-  setTimeout(() => {
-    path.setAttribute('class', 'region painted');
-  }, 700);
-
+// ─── FERRAMENTAS ───────────────────────────────────────────────────────────────
+function bucketFill(){
+  const svg = document.getElementById('drawing-svg');
+  const drawing = DRAWINGS[currentDrawingIdx];
+  const batch = [];
+  drawing.regions.forEach(r => {
+    const path = svg.querySelector(`[data-id="${r.id}"]`);
+    const prevColor = path.getAttribute('fill');
+    if(prevColor === selectedColor) return;
+    batch.push({ id:r.id, prevColor, wasDefault: prevColor === r.fill });
+    applyColor(path, r.id, selectedColor, false);
+  });
+  if(!batch.length){ showToast('Tudo já está nessa cor!'); return; }
+  pushHistory(batch);
   playPaintSound();
   paintedCount = Object.keys(regionColors).length;
   updateProgress();
-
-  if(paintedCount >= totalAreas) setTimeout(completeDrawing, 500);
+  persist();
+  if(paintedCount >= totalAreas) setTimeout(completeDrawing, 450);
 }
 
+function setEyedrop(on){
+  eyedropOn = on;
+  document.getElementById('eyedrop-btn').classList.toggle('active', on);
+  document.getElementById('drawing-svg').classList.toggle('eyedrop', on);
+}
+
+function randomColor(){
+  const pal = PALETTES[colorMode];
+  const c = pal[Math.floor(Math.random()*pal.length)];
+  selectColor(c);
+  showToast('Cor surpresa! 🎲');
+}
+
+function undo(){
+  if(!paintHistory.length) return;
+  const batch = paintHistory.pop();
+  const svg = document.getElementById('drawing-svg');
+  // desfaz na ordem inversa
+  for(let k = batch.length - 1; k >= 0; k--){
+    const last = batch[k];
+    const path = svg.querySelector(`[data-id="${last.id}"]`);
+    if(!path) continue;
+    if(last.wasDefault){
+      const defaultColor = DRAWINGS[currentDrawingIdx].regions.find(r => r.id === last.id).fill;
+      path.setAttribute('fill', defaultColor);
+      path.setAttribute('class', 'region');
+      delete regionColors[last.id];
+    } else {
+      path.setAttribute('fill', last.prevColor);
+      path.setAttribute('class', 'region painted');
+      regionColors[last.id] = last.prevColor;
+    }
+  }
+  paintedCount = Object.keys(regionColors).length;
+  updateProgress();
+  persist();
+}
+
+function resetDrawing(){
+  paintHistory = [];
+  const id = DRAWINGS[currentDrawingIdx].id;
+  allArt[id] = {};
+  persist();
+  renderDrawing();
+}
+
+// ─── EXPORTAR PNG ───────────────────────────────────────────────────────────────
+function downloadPNG(){
+  const svg = document.getElementById('drawing-svg');
+  const ns = 'http://www.w3.org/2000/svg';
+  const clone = svg.cloneNode(true);
+  clone.setAttribute('xmlns', ns);
+  clone.setAttribute('width', '600');
+  clone.setAttribute('height', '600');
+  // fundo
+  const rect = document.createElementNS(ns, 'rect');
+  rect.setAttribute('x','0'); rect.setAttribute('y','0');
+  rect.setAttribute('width','300'); rect.setAttribute('height','300');
+  rect.setAttribute('fill','#0f0f2e');
+  clone.insertBefore(rect, clone.firstChild);
+  // estilo (traços, já que vêm de CSS)
+  const style = document.createElementNS(ns, 'style');
+  style.textContent = '.region{stroke:#2a1f5c;stroke-width:1.5}.painted{stroke:#6d28d9;stroke-width:2}';
+  clone.insertBefore(style, clone.firstChild);
+
+  const data = new XMLSerializer().serializeToString(clone);
+  const svgBlob = new Blob([data], { type:'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600; canvas.height = 600;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, 600, 600);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'colorir-' + DRAWINGS[currentDrawingIdx].id + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }, 'image/png');
+    showToast('Imagem baixada! 💾');
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); showToast('Não foi possível baixar 😕'); };
+  img.src = url;
+}
+
+// ─── CONCLUSÃO ───────────────────────────────────────────────────────────────
 function completeDrawing(){
   const drawing = DRAWINGS[currentDrawingIdx];
+  const firstTime = !completed[drawing.id];
   const earned = drawing.xp;
-  totalXP += earned;
-  document.getElementById('xp-reward-txt').textContent = `+${earned} XP ganhos! Total: ${totalXP} XP`;
-  document.getElementById('complete-msg').classList.add('show');
 
-  // Conecta ao sistema de progresso/medalhas (flag draw = medalha "Artista!").
-  if (window.MAProgress) {
-    MAProgress.recordGame({
-      name: 'Colorir: ' + drawing.name, icon: '🖍️',
-      xp: earned, flags: { draw: 1 }
-    });
+  if(firstTime){
+    completed[drawing.id] = true;
+    totalXP += earned;
+    // Conecta ao sistema de progresso/medalhas só na 1ª conclusão (flag draw = "Artista!").
+    if (window.MAProgress) {
+      MAProgress.recordGame({
+        name: 'Colorir: ' + drawing.name, icon: '🖍️',
+        xp: earned, flags: { draw: 1 }
+      });
+    }
   }
 
+  document.getElementById('xp-reward-txt').textContent = firstTime
+    ? `+${earned} XP ganhos! Total: ${totalXP} XP`
+    : `Já concluído antes — sem XP extra. Total: ${totalXP} XP`;
+  document.getElementById('complete-msg').classList.add('show');
+  document.getElementById('xp-txt').textContent = totalXP + ' XP';
+
+  playCompleteSound();
+  confettiBurst();
+
+  // desbloqueia o próximo
   const next = currentDrawingIdx + 1;
   if(next < DRAWINGS.length && !unlocked[next]){
     unlocked[next] = true;
     updatePicker();
     setTimeout(() => showToast('Novo desenho desbloqueado: ' + DRAWINGS[next].name + '! 🎉'), 900);
   }
-  document.getElementById('xp-txt').textContent = totalXP + ' XP';
+  updatePicker();
+  persist();
 }
 
 function updateProgress(){
@@ -402,50 +649,66 @@ function updateProgress(){
 function showToast(msg){
   const t = document.getElementById('unlock-toast');
   t.textContent = msg;
-  t.classList.remove('show');
-  void t.offsetWidth;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── EFEITOS VISUAIS ───────────────────────────────────────────────────────────
+function sparkle(clientX, clientY, color){
+  const wrap = document.getElementById('canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const x = clientX - rect.left, y = clientY - rect.top;
+  const n = 8;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('div');
+    s.className = 'spark';
+    s.style.left = x+'px'; s.style.top = y+'px';
+    s.style.background = i % 2 ? '#fff' : color;
+    const ang = (Math.PI*2*i/n) + Math.random()*0.6;
+    const dist = 18 + Math.random()*26;
+    s.style.setProperty('--dx', Math.cos(ang)*dist+'px');
+    s.style.setProperty('--dy', Math.sin(ang)*dist+'px');
+    wrap.appendChild(s);
+    setTimeout(()=>s.remove(), 620);
+  }
+}
+
+function confettiBurst(){
+  const host = document.getElementById('complete-msg');
+  const colors = ['#ff6eb4','#ffd32a','#0be881','#54a0ff','#a55eea','#ff9f43','#00d2d3'];
+  const w = host.clientWidth || 360;
+  for(let i=0;i<46;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = (Math.random()*w) + 'px';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    const dur = 1.6 + Math.random()*1.4;
+    c.style.animationDuration = dur + 's';
+    c.style.animationDelay = (Math.random()*0.4) + 's';
+    c.style.setProperty('--fall', (host.clientHeight + 40) + 'px');
+    c.style.setProperty('--spin', (Math.random()*720 - 360) + 'deg');
+    host.appendChild(c);
+    setTimeout(()=>c.remove(), (dur+0.6)*1000);
+  }
 }
 
 // ─── EVENTS ──────────────────────────────────────────────────────────────────
 document.getElementById('sound-btn').addEventListener('click', toggleSound);
-
-document.getElementById('undo-btn').addEventListener('click', () => {
-  if(!paintHistory.length) return;
-  const last = paintHistory.pop();
-  const path = document.querySelector(`[data-id="${last.id}"]`);
-  if(!path) return;
-  if(last.wasDefault){
-    const defaultColor = DRAWINGS[currentDrawingIdx].regions.find(r => r.id === last.id).fill;
-    path.setAttribute('fill', defaultColor);
-    path.setAttribute('class', 'region');
-    delete regionColors[last.id];
-  } else {
-    path.setAttribute('fill', last.prevColor);
-    regionColors[last.id] = last.prevColor;
-    path.setAttribute('class', 'region painted');
-  }
-  paintedCount = Object.keys(regionColors).length;
-  updateProgress();
-});
-
-document.getElementById('reset-btn').addEventListener('click', () => {
-  paintHistory = [];
-  regionColors = {};
-  renderDrawing();
-});
+document.getElementById('bucket-btn').addEventListener('click', bucketFill);
+document.getElementById('eyedrop-btn').addEventListener('click', () => setEyedrop(!eyedropOn));
+document.getElementById('random-btn').addEventListener('click', randomColor);
+document.getElementById('undo-btn').addEventListener('click', undo);
+document.getElementById('reset-btn').addEventListener('click', resetDrawing);
+document.getElementById('download-btn').addEventListener('click', downloadPNG);
+document.getElementById('save-png-btn').addEventListener('click', downloadPNG);
 
 document.getElementById('next-draw-btn').addEventListener('click', () => {
   let next = (currentDrawingIdx + 1) % DRAWINGS.length;
   let tries = 0;
   while(!unlocked[next] && tries < DRAWINGS.length){ next = (next + 1) % DRAWINGS.length; tries++; }
   if(!unlocked[next]){ showToast('Ainda não há próximo disponível!'); return; }
-  currentDrawingIdx = next;
-  paintHistory = [];
-  regionColors = {};
-  renderDrawing();
-  updatePicker();
+  switchDrawing(next);
 });
 
 document.querySelectorAll('.mode-btn').forEach(btn => {
