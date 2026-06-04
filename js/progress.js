@@ -46,6 +46,7 @@
     { id:'educacao-5',      icon:'📚', name:'Estudioso!',       cond:'5 aulas',               req:{ edu:5   } },
     { id:'respiracao',      icon:'🫧', name:'Zen Mestre!',      cond:'Complete respiração',   req:{ breath:1} },
     { id:'coloriu',         icon:'🎨', name:'Artista!',         cond:'Salve um desenho',      req:{ draw:1  } },
+    { id:'fala-comunicador',icon:'🗣️', name:'Comunicador!',     cond:'Treine a fala',         req:{ fala:1  } },
     { id:'personagem',      icon:'🦸', name:'Herói Escolhido!', cond:'Escolha um personagem', req:{ char:1  } },
     { id:'corrida-100',     icon:'🏎️', name:'Piloto de Elite!', cond:'100 pts na corrida',    req:{ race:100} },
   ];
@@ -78,6 +79,7 @@
     if (req.race   != null) return (p.race||0)         >= req.race;
     if (req.breath != null) return (p.breath||0)       >= req.breath;
     if (req.draw   != null) return (p.draw||0)         >= req.draw;
+    if (req.fala   != null) return (p.fala||0)         >= req.fala;
     if (req.ia     != null) return (p.ia||0)           >= req.ia;
     if (req.edu    != null) return (p.edu||0)          >= req.edu;
     if (req.rotina != null) {

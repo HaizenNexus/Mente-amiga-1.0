@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fala Comigo</title>
+<link rel="shortcut icon" href="../assets/favicon.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep:    #07101a;
+    --bg-mid:     #0b1726;
+    --bg-card:    #0e1d30;
+    --bg-raised:  #122740;
+    --border:     rgba(80,184,255,0.16);
+    --border-glow:rgba(80,184,255,0.4);
+    --neon-blue:  #50b8ff;
+    --neon-teal:  #44d9b8;
+    --neon-purple:#9b8fff;
+    --neon-pink:  #ff79c0;
+    --neon-amber: #f7b955;
+    --text-1:     #dceaff;
+    --text-2:     #8298b8;
+    --text-3:     #4c6182;
+    --success:    #44d9b8;
+    --danger:     #ff6a8a;
+    --font-main: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html, body {
+    background: var(--bg-deep);
+    color: var(--text-1);
+    font-family: var(--font-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 18% 8%, rgba(80,184,255,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 35% at 82% 88%, rgba(68,217,184,0.1) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 540px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 16px;
+  }
+  .header-brand { display: flex; flex-direction: column; }
+  .brand-name { font-size: 18px; font-weight: 700; color: var(--neon-blue); letter-spacing: 0.02em; }
+  .brand-sub  { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); letter-spacing: 0.08em; margin-top: 1px; }
+  .header-controls { display: flex; gap: 8px; align-items: center; }
+  .record-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(247,185,85,0.1);
+    border: 1px solid rgba(247,185,85,0.28);
+    border-radius: 8px; padding: 5px 10px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--neon-amber); white-space: nowrap;
+  }
+  .icon-btn {
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-2); border-radius: 8px;
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .icon-btn:hover { border-color: var(--border-glow); color: var(--neon-blue); }
+  .icon-btn.active { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(80,184,255,0.1); }
+  .voice-sel {
+    max-width: 122px; height: 34px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-2); border-radius: 8px; padding: 0 6px;
+    font-family: var(--font-mono); font-size: 11px; cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .voice-sel:hover { border-color: var(--border-glow); color: var(--text-1); }
+  .voice-sel:focus { border-color: var(--neon-blue); color: var(--neon-blue); }
+  .voice-sel option { background: var(--bg-card); color: var(--text-1); }
+  @media(max-width:440px){ .voice-sel { max-width: 96px; font-size: 10px; } }
+
+  /* ── LEVEL & XP ── */
+  .level-row { width: 100%; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .level-tag { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); white-space: nowrap; }
+  .level-tag span { color: var(--neon-blue); font-weight: 500; }
+  .xp-track { flex: 1; height: 5px; background: var(--bg-raised); border-radius: 4px; overflow: hidden; }
+  .xp-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-teal));
+    border-radius: 4px; transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .level-name { font-size: 11px; font-family: var(--font-mono); color: var(--text-3); white-space: nowrap; }
+  .level-tag.level-up span, .level-name.level-up { animation: lvlPulse 0.7s ease; }
+  @keyframes lvlPulse {
+    0%,100% { transform: scale(1); }
+    40%     { transform: scale(1.4); color: var(--neon-teal); text-shadow: 0 0 12px var(--neon-teal); }
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .stat-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    transition: transform 0.15s, border-color 0.2s;
+  }
+  .stat-card.bump { transform: translateY(-3px); border-color: var(--border-glow); }
+  .stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); font-family: var(--font-mono); }
+  .stat-value { font-size: 20px; font-weight: 600; font-family: var(--font-mono); line-height: 1; }
+  .stat-value.c-xp    { color: var(--neon-teal); }
+  .stat-value.c-said  { color: var(--neon-blue); }
+  .stat-value.c-streak{ color: var(--neon-amber); }
+  .stat-value.c-prog  { color: var(--neon-purple); }
+
+  /* ── CATEGORY SELECTOR ── */
+  .cat-row { width: 100%; display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 14px; }
+  .cat-btn {
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-2); border-radius: 10px;
+    padding: 9px 4px 7px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 10px; font-family: var(--font-mono); letter-spacing: 0.02em;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+  }
+  .cat-btn .cat-ic { font-size: 19px; line-height: 1; }
+  .cat-btn:hover { color: var(--text-1); border-color: var(--border-glow); }
+  .cat-btn.sel { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(80,184,255,0.1); }
+
+  /* ── PROGRESS DOTS ── */
+  .set-bar { width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .set-track { flex: 1; height: 6px; background: var(--bg-raised); border-radius: 4px; overflow: hidden; }
+  .set-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink)); border-radius: 4px; transition: width 0.4s ease; }
+  .set-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); white-space: nowrap; }
+
+  /* ── PRACTICE CARD ── */
+  .practice {
+    width: 100%; background: var(--bg-mid);
+    border: 1px solid var(--border); border-radius: 18px;
+    padding: 26px 20px 22px; position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    min-height: 320px; margin-bottom: 12px;
+  }
+  .practice.shake { animation: areaShake 0.32s ease; }
+  @keyframes areaShake {
+    0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); }
+  }
+  .practice.win { animation: winPulse 0.6s ease; }
+  @keyframes winPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(68,217,184,0); }
+    40% { box-shadow: 0 0 0 4px rgba(68,217,184,0.4), 0 0 40px rgba(68,217,184,0.25); }
+  }
+
+  .pr-emoji { font-size: 76px; line-height: 1; animation: floatY 3.5s ease-in-out infinite; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.4)); }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .pr-emoji.pop { animation: emojiPop 0.5s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes emojiPop { 0% { transform: scale(0.6); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+  .pr-word {
+    font-size: clamp(30px, 9vw, 48px); font-weight: 700; letter-spacing: 0.01em;
+    color: var(--text-1); text-align: center; line-height: 1.1;
+    text-shadow: 0 2px 18px rgba(80,184,255,0.25);
+  }
+  .pr-word.phrase { font-size: clamp(22px, 6vw, 32px); }
+  .pr-syll { color: var(--neon-blue); }
+  .pr-tip {
+    font-size: 12.5px; color: var(--text-2); text-align: center; line-height: 1.5;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 14px; max-width: 380px;
+  }
+  .pr-tip strong { color: var(--neon-amber); font-weight: 600; }
+
+  /* ── ACTION BUTTONS ── */
+  .pr-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; }
+  .act-btn {
+    border-radius: 12px; padding: 11px 16px; font-size: 13px; font-weight: 600;
+    font-family: var(--font-main); cursor: pointer; border: 1px solid;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: transform 0.15s, background 0.2s, border-color 0.2s; user-select: none;
+  }
+  .act-btn:active { transform: scale(0.95); }
+  .act-listen { background: rgba(80,184,255,0.14); border-color: var(--neon-blue); color: var(--neon-blue); }
+  .act-listen:hover { background: rgba(80,184,255,0.24); }
+  .act-slow   { background: var(--bg-card); border-color: var(--border); color: var(--text-2); }
+  .act-slow:hover { border-color: var(--border-glow); color: var(--text-1); }
+  .act-speak {
+    background: linear-gradient(135deg, rgba(68,217,184,0.2), rgba(80,184,255,0.2));
+    border-color: var(--neon-teal); color: var(--neon-teal); font-weight: 700; font-size: 14px;
+    padding: 11px 22px;
+  }
+  .act-speak:hover { background: linear-gradient(135deg, rgba(68,217,184,0.32), rgba(80,184,255,0.32)); }
+  .act-speak.listening { animation: micPulse 1.1s ease infinite; border-color: var(--neon-pink); color: var(--neon-pink); }
+  @keyframes micPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,121,192,0.5); }
+    50% { box-shadow: 0 0 0 10px rgba(255,121,192,0); }
+  }
+
+  /* ── STATUS / FEEDBACK ── */
+  .pr-status {
+    width: 100%; min-height: 26px; text-align: center;
+    font-size: 13px; font-family: var(--font-mono); color: var(--text-3);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: color 0.2s;
+  }
+  .pr-status.ok    { color: var(--success); font-weight: 600; }
+  .pr-status.close { color: var(--neon-amber); }
+  .pr-status.bad   { color: var(--danger); }
+  .pr-status.hear  { color: var(--neon-pink); }
+  .mic-wave { display: inline-flex; gap: 3px; align-items: flex-end; height: 14px; }
+  .mic-wave i {
+    width: 3px; background: var(--neon-pink); border-radius: 2px; display: inline-block;
+    animation: micWave 0.9s ease-in-out infinite;
+  }
+  .mic-wave i:nth-child(2){ animation-delay: 0.15s; } .mic-wave i:nth-child(3){ animation-delay: 0.3s; }
+  .mic-wave i:nth-child(4){ animation-delay: 0.45s; } .mic-wave i:nth-child(5){ animation-delay: 0.6s; }
+  @keyframes micWave { 0%,100%{ height:4px; } 50%{ height:14px; } }
+
+  /* ── SECONDARY ROW ── */
+  .pr-second { display: flex; gap: 8px; justify-content: center; width: 100%; }
+  .mini-btn {
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-2);
+    border-radius: 10px; padding: 9px 16px; font-size: 12.5px; font-weight: 600;
+    font-family: var(--font-main); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .mini-btn:hover { border-color: var(--border-glow); color: var(--text-1); }
+  .mini-btn.confirm { color: var(--success); border-color: rgba(68,217,184,0.4); }
+  .mini-btn.confirm:hover { background: rgba(68,217,184,0.12); }
+
+  /* ── SPARKLES ── */
+  .spark { position: absolute; pointer-events: none; z-index: 12; font-size: 22px; transform: translate(-50%,-50%); animation: sparkFly 0.85s ease-out forwards; }
+  @keyframes sparkFly {
+    0% { opacity: 1; transform: translate(-50%,-50%) scale(0.4) rotate(0deg); }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.1) rotate(var(--rot)); }
+  }
+
+  /* ── OVERLAYS ── */
+  .overlay {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px; border-radius: 18px;
+    z-index: 10; background: rgba(7,16,26,0.94); backdrop-filter: blur(5px);
+    padding: 24px; text-align: center; animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .overlay-title { font-size: 23px; font-weight: 700; color: var(--neon-blue); }
+  .overlay-sub   { font-size: 13px; color: var(--text-2); line-height: 1.6; max-width: 360px; }
+  .overlay-stats { display: flex; gap: 20px; margin: 6px 0; flex-wrap: wrap; justify-content: center; }
+  .ov-stat .v { font-size: 26px; font-weight: 600; font-family: var(--font-mono); color: var(--neon-blue); }
+  .ov-stat .v.teal { color: var(--neon-teal); } .ov-stat .v.amber { color: var(--neon-amber); }
+  .ov-stat .l { font-size: 10px; font-family: var(--font-mono); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+  .record-banner {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--neon-amber);
+    background: rgba(247,185,85,0.12); border: 1px solid rgba(247,185,85,0.35);
+    padding: 5px 14px; border-radius: 20px;
+    animation: recPop 0.6s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes recPop { from{opacity:0;transform:scale(0.6)} to{opacity:1;transform:scale(1)} }
+  .warn-note {
+    font-size: 11px; color: var(--text-3); font-family: var(--font-mono); line-height: 1.5;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 8px 12px; max-width: 360px;
+  }
+  .privacy-note {
+    font-size: 10.5px; color: var(--text-3); line-height: 1.55;
+    background: rgba(68,217,184,0.06); border: 1px solid rgba(68,217,184,0.22);
+    border-radius: 10px; padding: 8px 12px; max-width: 360px;
+  }
+  .privacy-note b { color: var(--text-2); }
+
+  /* ── BUTTONS ── */
+  .btn-row { width: 100%; display: flex; gap: 8px; justify-content: center; }
+  .btn {
+    border-radius: 12px; padding: 11px 26px; font-size: 13px; font-weight: 600;
+    font-family: var(--font-main); cursor: pointer; transition: all 0.18s; border: 1px solid;
+  }
+  .btn-primary { background: rgba(80,184,255,0.15); border-color: var(--neon-blue); color: var(--neon-blue); }
+  .btn-primary:hover { background: rgba(80,184,255,0.26); }
+  .btn-secondary { background: var(--bg-card); border-color: var(--border); color: var(--text-2); }
+  .btn-secondary:hover { border-color: var(--border-glow); color: var(--text-1); }
+
+  @media(max-width:400px) {
+    .stats-bar { grid-template-columns: repeat(2,1fr); }
+    .stat-value { font-size: 17px; }
+    .record-pill { display: none; }
+    .cat-btn .cat-ic { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-brand">
+      <div class="brand-name">Fala Comigo</div>
+      <div class="brand-sub">FONÉTICA & COMUNICAÇÃO</div>
+    </div>
+    <div class="header-controls">
+      <div class="record-pill" id="recordPill" title="Seu recorde de XP">🏆 <span id="recordVal">0</span></div>
+      <select class="voice-sel" id="voiceSel" title="Escolher a voz" aria-label="Escolher a voz"></select>
+      <button class="icon-btn active" id="soundBtn" title="Sons do app">🔊</button>
+    </div>
+  </div>
+
+  <!-- LEVEL & XP -->
+  <div class="level-row">
+    <div class="level-tag" id="levelTag">NV <span id="levelNum">1</span></div>
+    <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+    <div class="level-name" id="levelName">Primeiras Palavras</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card" id="card-xp"><div class="stat-label">XP</div><div class="stat-value c-xp" id="xpVal">0</div></div>
+    <div class="stat-card" id="card-said"><div class="stat-label">Faladas</div><div class="stat-value c-said" id="saidVal">0</div></div>
+    <div class="stat-card" id="card-streak"><div class="stat-label">Sequência</div><div class="stat-value c-streak" id="streakVal">0</div></div>
+    <div class="stat-card" id="card-prog"><div class="stat-label">Estrelas</div><div class="stat-value c-prog" id="starsVal">0</div></div>
+  </div>
+
+  <!-- CATEGORY -->
+  <div class="cat-row" id="catRow">
+    <button class="cat-btn sel" data-c="vogais"><span class="cat-ic">🔤</span>Vogais</button>
+    <button class="cat-btn"    data-c="silabas"><span class="cat-ic">🔉</span>Sílabas</button>
+    <button class="cat-btn"    data-c="palavras"><span class="cat-ic">💬</span>Palavras</button>
+    <button class="cat-btn"    data-c="frases"><span class="cat-ic">🗣️</span>Frases</button>
+  </div>
+
+  <!-- SET PROGRESS -->
+  <div class="set-bar">
+    <div class="set-track"><div class="set-fill" id="setFill"></div></div>
+    <div class="set-count" id="setCount">0 / 0</div>
+  </div>
+
+  <!-- PRACTICE CARD -->
+  <div class="practice" id="practice">
+    <div class="pr-emoji" id="prEmoji">🗣️</div>
+    <div class="pr-word" id="prWord">Vamos falar!</div>
+    <div class="pr-tip" id="prTip">Escolha um tema e clique em <strong>Iniciar</strong>.</div>
+
+    <div class="pr-actions">
+      <button class="act-btn act-listen" id="btnListen">🔊 Ouvir</button>
+      <button class="act-btn act-slow"   id="btnSlow">🐢 Devagar</button>
+      <button class="act-btn act-speak"  id="btnSpeak">🎤 Falar</button>
+    </div>
+
+    <div class="pr-status" id="prStatus">Pronto quando você estiver!</div>
+
+    <div class="pr-second">
+      <button class="mini-btn confirm" id="btnConfirm">✓ Já falei!</button>
+      <button class="mini-btn" id="btnNext">Pular →</button>
+    </div>
+
+    <!-- Start overlay -->
+    <div class="overlay" id="startOverlay">
+      <div class="overlay-title">🗣️ Fala Comigo</div>
+      <div class="overlay-sub">
+        Eu falo a palavra, você <strong style="color:var(--neon-teal)">repete</strong> no microfone!<br>
+        Treine os sons, as palavras e as frases do dia a dia.
+      </div>
+      <div class="warn-note" id="micNote">🎤 Toque em <b>Iniciar</b> e permita o microfone para o jogo te ouvir. Sem microfone? Use o botão <b>“Já falei!”</b>.</div>
+      <div class="privacy-note" id="privacyNote">
+        🔒 <b>Para os pais:</b> o microfone é usado só para conferir a fala durante a brincadeira. O jogo <b>não grava nem guarda</b> o áudio. Em alguns navegadores, o áudio é processado pelo serviço de voz do próprio navegador para reconhecer as palavras.
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn btn-primary" id="startBtn">▶ Iniciar</button>
+    <button class="btn btn-secondary" id="restartBtn" style="display:none">↺ Trocar tema</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  /* ─── CONTEÚDO ─────────────────────────────────────────────
+     Cada item: { show, say, emoji, tip, accept[], phrase? }
+     - show: o que aparece na tela
+     - say:  o que a síntese de voz pronuncia
+     - accept: variações aceitas na hora de comparar a fala
+  */
+  const CONTENT = {
+    vogais: [
+      { show:'A', say:'a',  emoji:'🐝', tip:'Abra <strong>bem a boca</strong>, como a abelha que faz "aaa".', accept:['a','á','ah'] },
+      { show:'E', say:'é',  emoji:'🐘', tip:'<strong>Sorria um pouco</strong> e diga "ééé", como o elefante.', accept:['e','é','eh'] },
+      { show:'I', say:'i',  emoji:'⛪', tip:'<strong>Estique os lábios</strong> num sorriso fino: "iii".', accept:['i','í','ih'] },
+      { show:'O', say:'ó',  emoji:'🥚', tip:'Faça a boca <strong>redonda</strong>, como um ovo: "óóó".', accept:['o','ó','oh'] },
+      { show:'U', say:'u',  emoji:'🍇', tip:'Faça <strong>biquinho</strong> com os lábios: "uuu".', accept:['u','ú','uh'] },
+    ],
+    silabas: [
+      { show:'PA', say:'pá', emoji:'👏', tip:'Junte os lábios e <strong>solte o ar</strong>: "PA".', accept:['pa','pá'] },
+      { show:'BO', say:'bó', emoji:'🎾', tip:'Lábios juntos com voz: "BO", de <strong>bola</strong>.', accept:['bo','bó'] },
+      { show:'MA', say:'má', emoji:'🤱', tip:'Feche os lábios e faça "MMM" antes do "A": "MA".', accept:['ma','má'] },
+      { show:'TA', say:'tá', emoji:'👅', tip:'Língua atrás dos dentes de cima: "TA".', accept:['ta','tá'] },
+      { show:'LA', say:'lá', emoji:'🎵', tip:'Língua no céu da boca: "LA", como cantar.', accept:['la','lá'] },
+      { show:'FE', say:'fé', emoji:'🔥', tip:'Dentes no lábio de baixo soprando: "FE".', accept:['fe','fé'] },
+      { show:'VI', say:'vi', emoji:'🎻', tip:'Como o "FE", mas com voz: "VI".', accept:['vi','ví'] },
+      { show:'SO', say:'só', emoji:'☀️', tip:'Sopre como uma cobra "sss" e diga "SO".', accept:['so','só'] },
+      { show:'RU', say:'ru', emoji:'🚗', tip:'Vibre a língua de leve: "RU", como o carro.', accept:['ru','rú'] },
+      { show:'CA', say:'ká', emoji:'🏠', tip:'Som lá no fundo da garganta: "CA", de casa.', accept:['ca','cá','ka'] },
+    ],
+    palavras: [
+      { show:'BOLA',   say:'bola',   emoji:'🎾', tip:'Diga devagar: <strong>BO‑LA</strong>.', accept:['bola'] },
+      { show:'CASA',   say:'casa',   emoji:'🏠', tip:'<strong>CA‑SA</strong>, onde a gente mora.', accept:['casa'] },
+      { show:'GATO',   say:'gato',   emoji:'🐱', tip:'<strong>GA‑TO</strong>, o bichano que faz miau.', accept:['gato'] },
+      { show:'PATO',   say:'pato',   emoji:'🦆', tip:'<strong>PA‑TO</strong>, faz quá‑quá.', accept:['pato'] },
+      { show:'BOLO',   say:'bolo',   emoji:'🎂', tip:'<strong>BO‑LO</strong> de aniversário.', accept:['bolo'] },
+      { show:'SAPO',   say:'sapo',   emoji:'🐸', tip:'<strong>SA‑PO</strong> verde que pula.', accept:['sapo'] },
+      { show:'LUA',    say:'lua',    emoji:'🌙', tip:'<strong>LU‑A</strong> que brilha à noite.', accept:['lua'] },
+      { show:'SOL',    say:'sol',    emoji:'☀️', tip:'<strong>SOL</strong> quentinho do dia.', accept:['sol','sou'] },
+      { show:'FLOR',   say:'flor',   emoji:'🌻', tip:'<strong>FLOR</strong> bonita e colorida.', accept:['flor'] },
+      { show:'PEIXE',  say:'peixe',  emoji:'🐟', tip:'<strong>PEI‑XE</strong> que nada na água.', accept:['peixe','peixi'] },
+      { show:'MAÇÃ',   say:'maçã',   emoji:'🍎', tip:'<strong>MA‑ÇÃ</strong> vermelha e doce.', accept:['maçã','massa','maca','maçan'] },
+      { show:'CAVALO', say:'cavalo', emoji:'🐴', tip:'<strong>CA‑VA‑LO</strong> que galopa.', accept:['cavalo'] },
+      { show:'DENTE',  say:'dente',  emoji:'🦷', tip:'<strong>DEN‑TE</strong> que a gente escova.', accept:['dente','denti'] },
+      { show:'MÃO',    say:'mão',    emoji:'✋', tip:'<strong>MÃO</strong>, com cinco dedos.', accept:['mão','mao','mau'] },
+    ],
+    frases: [
+      { show:'Bom dia!',          say:'Bom dia!',           emoji:'🌅', tip:'Use ao <strong>acordar</strong> e encontrar alguém.', accept:['bom dia'], phrase:true },
+      { show:'Oi, tudo bem?',     say:'Oi, tudo bem?',      emoji:'👋', tip:'Um jeito legal de <strong>cumprimentar</strong>.', accept:['oi tudo bem','oi tudo','tudo bem'], phrase:true },
+      { show:'Obrigado!',         say:'Obrigado!',          emoji:'🙏', tip:'Quando alguém te <strong>ajuda</strong> ou te dá algo.', accept:['obrigado','obrigada','brigado'], phrase:true },
+      { show:'Por favor',         say:'Por favor',          emoji:'🤲', tip:'Para <strong>pedir</strong> com educação.', accept:['por favor','porfavor'], phrase:true },
+      { show:'Eu quero água',     say:'Eu quero água',      emoji:'💧', tip:'Diga quando estiver com <strong>sede</strong>.', accept:['eu quero agua','quero agua','agua'], phrase:true },
+      { show:'Eu tenho fome',     say:'Eu tenho fome',      emoji:'🍽️', tip:'Diga quando quiser <strong>comer</strong>.', accept:['eu tenho fome','tenho fome','fome'], phrase:true },
+      { show:'Me ajuda, por favor?', say:'Me ajuda, por favor?', emoji:'🤝', tip:'Para <strong>pedir ajuda</strong> a alguém.', accept:['me ajuda por favor','me ajuda','ajuda'], phrase:true },
+      { show:'Eu gosto de você',  say:'Eu gosto de você',   emoji:'💛', tip:'Diga para quem você <strong>ama</strong>.', accept:['eu gosto de voce','gosto de voce','eu gosto'], phrase:true },
+      { show:'Como você está?',   say:'Como você está?',    emoji:'😊', tip:'Para saber como a pessoa <strong>se sente</strong>.', accept:['como voce esta','como voce ta','como esta'], phrase:true },
+      { show:'Tchau, até logo!',  say:'Tchau, até logo!',   emoji:'👋', tip:'Para se <strong>despedir</strong>.', accept:['tchau ate logo','tchau','ate logo'], phrase:true },
+    ],
+  };
+
+  const CAT_LABEL = { vogais:'Vogais', silabas:'Sílabas', palavras:'Palavras', frases:'Frases' };
+
+  const LEVEL_XP    = [0, 60, 150, 300, 500, 760, 1100, 1550];
+  const LEVEL_NAMES = ['Primeiras Palavras','Voz Curiosa','Tagarela','Bom de Papo','Conversador','Comunicador','Voz de Ouro','Mestre da Fala'];
+
+  const STORE_KEY = 'ma-fala-stats';
+
+  /* ─── PERSISTÊNCIA ─── */
+  function loadStats(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)||'{}')||{}; } catch(e){ return {}; } }
+  function saveStats(s){ try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch(e){} }
+  let records = Object.assign({ bestXp:0, bestStreak:0, totalSaid:0, sessions:0 }, loadStats());
+
+  /* ─── ESTADO ─── */
+  let g = {
+    running:false, cat:'vogais', order:[], idx:0,
+    xp:0, said:0, streak:0, bestStreak:0, stars:0,
+    level:1, soundOn:true, listening:false, gotSpeech:false, attempts:0,
+  };
+
+  /* ─── VOZ DO APP (efeitos) ─── */
+  function tone(type){
+    if(!g.soundOn) return;
+    try {
+      const ac = new (window.AudioContext||window.webkitAudioContext)();
+      const o = ac.createOscillator(), gn = ac.createGain();
+      o.connect(gn); gn.connect(ac.destination);
+      if(type==='ok'){
+        o.type='sine'; o.frequency.setValueAtTime(620, ac.currentTime);
+        o.frequency.exponentialRampToValueAtTime(1040, ac.currentTime+0.14);
+        gn.gain.setValueAtTime(0.13, ac.currentTime);
+        gn.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.3);
+        o.start(); o.stop(ac.currentTime+0.3);
+      } else if(type==='star'){
+        o.type='triangle'; o.frequency.setValueAtTime(880, ac.currentTime);
+        o.frequency.exponentialRampToValueAtTime(1760, ac.currentTime+0.18);
+        gn.gain.setValueAtTime(0.12, ac.currentTime);
+        gn.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.34);
+        o.start(); o.stop(ac.currentTime+0.34);
+      } else if(type==='listen'){
+        o.type='sine'; o.frequency.setValueAtTime(480, ac.currentTime);
+        gn.gain.setValueAtTime(0.08, ac.currentTime);
+        gn.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.16);
+        o.start(); o.stop(ac.currentTime+0.16);
+      } else {
+        o.type='triangle'; o.frequency.setValueAtTime(300, ac.currentTime);
+        o.frequency.exponentialRampToValueAtTime(200, ac.currentTime+0.2);
+        gn.gain.setValueAtTime(0.08, ac.currentTime);
+        gn.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.28);
+        o.start(); o.stop(ac.currentTime+0.28);
+      }
+    } catch(e){}
+  }
+
+  /* ─── SÍNTESE DE VOZ (o app fala a palavra) ─────────────────
+     A voz "robótica" é a offline padrão do sistema (ex.: Microsoft
+     Maria no Windows). Aqui pontuamos as vozes para preferir as mais
+     NATURAIS quando existirem: Google pt-BR (Chrome) e as vozes
+     "Online/Natural" da Microsoft (Edge). O usuário ainda pode trocar
+     no seletor 🗣️ do topo. */
+  const VOICE_PREF_KEY = 'ma-fala-voice';
+  let ptVoice = null;          // voz escolhida
+  let ptVoices = [];           // todas as vozes em português, já ordenadas
+
+  function scoreVoice(v){
+    const n = (v.name||'').toLowerCase();
+    const lang = (v.lang||'').toLowerCase();
+    let s = 0;
+    if(/pt[-_]br/.test(lang)) s += 40; else if(/^pt/.test(lang)) s += 20;
+    if(/google/.test(n))            s += 30;   // Google pt-BR é bem natural
+    if(/natural|online|neural/.test(n)) s += 28;   // vozes neurais da Microsoft (Edge)
+    if(/francisca|thalita|brenda|giovanna|leila|yara|maria(?!na)|luciana|joana|fernanda/.test(n)) s += 6;
+    if(/antonio|daniel|fabio|nicolau|julio|valerio|donato|humberto/.test(n)) s += 4;
+    if(!v.localService) s += 8;                // online costuma ser mais natural
+    return s;
+  }
+  function rankVoices(){
+    if(!('speechSynthesis' in window)) return;
+    const vs = (speechSynthesis.getVoices() || []).filter(v=>/^pt/i.test(v.lang));
+    ptVoices = vs.slice().sort((a,b)=> scoreVoice(b) - scoreVoice(a));
+    // respeita a escolha salva, se ainda existir
+    let saved = null;
+    try { saved = localStorage.getItem(VOICE_PREF_KEY); } catch(e){}
+    const savedVoice = saved && ptVoices.find(v=>v.voiceURI===saved || v.name===saved);
+    ptVoice = savedVoice || ptVoices[0] || null;
+  }
+  if('speechSynthesis' in window){
+    rankVoices();
+    speechSynthesis.onvoiceschanged = ()=>{ rankVoices(); if(typeof buildVoiceMenu==='function') buildVoiceMenu(); };
+  }
+  function speak(text, slow){
+    if(!('speechSynthesis' in window) || !g.soundOn) return;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = (ptVoice && ptVoice.lang) || 'pt-BR';
+      if(ptVoice) u.voice = ptVoice;
+      // ritmo mais humano: nem rápido demais, nem arrastado
+      u.rate  = slow ? 0.72 : 0.97;
+      u.pitch = 1.0;
+      u.volume = 1;
+      speechSynthesis.speak(u);
+    } catch(e){}
+  }
+  function niceVoiceName(v){
+    let n = (v.name||'voz')
+      .replace(/microsoft/i,'').replace(/google/i,'Google')
+      .replace(/\((natural|online)\)/i,'').replace(/-\s*portugu[eê]s.*$/i,'')
+      .replace(/\s+/g,' ').trim();
+    if(n.length>20) n = n.slice(0,20)+'…';
+    const natural = scoreVoice(v) >= 50;
+    return (natural ? '★ ' : '') + n;
+  }
+  function buildVoiceMenu(){
+    const sel = document.getElementById('voiceSel');
+    if(!sel) return;
+    if(!ptVoices.length){ sel.style.display='none'; return; }
+    sel.style.display = '';
+    sel.innerHTML = '';
+    ptVoices.forEach((v)=>{
+      const o = document.createElement('option');
+      o.value = v.voiceURI || v.name;
+      o.textContent = niceVoiceName(v);
+      if(ptVoice && (v.voiceURI===ptVoice.voiceURI && v.name===ptVoice.name)) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+
+  /* ─── RECONHECIMENTO DE FALA ─── */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const srSupported = !!SR;
+  let recog = null, recogTimer = null;
+
+  /* ─── COMPARAÇÃO DE FALA ─── */
+  function normalize(s){
+    return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+  }
+  function lev(a,b){
+    const m=a.length, n=b.length;
+    if(!m) return n; if(!n) return m;
+    const d = Array.from({length:m+1},(_,i)=>[i].concat(new Array(n).fill(0)));
+    for(let j=0;j<=n;j++) d[0][j]=j;
+    for(let i=1;i<=m;i++) for(let j=1;j<=n;j++){
+      const c = a[i-1]===b[j-1]?0:1;
+      d[i][j]=Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+c);
+    }
+    return d[m][n];
+  }
+  function similar(a,b){
+    const mx=Math.max(a.length,b.length)||1;
+    return 1 - lev(a,b)/mx;
+  }
+  // Retorna 'ok' | 'close' | 'no'
+  function judge(transcript, item){
+    const heard = normalize(transcript);
+    if(!heard) return 'no';
+    const targets = (item.accept||[]).map(normalize).concat([normalize(item.say)]);
+
+    // "contém" só vale se o que foi ouvido tiver tamanho de verdade —
+    // evita que uma vogalzinha solta ("a") passe por uma frase/palavra inteira.
+    const containsOk = (a, b) => {
+      if(!a || !b) return false;
+      const shorter = Math.min(a.length, b.length);
+      if(shorter < 3) return a === b;        // muito curto: exige igualdade
+      return a.includes(b) || b.includes(a);
+    };
+
+    if(item.phrase){
+      // frases: conta quantas palavras do alvo apareceram
+      const target = normalize(item.say).split(' ').filter(w=>w.length>1);
+      if(!target.length) return 'no';
+      const heardWords = heard.split(' ').filter(Boolean);
+      let hit = 0;
+      target.forEach(w=>{
+        if(heardWords.some(h=>h===w || similar(h,w)>=0.8)) hit++;
+      });
+      const ratio = hit/target.length;
+      // variações curtas registradas (ex.: "tudo bem") — precisam casar de fato
+      if(targets.some(t=> containsOk(heard, t)) ) return 'ok';
+      // exige pelo menos 1 palavra reconhecida E uma fração mínima da frase
+      if(hit >= 1 && ratio >= 0.6) return 'ok';
+      if(hit >= 1 && ratio >= 0.34) return 'close';
+      return 'no';
+    }
+
+    // sílabas / palavras / vogais
+    let best = 0;
+    targets.forEach(t=>{
+      if(!t) return;
+      if(heard===t || containsOk(heard, t)) best = Math.max(best, 1);
+      best = Math.max(best, similar(heard, t));
+      // também testa cada palavra ouvida isoladamente
+      heard.split(' ').forEach(h=> best = Math.max(best, similar(h, t)) );
+    });
+    const thr = (item.show.length<=2) ? 0.55 : 0.7;   // vogais/sílabas são mais tolerantes
+    if(best >= thr) return 'ok';
+    if(best >= thr-0.2) return 'close';
+    return 'no';
+  }
+
+  /* ─── ELEMENTOS ─── */
+  const $ = id => document.getElementById(id);
+  const practice = $('practice');
+  const prEmoji = $('prEmoji'), prWord = $('prWord'), prTip = $('prTip'), prStatus = $('prStatus');
+
+  function shuffle(a){
+    const r = a.slice();
+    for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; }
+    return r;
+  }
+
+  function curItem(){ return CONTENT[g.cat][g.order[g.idx]]; }
+
+  function renderItem(){
+    const it = curItem();
+    prEmoji.textContent = it.emoji;
+    prWord.innerHTML = it.show;
+    prWord.className = 'pr-word' + (it.phrase ? ' phrase' : '');
+    prTip.innerHTML = it.tip;
+    prEmoji.classList.remove('pop'); void prEmoji.offsetWidth; prEmoji.classList.add('pop');
+    setStatus('Clique 🔊 para ouvir, depois 🎤 para falar.', '');
+    g.attempts = 0;
+    updateSetBar();
+    // o app já demonstra a fala automaticamente
+    setTimeout(()=> speak(it.say, false), 250);
+  }
+
+  function setStatus(txt, cls, html){
+    prStatus.className = 'pr-status' + (cls?(' '+cls):'');
+    if(html) prStatus.innerHTML = html; else prStatus.textContent = txt;
+  }
+
+  function updateSetBar(){
+    const total = CONTENT[g.cat].length;
+    $('setCount').textContent = (g.idx) + ' / ' + total;
+    $('setFill').style.width = (g.idx/total*100) + '%';
+    $('starsVal').textContent = g.stars;
+  }
+
+  /* ─── FLUXO DE ACERTO ─── */
+  function onSuccess(viaMic){
+    const it = curItem();
+    g.said++; g.streak++; g.stars++;
+    if(g.streak > g.bestStreak) g.bestStreak = g.streak;
+    const bonus = g.streak>=6?3 : g.streak>=3?2 : 1;
+    const base = it.phrase ? 14 : (it.show.length<=2 ? 8 : 11);
+    const gain = base*bonus;
+    g.xp += gain;
+
+    tone(g.streak>=3 ? 'star' : 'ok');
+    speak(['Muito bem!','Isso!','Você conseguiu!','Mandou bem!','Perfeito!'][Math.floor(Math.random()*5)], false);
+    sparkles();
+    practice.classList.remove('win'); void practice.offsetWidth; practice.classList.add('win');
+    bumpCard('card-xp'); bumpCard('card-said'); bumpCard('card-streak');
+    setStatus('', 'ok', '🌟 <b>Boa!</b> +'+gain+' XP'+(viaMic?'':' '));
+    updateUI(); checkLevel();
+
+    setTimeout(nextItem, 1300);
+  }
+
+  function onClose(transcript){
+    g.streak = 0;
+    tone('listen');
+    setStatus('', 'close', '👂 Quase! Ouvi “'+escapeHtml(transcript)+'”. Tenta de novo!');
+    speak('Quase! Tenta de novo.', false);
+    updateUI();
+  }
+
+  function onFail(transcript){
+    g.streak = 0;
+    practice.classList.remove('shake'); void practice.offsetWidth; practice.classList.add('shake');
+    tone('miss');
+    const heardTxt = transcript ? ('Ouvi “'+escapeHtml(transcript)+'”. ') : '';
+    setStatus('', 'bad', '🔁 '+heardTxt+'Sem pressa — escute e repita!');
+    speak('Vamos tentar de novo. Escute.', false);
+    setTimeout(()=> speak(curItem().say, true), 900); // repete devagar
+    updateUI();
+  }
+
+  function nextItem(){
+    g.idx++;
+    if(g.idx >= CONTENT[g.cat].length){ endSession(); return; }
+    renderItem();
+  }
+
+  /* ─── MICROFONE ─── */
+  function startListen(){
+    if(!g.running) return;
+    const it = curItem();
+
+    if(!srSupported){
+      // sem reconhecimento: orienta usar "Já falei!"
+      setStatus('', 'hear', '🎤 Seu navegador não ouve a fala aqui. Fale e toque em “Já falei!”.');
+      speak(it.say, false);
+      return;
+    }
+    if(g.listening) return;
+
+    try { speechSynthesis.cancel(); } catch(e){}
+
+    recog = new SR();
+    recog.lang = 'pt-BR';
+    recog.interimResults = true;     // feedback ao vivo: mostra que o mic está captando
+    recog.maxAlternatives = 5;
+    recog.continuous = false;
+
+    g.listening = true;
+    g.gotSpeech = false;
+    $('btnSpeak').classList.add('listening');
+    $('btnSpeak').innerHTML = '🎤 Ouvindo…';
+    tone('listen');
+    const WAVE = '<span class="mic-wave"><i></i><i></i><i></i><i></i><i></i></span>';
+    setStatus('', 'hear', WAVE + ' Pode falar agora!');
+
+    let done = false, evaluated = false, lastHeard = '';
+    const finish = ()=>{ if(done) return; done=true; stopListenUI(); };
+
+    // Avalia um texto reconhecido e dá o veredito (uma vez só).
+    function evaluate(text){
+      if(evaluated) return;
+      evaluated = true;
+      finish();
+      const heard = (text||'').trim();
+      let verdict = heard ? judge(heard, it) : 'no';
+      // vogais e sílabas curtas: o reconhecedor é fraco com sons isolados,
+      // então qualquer fala detectada já vale como acerto (incentivo).
+      if(verdict !== 'ok' && it.show.length <= 2 && heard) verdict = 'ok';
+      if(verdict==='ok')         onSuccess(true);
+      else if(verdict==='close') onClose(heard);
+      else                       onFail(heard);
+    }
+
+    recog.onresult = (e)=>{
+      // separa o que ainda é parcial (interim) do resultado final
+      let interim = '', finalIdx = -1;
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        if(e.results[i].isFinal) finalIdx = i;
+        else interim += e.results[i][0].transcript;
+      }
+      if(finalIdx === -1){
+        // ainda ouvindo — mostra ao vivo o que entendeu até agora
+        if(interim.trim()){
+          g.gotSpeech = true; lastHeard = interim.trim();
+          setStatus('', 'hear', WAVE + ' Ouvindo: <b>'+escapeHtml(lastHeard)+'</b>');
+        }
+        return;
+      }
+      // resultado final: escolhe a melhor das alternativas
+      const res = e.results[finalIdx];
+      let verdict = 'no', heardShown = '';
+      const order = { ok:3, close:2, no:1 };
+      for(let i=0;i<res.length;i++){
+        const t = res[i].transcript;
+        if(!heardShown) heardShown = t;
+        const v = judge(t, it);
+        if(order[v] > order[verdict]){ verdict = v; heardShown = t; }
+        if(verdict==='ok') break;
+      }
+      lastHeard = heardShown.trim() || lastHeard;
+      evaluate(heardShown);
+    };
+    recog.onerror = (e)=>{
+      finish();
+      if(e.error==='not-allowed' || e.error==='service-not-allowed'){
+        evaluated = true;
+        setStatus('', 'bad', '🔒 Microfone bloqueado. Use “Já falei!” ou libere o microfone.');
+      } else if(e.error==='no-speech' && !g.gotSpeech){
+        evaluated = true;
+        setStatus('', 'close', '🤫 Não ouvi nada. Toque em 🎤 e fale mais perto.');
+      } else if(e.error==='aborted' || e.error==='audio-capture'){
+        evaluated = true;
+        setStatus('', 'bad', '🎤 Não consegui usar o microfone. Confira se ele está conectado.');
+      }
+      // demais erros: deixa o onend decidir com o que já foi ouvido
+    };
+    // Se terminou e ainda não houve veredito mas algo foi ouvido, avalia o parcial.
+    recog.onend = ()=>{
+      finish();
+      if(!evaluated){
+        if(lastHeard) evaluate(lastHeard);
+        else setStatus('', 'close', '🤫 Não ouvi direito. Toque em 🎤 e tente de novo.');
+      }
+    };
+
+    try { recog.start(); } catch(e){ finish(); }
+    clearTimeout(recogTimer);
+    recogTimer = setTimeout(()=>{ try{ recog && recog.stop(); }catch(e){} }, 8000);
+  }
+  function stopListenUI(){
+    g.listening = false;
+    clearTimeout(recogTimer);
+    const b = $('btnSpeak');
+    b.classList.remove('listening');
+    b.innerHTML = '🎤 Falar';
+  }
+
+  /* ─── EFEITOS ─── */
+  function sparkles(){
+    const r = prEmoji.getBoundingClientRect();
+    const a = practice.getBoundingClientRect();
+    const cx = r.left - a.left + r.width/2;
+    const cy = r.top - a.top + r.height/2;
+    const ic = ['⭐','✨','🌟','💫','🎉'];
+    for(let i=0;i<10;i++){
+      const s = document.createElement('div');
+      s.className = 'spark';
+      s.textContent = ic[Math.floor(Math.random()*ic.length)];
+      s.style.left = cx+'px'; s.style.top = cy+'px';
+      const ang = (Math.PI*2*i/10) + Math.random()*0.4;
+      const dist = 55 + Math.random()*45;
+      s.style.setProperty('--dx', Math.cos(ang)*dist+'px');
+      s.style.setProperty('--dy', Math.sin(ang)*dist+'px');
+      s.style.setProperty('--rot', (Math.random()*180-90)+'deg');
+      practice.appendChild(s);
+      setTimeout(()=>s.remove(), 870);
+    }
+  }
+  function bumpCard(id){ const c=$(id); c.classList.add('bump'); setTimeout(()=>c.classList.remove('bump'),160); }
+  function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  /* ─── UI ─── */
+  function updateUI(){
+    $('xpVal').textContent = g.xp;
+    $('saidVal').textContent = g.said;
+    $('streakVal').textContent = g.streak;
+    $('starsVal').textContent = g.stars;
+    const xpStart = LEVEL_XP[Math.max(0,g.level-1)];
+    const xpEnd   = LEVEL_XP[Math.min(g.level, LEVEL_XP.length-1)];
+    const pct = xpEnd>xpStart ? Math.min(100,((g.xp-xpStart)/(xpEnd-xpStart))*100) : 100;
+    $('xpFill').style.width = Math.max(0,pct)+'%';
+  }
+  function checkLevel(){
+    for(let i=LEVEL_XP.length-1;i>=0;i--){
+      if(g.xp>=LEVEL_XP[i] && (i+1)!==g.level){
+        const up=(i+1)>g.level; g.level=i+1;
+        $('levelNum').textContent=g.level;
+        $('levelName').textContent=LEVEL_NAMES[Math.min(g.level-1,LEVEL_NAMES.length-1)];
+        if(up){ tone('star');
+          ['levelTag','levelName'].forEach(id=>{ const e=$(id); e.classList.remove('level-up'); void e.offsetWidth; e.classList.add('level-up'); });
+        }
+        break;
+      }
+    }
+  }
+  function updateRecordPill(){ $('recordVal').textContent = records.bestXp||0; }
+
+  /* ─── FLUXO DO JOGO ─── */
+  function removeOverlays(){ document.querySelectorAll('.overlay').forEach(o=>o.remove()); }
+
+  function startSession(){
+    Object.assign(g, {
+      running:true, idx:0, xp:0, said:0, streak:0, bestStreak:0, stars:0, level:1, attempts:0,
+    });
+    g.order = shuffle(CONTENT[g.cat].map((_,i)=>i));
+    $('startBtn').style.display='none';
+    $('restartBtn').style.display='inline-block';
+    $('catRow').style.pointerEvents='none';
+    $('catRow').style.opacity='0.5';
+    $('levelNum').textContent='1';
+    $('levelName').textContent=LEVEL_NAMES[0];
+    removeOverlays();
+    updateUI();
+    renderItem();
+  }
+
+  function endSession(){
+    g.running=false;
+    stopListenUI();
+    $('catRow').style.pointerEvents='';
+    $('catRow').style.opacity='1';
+    $('setFill').style.width='100%';
+    $('setCount').textContent = CONTENT[g.cat].length+' / '+CONTENT[g.cat].length;
+
+    const total = CONTENT[g.cat].length;
+    // recordes locais
+    const newRecords=[];
+    if(g.xp>(records.bestXp||0)){ records.bestXp=g.xp; newRecords.push('XP'); }
+    if(g.bestStreak>(records.bestStreak||0)){ records.bestStreak=g.bestStreak; newRecords.push('sequência'); }
+    records.totalSaid=(records.totalSaid||0)+g.said;
+    records.sessions=(records.sessions||0)+1;
+    saveStats(records); updateRecordPill();
+
+    // integra ao progresso geral do app (XP, medalhas, histórico)
+    if(window.MAProgress){
+      MAProgress.recordGame({
+        name:'Fala Comigo', icon:'🗣️',
+        xp: MAProgress.clamp(Math.round(g.xp), 10, 200),
+        score: g.said,
+        flags:{ fala:1 }
+      });
+    }
+
+    const allDone = g.said>=total;
+    const msg = allDone ? 'Você falou tudo! 🎉' : g.said>=Math.ceil(total*0.6) ? 'Mandou muito bem!' : 'Continue treinando, tá indo bem!';
+    speak(allDone?'Você falou tudo! Que orgulho!':'Muito bem! Vamos treinar mais.', false);
+    tone('star');
+
+    const ov=document.createElement('div'); ov.className='overlay';
+    ov.innerHTML = `
+      <div class="overlay-title">${msg}</div>
+      ${newRecords.length?`<div class="record-banner">🏆 Novo recorde de ${newRecords.join(' e ')}!</div>`:''}
+      <div class="overlay-stats">
+        <div class="ov-stat"><div class="v">${g.said}/${total}</div><div class="l">faladas</div></div>
+        <div class="ov-stat"><div class="v teal">${g.stars}</div><div class="l">estrelas</div></div>
+        <div class="ov-stat"><div class="v amber">${g.bestStreak}</div><div class="l">sequência</div></div>
+      </div>
+      <div class="overlay-sub">Tema: <strong style="color:var(--neon-blue)">${CAT_LABEL[g.cat]}</strong> · Nível ${g.level} — ${LEVEL_NAMES[Math.min(g.level-1,LEVEL_NAMES.length-1)]}<br>
+        <span style="color:var(--text-3);font-family:var(--font-mono);font-size:11px">recorde de XP: ${records.bestXp} · ${records.sessions} treinos</span>
+      </div>`;
+    practice.appendChild(ov);
+  }
+
+  /* ─── CONTROLES ─── */
+  $('startBtn').addEventListener('click', startSession);
+  $('restartBtn').addEventListener('click', ()=>{
+    g.running=false; stopListenUI(); removeOverlays();
+    $('startBtn').style.display='inline-block';
+    $('restartBtn').style.display='none';
+    $('catRow').style.pointerEvents='';
+    $('catRow').style.opacity='1';
+    prEmoji.textContent='🗣️'; prWord.className='pr-word'; prWord.textContent='Vamos falar!';
+    prTip.innerHTML='Escolha um tema e clique em <strong>Iniciar</strong>.';
+    setStatus('Pronto quando você estiver!','');
+    $('setFill').style.width='0%'; $('setCount').textContent='0 / '+CONTENT[g.cat].length;
+  });
+
+  $('btnListen').addEventListener('click', ()=>{ if(g.running) speak(curItem().say, false); });
+  $('btnSlow').addEventListener('click',   ()=>{ if(g.running) speak(curItem().say, true); });
+  $('btnSpeak').addEventListener('click',  ()=>{ if(g.running) startListen(); else startSession(); });
+  $('btnConfirm').addEventListener('click',()=>{ if(g.running && !g.listening) onSuccess(false); });
+  $('btnNext').addEventListener('click',   ()=>{ if(g.running){ g.streak=0; updateUI(); nextItem(); } });
+
+  $('soundBtn').addEventListener('click', ()=>{
+    g.soundOn=!g.soundOn; const b=$('soundBtn');
+    b.textContent=g.soundOn?'🔊':'🔇'; b.classList.toggle('active',g.soundOn);
+    if(!g.soundOn){ try{ speechSynthesis.cancel(); }catch(e){} }
+  });
+
+  $('voiceSel').addEventListener('change', (e)=>{
+    const v = ptVoices.find(x=> (x.voiceURI||x.name)===e.target.value);
+    if(!v) return;
+    ptVoice = v;
+    try { localStorage.setItem(VOICE_PREF_KEY, v.voiceURI || v.name); } catch(err){}
+    // amostra para ouvir a voz escolhida
+    const sample = g.running ? curItem().say : 'Oi! Vamos falar juntos?';
+    const wasOn = g.soundOn; g.soundOn = true; speak(sample, false); g.soundOn = wasOn;
+  });
+
+  document.querySelectorAll('.cat-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(g.running) return;
+      document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      g.cat = btn.dataset.c;
+      $('setCount').textContent='0 / '+CONTENT[g.cat].length;
+      $('setFill').style.width='0%';
+    });
+  });
+
+  /* ─── BOOT ─── */
+  // ajusta o aviso do microfone conforme suporte do navegador
+  if(!srSupported){
+    $('micNote').innerHTML = '🎤 Este navegador não reconhece a fala automaticamente. Sem problema: ouça, fale em voz alta e toque em <b>“Já falei!”</b> para avançar.';
+    // sem reconhecimento, o microfone não é usado — o aviso de privacidade não se aplica
+    const pn = $('privacyNote'); if(pn) pn.style.display = 'none';
+  }
+  $('setCount').textContent='0 / '+CONTENT[g.cat].length;
+  buildVoiceMenu();
+  updateRecordPill();
+  updateUI();
+})();
+</script>
+<script src="../js/progress.js"></script>
+<script src="../js/nav.js"></script>
+</body>
+</html>
