@@ -20,6 +20,82 @@ const typingIndicator = document.getElementById("typing-indicator");
 // ESTADO
 // =============================================
 let isWaiting = false; // Evita envios duplicados enquanto aguarda resposta
+let lunaTurns = 0;     // Quantas respostas a Luna já deu (para saudar só na 1ª)
+
+// =============================================
+// ESCOPO: A LUNA SÓ FALA DE IDIOMAS
+// ---------------------------------------------
+// Guardrail no frontend: se a mensagem não for sobre idiomas/línguas,
+// a Luna recusa na hora e nem chama o backend.
+// =============================================
+function normalizeText(s) {
+  return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
+// Sinais de que a conversa é sobre idiomas/línguas.
+const LANGUAGE_SIGNALS = [
+  // a própria ideia de idioma/língua
+  /\b(idioma|idiomas|lingua|linguas|linguagem|linguistica|bilingue)\b/,
+  // nomes de idiomas (pt e formas nativas)
+  /\b(portugues|ingles|english|espanhol|espanol|spanish|frances|french|francais|italiano|italian|alemao|german|deutsch|japones|japanese|nihongo|chines|chinese|mandarim|mandarin|coreano|korean|russo|russian|arabe|arabic|latim|latin|libras|hebraico|holandes|grego|polones)\b/,
+  // tradução / significado
+  /\b(traduz|traduza|traduzir|traducao|translate|translation)\b/,
+  /(significa|significado|quer dizer|como se diz|como se fala|como se escreve|como fala|como escrevo|como pronuncia)/,
+  // fonética / escrita
+  /\b(pronunc|sotaque|accent|soletr|alfabeto|letra|letras|silaba|silabas|acento)\b/,
+  // gramática / vocabulário
+  /\b(gramatica|grammar|verbo|verbos|verb|conjug|vocabulario|vocabulary|palavra|palavras|word|words|frase|frases|sentence|expressao|expressoes)\b/,
+  /\b(plural|singular|feminino|masculino|artigo|preposicao|adjetivo|substantivo|adverbio|pronome|tempo verbal|presente|passado|futuro)\b/,
+  // pedir em outra língua
+  /(in english|em ingles|en espanol|en frances|auf deutsch)/,
+  // saudações/expressões comuns (servem pra começar a praticar)
+  /\b(hello|hi|hey|hola|bonjour|ciao|hallo|salut|konnichiwa|ni hao|annyeong|gracias|merci|danke|arigato|thank you|please|good morning|good night|goodbye|bye)\b/,
+  // saudações em português pra iniciar a conversa
+  /\b(oi|ola|opa|bom dia|boa tarde|boa noite)\b/,
+];
+
+function isLanguageTopic(text) {
+  const t = normalizeText(text);
+  if (!t) return false;
+  return LANGUAGE_SIGNALS.some((re) => re.test(t));
+}
+
+// Mensagem de recusa (na voz da Luna).
+const OFF_TOPIC_REPLY =
+  "Ops! 🌍 Eu sou a Luna e só sei conversar sobre idiomas e línguas, nada além disso.\n" +
+  'Que tal me perguntar algo assim: "Como se diz obrigado em inglês?" ou "O que significa hello?" 💜';
+
+// Embrulha a mensagem com o contexto de professora de idiomas, para
+// orientar o backend a responder sempre dentro do tema.
+function buildLanguagePrompt(text) {
+  return (
+    "Você é a Luna, uma professora de idiomas simpática para crianças e adolescentes. " +
+    "Responda sempre em português, de forma curta, gentil e divertida, e fale APENAS sobre " +
+    "idiomas, línguas e como aprendê-los (tradução, vocabulário, pronúncia, gramática, frases). " +
+    "Se a pergunta não for sobre idiomas, diga com carinho que você só ajuda com idiomas. " +
+    'Pergunta da criança: "' + text + '"'
+  );
+}
+
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// =============================================
+// SAUDAÇÃO SÓ NA PRIMEIRA RESPOSTA
+// ---------------------------------------------
+// O backend tende a começar toda resposta com "Oii". A partir da 2ª
+// resposta, removemos essa saudação inicial para o papo fluir natural.
+// =============================================
+// Saudação no início: "oi", "oii", "olá", "opa", "e aí", "hey"...
+// seguida de pontuação/espaço (ou fim), para não cortar "oitavo", "olaria" etc.
+const LEADING_GREETING_RE =
+  /^[\s]*(?:oi+e?|oi+|olá+|ola+|opa|oie+|e a[ií]|hey+|hello|hi)(?=$|[\s,!.…?:–—-])[\s,!.…?:–—-]*/i;
+
+function stripLeadingGreeting(text) {
+  const stripped = (text || "").replace(LEADING_GREETING_RE, "");
+  const clean = stripped.trim();
+  if (!clean) return (text || "").trim();           // nunca esvazia a bolha
+  return clean.charAt(0).toUpperCase() + clean.slice(1); // recapitaliza
+}
 
 // =============================================
 // AUTO-RESIZE DO TEXTAREA
@@ -64,13 +140,28 @@ async function handleSend() {
   userInput.value = "";
   userInput.style.height = "auto";
 
+  // 2.5. TRAVA DE ASSUNTO: se não for sobre idiomas, recusa sem chamar o backend.
+  if (!isLanguageTopic(text)) {
+    showTypingIndicator();
+    await wait(650);
+    hideTypingIndicator();
+    appendMessage(OFF_TOPIC_REPLY, "luna");
+    isWaiting = false;
+    setInputDisabled(false);
+    userInput.focus();
+    return;
+  }
+
   // 3. Mostra indicador de digitação
   showTypingIndicator();
 
-  // 4. Chama o backend
+  // 4. Chama o backend (com o contexto de professora de idiomas)
   try {
-    const reply = await sendToBackend(text);
+    let reply = await sendToBackend(buildLanguagePrompt(text));
     hideTypingIndicator();
+    lunaTurns++;
+    // Saúda só na 1ª resposta; nas seguintes, remove o "Oii" inicial.
+    if (lunaTurns > 1) reply = stripLeadingGreeting(reply);
     appendMessage(reply, "luna");
   } catch (err) {
     hideTypingIndicator();
@@ -207,8 +298,32 @@ function showError(message) {
 }
 
 // =============================================
+// AQUECIMENTO DO BACKEND (Render dorme após inatividade)
+// ---------------------------------------------
+// Ao abrir a página, "cutucamos" o servidor para ele acordar enquanto
+// a criança lê as boas-vindas e digita. Assim a 1ª mensagem real já
+// chega com o backend desperto, sem aquele atraso de cold-start.
+// Não cria mensagem de chat: é só um GET para acordar o serviço.
+// Erros/404/CORS são ignorados de propósito.
+// =============================================
+function warmUpBackend() {
+  try {
+    const origin = new URL(BACKEND_URL).origin;
+    fetch(origin, {
+      method: "GET",
+      mode: "no-cors",
+      cache: "no-store",
+      keepalive: true,
+    }).catch(() => {});
+  } catch (e) {
+    /* silencioso */
+  }
+}
+
+// =============================================
 // FOCO INICIAL
 // =============================================
 window.addEventListener("load", () => {
   userInput.focus();
+  warmUpBackend();
 });
