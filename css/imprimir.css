@@ -1,0 +1,176 @@
+/* ============================================================
+   MENTE AMIGA — Jogos para Imprimir (imprimir.css)
+   Estilos da página + folhas imprimíveis no TEMA da marca.
+   ============================================================ */
+
+.ph-hero { padding: 88px 1.5rem 1.5rem; text-align: center; background: var(--bg-secondary); }
+.ph-wrap { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+/* ─── HUB de atividades ─── */
+.ph-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 1.5rem; }
+.ph-card {
+  border: 2px solid transparent; border-radius: var(--r-xl); padding: 1.75rem 1.25rem;
+  text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .6rem;
+  transition: all var(--t-slow); font-family: inherit; color: var(--text-primary);
+}
+.ph-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+.ph-card-ic { font-size: 3rem; }
+.ph-card-name { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; }
+.ph-card-desc { font-size: .82rem; color: var(--text-secondary); line-height: 1.5; }
+.pc-a { background: linear-gradient(145deg, #EDE9F8, #DDD5F5); border-color: rgba(124, 92, 191, .3); }
+.pc-b { background: linear-gradient(145deg, #FCE4F3, #F8C9E8); border-color: rgba(233, 30, 140, .3); }
+.pc-c { background: linear-gradient(145deg, #FFF0E0, #FFE0C0); border-color: rgba(255, 140, 66, .3); }
+.pc-d { background: linear-gradient(145deg, #E0F5F2, #C8EEE9); border-color: rgba(43, 181, 160, .3); }
+.pc-e { background: linear-gradient(145deg, #E8F3FD, #D0E8FA); border-color: rgba(74, 144, 217, .3); }
+[data-theme="dark"] .pc-a { background: linear-gradient(145deg, #231849, #180F35); }
+[data-theme="dark"] .pc-b { background: linear-gradient(145deg, #2A0A1E, #1E0614); }
+[data-theme="dark"] .pc-c { background: linear-gradient(145deg, #2A1A0F, #1F1308); }
+[data-theme="dark"] .pc-d { background: linear-gradient(145deg, #0A2420, #061A16); }
+[data-theme="dark"] .pc-e { background: linear-gradient(145deg, #0D1828, #080F1E); }
+
+/* ─── Barra de ações da atividade ─── */
+.ph-toolbar { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; justify-content: center; margin: 1rem 0 1.5rem; }
+.ph-btn {
+  border: none; border-radius: var(--r-md); padding: 11px 20px; font-family: inherit; font-weight: 800;
+  font-size: .9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all .2s;
+}
+.ph-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.ph-btn-print { background: linear-gradient(135deg, #7C5CBF, #4A90D9); color: #fff; }
+.ph-btn-regen { background: var(--c-orange, #FF8C42); color: #fff; }
+.ph-btn-back  { background: var(--bg-tertiary, #eee); color: var(--text-primary); }
+
+/* ============================================================
+   FOLHA IMPRIMÍVEL — tema Mente Amiga
+   Cada folha define suas cores via .sheet-<jogo> (--accent etc).
+   print-color-adjust:exact = OBRIGA o navegador a imprimir as
+   cores de fundo (senão a impressão sai sem o tema).
+   ============================================================ */
+.print-sheet {
+  --accent: #7C5CBF; --accent2: #4A90D9; --accent-soft: #EDE9F8;
+  background: #fff; color: #20183a; width: 100%; max-width: 800px; margin: 0 auto;
+  border-radius: 20px; box-shadow: var(--shadow-lg);
+  border: 3px solid var(--accent); overflow: hidden;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.sheet-memoria { --accent: #7C5CBF; --accent2: #9B7FD4; --accent-soft: #EDE9F8; }
+.sheet-colorir { --accent: #E91E8C; --accent2: #FF6FB5; --accent-soft: #FCE4F3; }
+.sheet-cores   { --accent: #FF8C42; --accent2: #FFB36B; --accent-soft: #FFF0E0; }
+.sheet-foco    { --accent: #2BB5A0; --accent2: #4FC7B5; --accent-soft: #E0F5F2; }
+.sheet-dama    { --accent: #4A90D9; --accent2: #7C5CBF; --accent-soft: #E8F3FD; }
+/* borda/padding não somam à largura (evita peças/cartas cortadas na borda) */
+.print-sheet, .print-sheet * { box-sizing: border-box; }
+
+/* cabeçalho: logo + marca + título, sobre gradiente da cor-tema */
+.ps-head {
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; padding: 16px 22px;
+}
+.ps-head img { width: 56px; height: 56px; border-radius: 14px; background: #fff; padding: 3px; box-shadow: 0 2px 7px rgba(0,0,0,.28); flex-shrink: 0; }
+.ps-head-txt { display: flex; flex-direction: column; line-height: 1.15; }
+.ps-brandname { font-size: .76rem; font-weight: 800; letter-spacing: .06em; opacity: .92; }
+.ps-title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 800; }
+.ps-head-emoji { margin-left: auto; font-size: 2.1rem; filter: drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+
+/* faixa de instrução */
+.ps-instr {
+  background: var(--accent-soft); color: #3a3350;
+  margin: 16px 22px 0; padding: 11px 16px; border-radius: 12px;
+  font-size: .92rem; text-align: center; border: 1.5px dashed var(--accent);
+}
+.ps-instr strong { color: var(--accent); }
+.ps-body { padding: 18px 22px 6px; }
+
+/* rodapé com marca + nome/data */
+.ps-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  border-top: 2px dashed var(--accent-soft); margin: 6px 22px 0; padding: 12px 0 16px;
+}
+.ps-foot .brand { font-size: .8rem; color: var(--accent); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.ps-foot .name { font-size: .8rem; color: #888; }
+
+/* ─── Memória ─── */
+.mem-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.mem-card {
+  aspect-ratio: 4/5; border: 2px dashed var(--accent); border-radius: 12px;
+  overflow: hidden; background: var(--accent-soft);
+}
+.mem-card img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+
+/* ─── Colorir ─── */
+.cl-stage { display: flex; justify-content: center; align-items: center; padding: 10px;
+  border: 2.5px dashed var(--accent); border-radius: 16px; background: #fff; }
+.cl-svg { width: min(100%, 440px); height: auto; }
+.cl-img { width: min(100%, 480px); height: auto; display: block; }
+
+/* ─── Cores ─── */
+.cor-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 14px; }
+.cor-item { display: flex; flex-direction: column; align-items: center; gap: 6px;
+  border: 2px solid var(--accent-soft); border-radius: 14px; padding: 10px 6px 12px; background: #fff; }
+.cor-item svg { width: 104px; height: 104px; }
+.cor-label { font-weight: 800; font-size: .85rem; color: var(--accent); text-transform: uppercase; letter-spacing: .03em; text-align: center; }
+.cor-label small { display: block; font-weight: 600; font-size: .66rem; color: #888; text-transform: none; letter-spacing: 0; }
+
+/* ─── Foco ─── */
+.foco-block { margin-bottom: 18px; background: var(--accent-soft); border-radius: 14px; padding: 12px 14px; }
+.foco-h { font-weight: 800; font-size: 1rem; margin-bottom: 8px; color: #2a2440; }
+.foco-h b { color: var(--accent); }
+.foco-grid { display: grid; gap: 6px; justify-content: center; background: #fff; border-radius: 10px; padding: 8px; }
+.foco-cell { font-size: clamp(20px, 5vw, 30px); text-align: center; line-height: 1.1; }
+.foco-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 6px 8px; background: #fff; border-radius: 8px; margin-top: 6px; }
+.foco-row .lbl { font-weight: 700; color: var(--accent); min-width: 54px; }
+.foco-row .em { font-size: clamp(22px, 5vw, 30px); }
+.foco-count { margin-top: 8px; font-size: .9rem; color: #333; text-align: center; font-weight: 700; }
+
+/* ─── Jogo de Dama dos Heróis ─── */
+.dama-board {
+  display: grid; grid-template-columns: repeat(8, 1fr);
+  width: min(100%, 400px); margin: 0 auto; border: 4px solid var(--accent);
+  border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,.18);
+}
+.dama-sq { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+.dama-sq.light { background: #FBF6EC; }
+.dama-sq.dark  { background: #D7C9F0; }
+.dama-piece {
+  width: 84%; height: 84%; border-radius: 50%; object-fit: cover; object-position: center 20%;
+  border: 2px solid var(--accent); box-shadow: 0 1px 3px rgba(0,0,0,.3); background: #fff;
+}
+.dama-legend {
+  display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;
+  margin: 12px 0 4px; font-weight: 800; font-size: .85rem; color: #2a2440;
+}
+.dama-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dama-legend img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; object-position: center 20%; border: 2px solid var(--accent); }
+.dama-cut-title { font-weight: 800; font-size: .9rem; margin: 14px 0 8px; color: var(--accent); text-align: center; }
+.dama-cut { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; }
+.dama-token { aspect-ratio: 1; border: 2px dashed #999; border-radius: 50%; padding: 2px; }
+.dama-token img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center 20%; }
+
+@media (max-width: 480px) {
+  .cor-grid { grid-template-columns: repeat(2, 1fr); }
+  .mem-grid { gap: 8px; }
+  .dama-cut { grid-template-columns: repeat(8, 1fr); }
+}
+
+/* ─── IMPRESSÃO ─── */
+@media print {
+  @page { size: A4 portrait; margin: 8mm; }
+  .no-print { display: none !important; }
+  body { background: #fff !important; }
+  .ph-wrap { padding: 0; max-width: none; }
+  .print-sheet {
+    box-shadow: none; max-width: none; margin: 0; border-width: 2px;
+    overflow: visible;                 /* CRÍTICO: sem isso o conteúdo é CORTADO entre páginas */
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  /* itens atômicos + tabuleiro/desenho ficam inteiros; as grades podem fluir
+     (assim não corta nada NEM deixa página em branco) */
+  .ps-head, .mem-card, .cor-item, .foco-row, .foco-cell, .dama-token,
+  .dama-board, .cl-stage { break-inside: avoid; }
+  /* cabeçalho/corpo mais compactos pra caber melhor em 1 página */
+  .ps-head { padding: 10px 16px; }
+  .ps-head img { width: 44px; height: 44px; }
+  .ps-title { font-size: 1.25rem; }
+  .ps-instr { margin-top: 12px; padding: 8px 14px; }
+  .ps-body { padding: 12px 18px 4px; }
+}

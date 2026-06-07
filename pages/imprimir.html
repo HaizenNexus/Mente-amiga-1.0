@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Imprimir 🖨️</title>
+  <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link rel="stylesheet" href="../css/imprimir.css"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="no-print" style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--bg-primary);border-bottom:1px solid var(--border)">
+    <a href="jogos.html" class="ma-btn-voltar"><span aria-hidden="true">←</span><span>Jogos</span></a>
+    <strong style="font-family:var(--font-display)">🖨️ Para Imprimir</strong>
+    <button class="btn-theme" id="btn-theme" aria-label="Mudar tema">🌙</button>
+  </header>
+
+  <!-- HUB -->
+  <section id="view-hub">
+    <div class="ph-hero">
+      <div style="font-size:3rem">🖨️</div>
+      <h1 style="font-family:var(--font-display);margin:.25rem 0 .5rem">Jogos para <span class="text-gradient">Imprimir</span></h1>
+      <p style="color:var(--text-secondary);max-width:520px;margin:0 auto">Leve a brincadeira pro papel! Escolha uma atividade, clique em <strong>Imprimir</strong> (ou salve em PDF) e divirta-se longe das telas. 💜</p>
+    </div>
+    <div class="ph-wrap">
+      <div class="ph-grid">
+        <button class="ph-card pc-a" data-act="memoria">
+          <span class="ph-card-ic">🃏</span><span class="ph-card-name">Jogo da Memória</span>
+          <span class="ph-card-desc">Cartas com figuras pra recortar, embaralhar e achar os pares.</span>
+        </button>
+        <button class="ph-card pc-b" data-act="colorir">
+          <span class="ph-card-ic">🖍️</span><span class="ph-card-name">Colorir</span>
+          <span class="ph-card-desc">Desenhos em contorno pra pintar com lápis de cor ou giz.</span>
+        </button>
+        <button class="ph-card pc-c" data-act="cores">
+          <span class="ph-card-ic">🎨</span><span class="ph-card-name">Cores</span>
+          <span class="ph-card-desc">Pinte cada figura da cor que está escrita. Aprenda as cores!</span>
+        </button>
+        <button class="ph-card pc-d" data-act="foco">
+          <span class="ph-card-ic">🎯</span><span class="ph-card-name">Foco</span>
+          <span class="ph-card-desc">Circule os objetos certos e ache o diferente. Treino de atenção.</span>
+        </button>
+        <button class="ph-card pc-e" data-act="dama">
+          <span class="ph-card-ic">♟️</span><span class="ph-card-name">Dama dos Heróis</span>
+          <span class="ph-card-desc">Tabuleiro de dama com os heróis do app. Recorte as peças e jogue!</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATIVIDADE -->
+  <section id="view-activity" style="display:none">
+    <div class="ph-wrap" style="padding-top:74px">
+      <div class="ph-toolbar no-print">
+        <button class="ph-btn ph-btn-back"  onclick="backToHub()">← Voltar</button>
+        <button class="ph-btn ph-btn-regen" onclick="regenerate()">🔄 Gerar outra folha</button>
+        <button class="ph-btn ph-btn-print" onclick="window.print()">🖨️ Imprimir</button>
+      </div>
+      <div class="print-sheet" id="sheet"></div>
+      <p class="no-print" style="text-align:center;color:var(--text-muted);font-size:.8rem;margin-top:1rem">
+        Dica: na janela de impressão dá pra escolher <strong>“Salvar como PDF”</strong> pra imprimir depois.
+      </p>
+    </div>
+  </section>
+
+  <script src="../js/imprimir.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

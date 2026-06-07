@@ -164,16 +164,18 @@
         a Luna agora é acessada pelo botão "Voltar"/menu das páginas). */
   function buildBottomNav() {
     var items = [
-      { key: 'home',   icon: '🏠', label: 'Início',    href: homeHref() },
-      { key: 'jogos',  icon: '🎮', label: 'Jogos',     href: ROOT + 'pages/jogos.html' },
-      { key: 'rotina', icon: '📅', label: 'Rotina',    href: ROOT + 'pages/rotina.html' },
-      { key: 'prog',   icon: '🏆', label: 'Progresso', href: ROOT + 'pages/progresso.html' }
+      { key: 'home',     icon: '🏠', label: 'Início',    href: homeHref() },
+      { key: 'jogos',    icon: '🎮', label: 'Jogos',     href: ROOT + 'pages/jogos.html' },
+      { key: 'imprimir', icon: '🖨️', label: 'Imprimir',  href: ROOT + 'pages/imprimir.html' },
+      { key: 'rotina',   icon: '📅', label: 'Rotina',    href: ROOT + 'pages/rotina.html' },
+      { key: 'prog',     icon: '🏆', label: 'Progresso', href: ROOT + 'pages/progresso.html' }
     ];
     var activeMap = {
       'dashboard-crianca.html': 'home',
       'dashboard-adolescente.html': 'home',
       'index.html': 'home',
       'jogos.html': 'jogos',
+      'imprimir.html': 'imprimir',
       'rotina.html': 'rotina',
       'progresso.html': 'prog'
     };
