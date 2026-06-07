@@ -7,6 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧒</text></svg>"/>
   <link rel="stylesheet" href="../css/main.css"/>
   <link rel="stylesheet" href="../css/dashboard-kids.css"/>
+  <link rel="stylesheet" href="../css/enhance.css" />
   <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
 </head>
 <body data-page="kids-dashboard">
@@ -26,10 +27,10 @@
   <div class="nav-actions">
     <!-- XP badge -->
     <div style="display:flex;align-items:center;gap:6px;background:var(--c-yellow-light);border-radius:999px;padding:6px 14px;border:1px solid rgba(255,214,0,0.3)">
-      <span>⭐</span>
+      <span><i data-lucide="star"></i></span>
       <span id="nav-xp" style="font-size:0.875rem;font-weight:800;color:#B8860B">0 XP</span>
     </div>
-    <button class="btn-theme" id="btn-theme" aria-label="Mudar tema">🌙</button>
+    <button class="btn-theme" id="btn-theme" aria-label="Mudar tema"><i data-lucide="moon"></i></button>
     <a href="../index.html" class="ma-btn-voltar">← Voltar</a>
     <button class="hamburger" aria-label="Abrir menu">
       <span></span><span></span><span></span>
@@ -37,11 +38,11 @@
   </div>
 </nav>
 <div class="nav-drawer">
-  <a href="#secao-jogos">🎮 Jogos</a>
-  <a href="#secao-ia">🤖 IA Amiga</a>
-  <a href="rotina.html?perfil=crianca">📅 Rotina</a>
-  <a href="#secao-educacao">📚 Estudar</a>
-  <a href="personagens.html">🦸 Personagens</a>
+  <a href="#secao-jogos"><i data-lucide="gamepad-2"></i> Jogos</a>
+  <a href="#secao-ia"><i data-lucide="bot"></i> IA Amiga</a>
+  <a href="rotina.html?perfil=crianca"><i data-lucide="calendar"></i> Rotina</a>
+  <a href="#secao-educacao"><i data-lucide="book-open"></i> Estudar</a>
+  <a href="personagens.html"><i data-lucide="shield"></i> Personagens</a>
 </div>
 
 <!-- HERO KIDS -->
@@ -56,7 +57,7 @@
     <div class="kids-welcome-card" id="welcome-card">
       <div class="kids-avatar" id="kids-avatar">🧒</div>
       <div>
-        <h2 id="kids-greeting">Olá, aventureiro(a)! 👋</h2>
+        <h2 id="kids-greeting">Olá, aventureiro(a)! <i data-lucide="hand"></i></h2>
         <p style="color:var(--text-secondary)">O que vamos fazer hoje?</p>
         <a href="progresso.html" class="btn btn-primary btn-sm" style="margin-top:8px">Ver suas Conquistas!</a>
       </div>
@@ -65,7 +66,7 @@
     <!-- Barra de XP/Nível -->
     <div class="xp-bar-container">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span style="font-size:0.85rem;font-weight:700;color:var(--text-secondary)">⭐ Nível <span id="kids-level">1</span></span>
+        <span style="font-size:0.85rem;font-weight:700;color:var(--text-secondary)"><i data-lucide="star"></i> Nível <span id="kids-level">1</span></span>
         <span style="font-size:0.85rem;font-weight:700;color:var(--c-purple)"><span id="kids-xp-cur">0</span> / <span id="kids-xp-max">100</span> XP</span>
       </div>
       <div class="xp-bar-track">
@@ -75,7 +76,7 @@
 
     <!-- Medalhas rápidas -->
     <div class="medals-row" id="medals-row" aria-label="Suas medalhas">
-      <div class="medal-empty">Jogue para ganhar medalhas! 🏅</div>
+      <div class="medal-empty">Jogue para ganhar medalhas! <i data-lucide="medal"></i></div>
     </div>
   </div>
 </section>
@@ -86,13 +87,13 @@
   <!-- Acesso rápido -->
   <section id="secao-jogos" aria-labelledby="quick-title">
     <h2 id="quick-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
-      🎮 <span>Mini Jogos</span>
+      <i data-lucide="gamepad-2"></i> <span>Mini Jogos</span>
     </h2>
 
     <div class="games-grid">
 
       <a href="../jogos/cores.html" class="game-card gc-orange" aria-label="Jogo das Cores">
-        <div class="game-card-icon">🎨</div>
+        <div class="game-card-icon"><i data-lucide="palette"></i></div>
         <h3 class="game-card-title">Jogo das Cores</h3>
         <p class="game-card-desc">Descubra as cores certas!</p>
         <div class="game-card-xp">+10 XP</div>
@@ -106,14 +107,14 @@
       </a>
 
       <a href="../jogos/respiracao-guiada.html" class="game-card gc-teal" aria-label="Respiração Guiada">
-        <div class="game-card-icon">🫧</div>
+        <div class="game-card-icon"><i data-lucide="droplets"></i></div>
         <h3 class="game-card-title">Respiração</h3>
         <p class="game-card-desc">Respira fundo com a gente!</p>
         <div class="game-card-xp">+5 XP</div>
       </a>
 
       <a href="../jogos/foco.html" class="game-card gc-blue" aria-label="Jogo de Foco">
-        <div class="game-card-icon">🎯</div>
+        <div class="game-card-icon"><i data-lucide="target"></i></div>
         <h3 class="game-card-title">Jogo do Foco</h3>
         <p class="game-card-desc">Clique no objeto certo!</p>
         <div class="game-card-xp">+12 XP</div>
@@ -127,14 +128,14 @@
       </a>
 
       <a href="../jogos/corrida.html" class="game-card gc-green" aria-label="Jogo de Corrida">
-        <div class="game-card-icon">🏎️</div>
+        <div class="game-card-icon"><i data-lucide="car"></i></div>
         <h3 class="game-card-title">Corrida</h3>
         <p class="game-card-desc">Acelera e vença a corrida!</p>
         <div class="game-card-xp">+20 XP</div>
       </a>
 
       <a href="../jogos/fala.html" class="game-card gc-blue" aria-label="Fala Comigo">
-        <div class="game-card-icon">🗣️</div>
+        <div class="game-card-icon"><i data-lucide="megaphone"></i></div>
         <h3 class="game-card-title">Fala Comigo</h3>
         <p class="game-card-desc">Treine a fala e converse!</p>
         <div class="game-card-xp">+16 XP</div>
@@ -146,7 +147,7 @@
   <!-- Seção IA -->
   <section id="secao-ia" style="margin-top:3rem" aria-labelledby="ia-title">
     <h2 id="ia-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
-      🌙 <span>IA Amiga</span>
+      <i data-lucide="moon"></i> <span>IA Amiga</span>
     </h2>
     <a href="../frontend/ia.html" style="display:block;text-decoration:none">
       <div style="background:linear-gradient(135deg,var(--c-purple-light),var(--c-blue-light));border:2px solid rgba(124,92,191,0.2);border-radius:var(--r-xl);padding:2rem;display:flex;align-items:center;gap:1.5rem;transition:all 0.3s ease;cursor:pointer"
@@ -169,7 +170,7 @@
   <!-- Rotina Rápida -->
   <section id="secao-rotina" style="margin-top:3rem" aria-labelledby="rotina-title">
     <h2 id="rotina-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
-      📅 <span>Minha Rotina de Hoje</span>
+      <i data-lucide="calendar"></i> <span>Minha Rotina de Hoje</span>
     </h2>
     <div id="rotina-preview" style="background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem">
       <div id="rotina-items" style="display:flex;flex-direction:column;gap:0.6rem"></div>
@@ -182,31 +183,31 @@
   <!-- Educação -->
   <section id="secao-educacao" style="margin-top:3rem" aria-labelledby="edu-title">
     <h2 id="edu-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
-      📚 <span>Aprender é Legal!</span>
+      <i data-lucide="book-open"></i> <span>Aprender é Legal!</span>
     </h2>
     <div class="edu-grid">
       <a href="biblioteca-mente-amiga.html?materia=matematica" class="edu-card" style="--edu-color:#4A90D9">
-        <span class="edu-icon">🔢</span>
+        <span class="edu-icon"><i data-lucide="hash"></i></span>
         <span class="edu-name">Matemática</span>
       </a>
       <a href="biblioteca-mente-amiga.html?materia=portugues" class="edu-card" style="--edu-color:#E91E8C">
-        <span class="edu-icon">📖</span>
+        <span class="edu-icon"><i data-lucide="book"></i></span>
         <span class="edu-name">Português</span>
       </a>
       <a href="biblioteca-mente-amiga.html?materia=ciencias" class="edu-card" style="--edu-color:#4CAF50">
-        <span class="edu-icon">🔬</span>
+        <span class="edu-icon"><i data-lucide="microscope"></i></span>
         <span class="edu-name">Ciências</span>
       </a>
       <a href="biblioteca-mente-amiga.html?materia=historia" class="edu-card" style="--edu-color:#FF8C42">
-        <span class="edu-icon">🏛️</span>
+        <span class="edu-icon"><i data-lucide="landmark"></i></span>
         <span class="edu-name">História</span>
       </a>
       <a href="biblioteca-mente-amiga.html?materia=geografia" class="edu-card" style="--edu-color:#2BB5A0">
-        <span class="edu-icon">🌍</span>
+        <span class="edu-icon"><i data-lucide="globe"></i></span>
         <span class="edu-name">Geografia</span>
       </a>
       <a href="biblioteca-mente-amiga.html?materia=artes" class="edu-card" style="--edu-color:#7C5CBF">
-        <span class="edu-icon">✍🏻</span>
+        <span class="edu-icon"><i data-lucide="pencil"></i></span>
         <span class="edu-name">Redação</span>
       </a>
     </div>
@@ -218,7 +219,7 @@
   <!-- Personagens -->
   <section style="margin-top:3rem" aria-labelledby="char-title">
     <h2 id="char-title" style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
-      🦸 <span>Meu Personagem</span>
+      <i data-lucide="shield"></i> <span>Meu Personagem</span>
     </h2>
     <a href="personagens.html" style="display:block;text-decoration:none">
       <div id="char-preview" style="background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;display:flex;align-items:center;gap:1.5rem;transition:all 0.3s"
@@ -332,5 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>

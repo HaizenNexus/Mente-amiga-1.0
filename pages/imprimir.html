@@ -8,22 +8,23 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>"/>
   <link rel="stylesheet" href="../css/main.css"/>
   <link rel="stylesheet" href="../css/imprimir.css"/>
+  <link rel="stylesheet" href="../css/enhance.css" />
 </head>
 <body>
 
   <!-- HEADER -->
   <header class="no-print" style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--bg-primary);border-bottom:1px solid var(--border)">
     <a href="jogos.html" class="ma-btn-voltar"><span aria-hidden="true">←</span><span>Jogos</span></a>
-    <strong style="font-family:var(--font-display)">🖨️ Para Imprimir</strong>
-    <button class="btn-theme" id="btn-theme" aria-label="Mudar tema">🌙</button>
+    <strong style="font-family:var(--font-display)"><i data-lucide="printer"></i> Para Imprimir</strong>
+    <button class="btn-theme" id="btn-theme" aria-label="Mudar tema"><i data-lucide="moon"></i></button>
   </header>
 
   <!-- HUB -->
   <section id="view-hub">
     <div class="ph-hero">
-      <div style="font-size:3rem">🖨️</div>
+      <div style="font-size:3rem"><i data-lucide="printer"></i></div>
       <h1 style="font-family:var(--font-display);margin:.25rem 0 .5rem">Jogos para <span class="text-gradient">Imprimir</span></h1>
-      <p style="color:var(--text-secondary);max-width:520px;margin:0 auto">Leve a brincadeira pro papel! Escolha uma atividade, clique em <strong>Imprimir</strong> (ou salve em PDF) e divirta-se longe das telas. 💜</p>
+      <p style="color:var(--text-secondary);max-width:520px;margin:0 auto">Leve a brincadeira pro papel! Escolha uma atividade, clique em <strong>Imprimir</strong> (ou salve em PDF) e divirta-se longe das telas. <i data-lucide="heart"></i></p>
     </div>
     <div class="ph-wrap">
       <div class="ph-grid">
@@ -36,11 +37,11 @@
           <span class="ph-card-desc">Desenhos em contorno pra pintar com lápis de cor ou giz.</span>
         </button>
         <button class="ph-card pc-c" data-act="cores">
-          <span class="ph-card-ic">🎨</span><span class="ph-card-name">Cores</span>
+          <span class="ph-card-ic"><i data-lucide="palette"></i></span><span class="ph-card-name">Cores</span>
           <span class="ph-card-desc">Pinte cada figura da cor que está escrita. Aprenda as cores!</span>
         </button>
         <button class="ph-card pc-d" data-act="foco">
-          <span class="ph-card-ic">🎯</span><span class="ph-card-name">Foco</span>
+          <span class="ph-card-ic"><i data-lucide="target"></i></span><span class="ph-card-name">Foco</span>
           <span class="ph-card-desc">Circule os objetos certos e ache o diferente. Treino de atenção.</span>
         </button>
         <button class="ph-card pc-e" data-act="dama">
@@ -56,8 +57,8 @@
     <div class="ph-wrap" style="padding-top:74px">
       <div class="ph-toolbar no-print">
         <button class="ph-btn ph-btn-back"  onclick="backToHub()">← Voltar</button>
-        <button class="ph-btn ph-btn-regen" onclick="regenerate()">🔄 Gerar outra folha</button>
-        <button class="ph-btn ph-btn-print" onclick="window.print()">🖨️ Imprimir</button>
+        <button class="ph-btn ph-btn-regen" onclick="regenerate()"><i data-lucide="refresh-cw"></i> Gerar outra folha</button>
+        <button class="ph-btn ph-btn-print" onclick="window.print()"><i data-lucide="printer"></i> Imprimir</button>
       </div>
       <div class="print-sheet" id="sheet"></div>
       <p class="no-print" style="text-align:center;color:var(--text-muted);font-size:.8rem;margin-top:1rem">
@@ -69,5 +70,8 @@
   <script src="../js/imprimir.js"></script>
   <script src="../js/app.js"></script>
   <script src="../js/nav.js"></script>
+  <!-- Ícones Lucide + refino -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="../js/enhance.js"></script>
 </body>
 </html>

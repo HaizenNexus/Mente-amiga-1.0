@@ -7,8 +7,9 @@
   <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
   
   <link rel="stylesheet" href="../css/games.css">
-  
-  
+  <link rel="stylesheet" href="../css/enhance.css" />
+
+
   
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
@@ -25,7 +26,7 @@
       <span class="orb orb-3"></span>
     </div>
     <div class="intro-content">
-      <div class="logo-badge">🎨</div>
+      <div class="logo-badge"><i data-lucide="palette"></i></div>
       <h1 class="game-title">Jogo das<br><span class="title-accent">Cores</span></h1>
       <p class="game-subtitle">Teste sua percepção cromática e acumule XP</p>
       <div class="stats-preview">
@@ -94,7 +95,7 @@
       <span class="orb orb-r2"></span>
     </div>
     <div class="result-content">
-      <div id="result-trophy" class="result-trophy">🏆</div>
+      <div id="result-trophy" class="result-trophy"><i data-lucide="trophy"></i></div>
       <h2 class="result-title">Rodada<br>Concluída!</h2>
       <div class="result-xp-card">
         <span class="result-xp-label">XP Total</span>
@@ -116,7 +117,7 @@
           <span class="rs-label">Sequência</span>
         </div>
       </div>
-      <p id="result-record-msg" class="result-record-msg hidden">🎉 Novo Recorde!</p>
+      <p id="result-record-msg" class="result-record-msg hidden"><i data-lucide="party-popper"></i> Novo Recorde!</p>
       <div class="result-actions">
         <button id="btn-replay" class="btn-primary" aria-label="Jogar novamente">Jogar Novamente</button>
         <button id="btn-home" class="btn-ghost" aria-label="Voltar ao início">Início</button>
@@ -127,5 +128,8 @@
   <script src="../js/progress.js"></script>
   <script src="../js/games.js"></script>
 <script src="../js/nav.js"></script>
+  <!-- Ícones Lucide + refino -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="../js/enhance.js"></script>
 </body>
 </html>

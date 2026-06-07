@@ -224,7 +224,11 @@ Este projeto foi desenvolvido com base em princípios de:
 **CEO Pedro Henrique**  
 Projeto Mente Amiga © 2026  
 Todos os direitos reservados.
+74981396686
 
 ---
 
 *Feito com ❤️ para quem merece o melhor.*
+
+## Essa equipe vem de uma cidade do interior da Bahia
+O nome dessa cidade é Senhor do Bonfim. 

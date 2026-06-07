@@ -6,6 +6,7 @@
 <title>Jogo do Foco</title>
 <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/enhance.css" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -408,7 +409,7 @@
       <div class="brand-sub">MODO CONCENTRAÇÃO</div>
     </div>
     <div class="header-controls">
-      <div class="record-pill" id="recordPill" title="Seu recorde">🏆 <span id="recordVal">0</span></div>
+      <div class="record-pill" id="recordPill" title="Seu recorde"><i data-lucide="trophy"></i> <span id="recordVal">0</span></div>
       <button class="icon-btn active" id="soundBtn" title="Sons">🔊</button>
       <button class="icon-btn" id="pauseBtn" title="Pausar" style="display:none">⏸</button>
     </div>
@@ -461,7 +462,7 @@
 
   <!-- BUTTONS -->
   <div class="btn-row">
-    <button class="btn btn-primary" id="startBtn">▶ Iniciar</button>
+    <button class="btn btn-primary" id="startBtn"><i data-lucide="play"></i> Iniciar</button>
     <button class="btn btn-secondary" id="restartBtn" style="display:none">↺ Reiniciar</button>
   </div>
 
@@ -1003,5 +1004,8 @@
 </script>
 <script src="../js/progress.js"></script>
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>

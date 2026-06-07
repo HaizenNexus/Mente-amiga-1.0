@@ -1,0 +1,274 @@
+/* ============================================================
+   MENTE AMIGA — Camada de Refinamento Visual (Vitrine: Home)
+   Carregado DEPOIS de main.css. Aditivo e reversível.
+   Intensidade: equilibrada + acessível (TEA/TDAH).
+   CEO: Pedro Henrique © 2026
+   ============================================================ */
+
+/* ─── Variáveis de fallback (páginas sem main.css) ─────────
+   nav.js marca <html class="ma-standalone"> quando o main.css NÃO
+   está carregado (biblioteca, Luna, jogos). Assim a camada de
+   refino funciona sozinha, sem quebrar tema escuro do main.css
+   (este bloco só existe quando main.css está ausente). */
+.ma-standalone {
+  --c-purple:#7C5CBF; --c-purple-light:#EDE9F8; --c-purple-mid:#9B7DD4;
+  --c-blue:#4A90D9; --c-blue-light:#E8F3FD;
+  --c-teal:#2BB5A0; --c-teal-light:#E0F5F2;
+  --c-green:#4CAF50; --c-green-light:#E8F5E9;
+  --c-orange:#FF8C42; --c-orange-light:#FFF0E6;
+  --c-pink:#E91E8C; --c-pink-light:#FCE4F3;
+  --c-yellow:#FFD600;
+  --bg-primary:#FFFFFF; --bg-secondary:#F7F5FF; --bg-tertiary:#F0EDF9;
+  --text-primary:#1A1230; --text-secondary:#5B5278; --text-muted:#9E97B8;
+  --border:rgba(124,92,191,0.15); --border-strong:rgba(124,92,191,0.3);
+  --grad-hero:linear-gradient(135deg,#7C5CBF 0%,#4A90D9 50%,#2BB5A0 100%);
+}
+
+/* ─── Sistema de ícones Lucide ─────────────────────────────
+   Lucide renderiza <svg class="lucide"> a partir de <i data-lucide>.
+   Os ícones herdam a cor (currentColor) e o tamanho via font-size. */
+[data-lucide],
+.lucide {
+  width: 1em;
+  height: 1em;
+  stroke-width: 2.25;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+}
+/* enquanto o JS do Lucide não trocou o <i> por <svg>, esconde o quadradinho */
+i[data-lucide]:not(.lucide) { display: inline-block; width: 1em; height: 1em; }
+
+/* ─── Suavização global do texto ─── */
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* Faltava no projeto: gradiente usado em vários títulos do index */
+.text-gradient {
+  background: var(--grad-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   REVEAL ON SCROLL (estava sem CSS — não animava)
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+
+/* ============================================================
+   PAGE TRANSITION — fade-in suave ao carregar a página
+   ============================================================ */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+body.page-enter { animation: pageFadeIn 0.55s ease both; }
+
+/* ============================================================
+   NAVBAR — glassmorphism refinado
+   ============================================================ */
+.navbar {
+  background: rgba(247, 245, 255, 0.6) !important;
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-bottom: 1px solid rgba(124, 92, 191, 0.08);
+  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+[data-theme="dark"] .navbar {
+  background: rgba(15, 10, 30, 0.55) !important;
+  border-bottom-color: rgba(155, 125, 212, 0.12);
+}
+.navbar.scrolled {
+  box-shadow: 0 6px 30px rgba(124, 92, 191, 0.10);
+  border-bottom-color: rgba(124, 92, 191, 0.14);
+}
+.nav-links a { display: inline-flex; align-items: center; gap: 7px; }
+.nav-links a [data-lucide],
+.nav-links a .lucide { font-size: 1.05rem; color: var(--c-purple); opacity: 0.85; }
+
+/* Botão de tema — rotação suave + ícone Lucide */
+.btn-theme { font-size: 1.15rem; }
+.btn-theme:hover { transform: rotate(-18deg) scale(1.08); }
+
+/* Drawer mobile — ícones */
+.nav-drawer a [data-lucide],
+.nav-drawer a .lucide { font-size: 1.25rem; color: var(--c-purple); }
+
+/* ============================================================
+   BOTÕES — ripple, brilho deslizante e ícones
+   ============================================================ */
+.btn [data-lucide],
+.btn .lucide,
+.choose-arrow [data-lucide],
+.choose-arrow .lucide { font-size: 1.15em; }
+
+/* Brilho deslizante (sheen) nos botões primários ao hover */
+.btn-primary, .btn-kids, .btn-teen { position: relative; overflow: hidden; }
+.btn-primary::before, .btn-kids::before, .btn-teen::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-18deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+.btn-primary:hover::before,
+.btn-kids:hover::before,
+.btn-teen:hover::before { left: 130%; }
+
+/* Ripple (criado via JS) */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: rippleExpand 0.6s ease-out;
+  pointer-events: none;
+}
+@keyframes rippleExpand {
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+/* Botão magnético: o JS move via transform; a transição deixa o retorno macio */
+.magnetic { transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ============================================================
+   HERO — partículas leves + gradiente animado
+   ============================================================ */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+/* Gradiente do título ganha leve movimento (lento e calmo) */
+.hero-title .gradient-text,
+.hero-title .text-gradient {
+  background: linear-gradient(120deg, #7C5CBF, #4A90D9, #2BB5A0, #7C5CBF);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroGradientShift 9s ease-in-out infinite;
+}
+@keyframes heroGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+.hero-badge { backdrop-filter: blur(8px); }
+.hero-badge [data-lucide],
+.hero-badge .lucide { font-size: 1rem; }
+
+/* Stat numbers com leve realce ao revelar */
+.stat-number { transition: transform 0.3s ease; }
+.stat-item:hover .stat-number { transform: scale(1.06); }
+
+/* Scroll indicator: ícone chevron animado */
+.scroll-indicator [data-lucide],
+.scroll-indicator .lucide {
+  font-size: 1.4rem;
+  animation: chevronBounce 1.6s ease-in-out infinite;
+}
+@keyframes chevronBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+
+/* ============================================================
+   CHOOSE CARDS — profundidade e ícones
+   ============================================================ */
+.choose-card {
+  backdrop-filter: blur(4px);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s ease, border-color 0.3s ease;
+}
+.choose-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%),
+              rgba(255, 255, 255, 0.25), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.choose-card:hover::after { opacity: 1; }
+
+.choose-tags span { display: inline-flex; align-items: center; gap: 5px; }
+.choose-tags span [data-lucide],
+.choose-tags span .lucide { font-size: 0.85rem; }
+.choose-arrow [data-lucide],
+.choose-arrow .lucide { color: #fff; }
+
+/* ============================================================
+   FEATURE CARDS — ícone com leve animação ao hover
+   ============================================================ */
+.feature-icon { transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.feature-card:hover .feature-icon { transform: translateY(-4px) scale(1.08) rotate(-4deg); }
+.feature-icon [data-lucide],
+.feature-icon .lucide { font-size: 1.55rem; }
+.fi-purple { color: var(--c-purple); }
+.fi-orange { color: var(--c-orange); }
+.fi-teal   { color: var(--c-teal);   }
+.fi-pink   { color: var(--c-pink);   }
+.fi-green  { color: var(--c-green);  }
+.fi-blue   { color: var(--c-blue);   }
+
+/* ============================================================
+   ÍCONES GENÉRICOS dentro de chips/badges/listas do index
+   ============================================================ */
+.choose-age [data-lucide],
+.feature-card [data-lucide] { vertical-align: -0.15em; }
+
+/* Footer social com ícones Lucide */
+.footer-brand a [data-lucide],
+.footer-brand a .lucide { font-size: 1.1rem; color: var(--text-secondary); }
+.footer-brand a:hover { background: var(--c-purple-light) !important; }
+.footer-brand a:hover [data-lucide],
+.footer-brand a:hover .lucide { color: var(--c-purple); }
+
+/* ============================================================
+   ROTINA MOCKUP — ícones coloridos no lugar dos emojis
+   ============================================================ */
+.routine-icon {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+}
+
+/* ============================================================
+   COUNT-UP: evita "pulo" de layout enquanto anima
+   ============================================================ */
+.stat-number { font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   ACESSIBILIDADE — respeitar quem prefere menos movimento
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .hero-particles { display: none !important; }
+  .orb { animation: none !important; }
+  body.page-enter { animation: none !important; }
+}

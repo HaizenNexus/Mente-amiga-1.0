@@ -7,6 +7,7 @@
 <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧑</text></svg>"/>
   <link rel="stylesheet" href="../css/main.css"/>
+  <link rel="stylesheet" href="../css/enhance.css" />
   <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
   <style>
     /* ─── Teen Hero ─── */
@@ -399,28 +400,28 @@
   </div>
   <div class="nav-actions">
     <div style="display:flex;align-items:center;gap:6px;background:rgba(124,92,191,0.15);border-radius:999px;padding:6px 14px;border:1px solid rgba(124,92,191,0.2)">
-      <span>⭐</span>
+      <span><i data-lucide="star"></i></span>
       <span id="nav-xp-teen" style="font-size:0.8rem;font-weight:800;color:#C4B8F0">0 XP</span>
     </div>
-    <button class="btn-theme" id="btn-theme">🌙</button>
+    <button class="btn-theme" id="btn-theme"><i data-lucide="moon"></i></button>
     <a href="../index.html" class="ma-btn-voltar">← Sair</a>
     <button class="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="nav-drawer">
-  <a href="#teen-pc">💻 Mini PC</a>
-  <a href="personagens.html">🦸 Heróis</a>
-  <a href="#teen-jogos">🎮 Jogos</a>
-  <a href="rotina.html?perfil=jovem">📅 Rotina</a>
-  <a href="biblioteca-mente-amiga.html">📚 Estudar</a>
-  <a href="../frontend/ia.html">🤖 IA Amiga</a>
+  <a href="#teen-pc"><i data-lucide="monitor"></i> Mini PC</a>
+  <a href="personagens.html"><i data-lucide="shield"></i> Heróis</a>
+  <a href="#teen-jogos"><i data-lucide="gamepad-2"></i> Jogos</a>
+  <a href="rotina.html?perfil=jovem"><i data-lucide="calendar"></i> Rotina</a>
+  <a href="biblioteca-mente-amiga.html"><i data-lucide="book-open"></i> Estudar</a>
+  <a href="../frontend/ia.html"><i data-lucide="bot"></i> IA Amiga</a>
 </div>
 
 <!-- TEEN HERO -->
 <section class="teen-hero">
   <div class="teen-hero-particles" id="particles-container"></div>
   <div class="teen-hero-content">
-    <div class="teen-badge"><span>🦸</span><span>Área dos Adolescentes</span></div>
+    <div class="teen-badge"><span><i data-lucide="shield"></i></span><span>Área dos Adolescentes</span></div>
     <h1 class="teen-title">
       Olá, <span class="g" id="teen-name">Herói</span>!<br/>
       Pronto para sua <span class="g">missão?</span>
@@ -428,12 +429,12 @@
     <p class="teen-subtitle">Jogos, IA, YouTube e muito mais — tudo do jeito que você curte.</p>
     <div class="teen-xp-bar" style="max-width:400px">
       <div class="teen-xp-inner">
-        <span class="teen-xp-label">⭐ Nível <span id="teen-level">1</span></span>
+        <span class="teen-xp-label"><i data-lucide="star"></i> Nível <span id="teen-level">1</span></span>
         <span class="teen-xp-val"><span id="teen-xp-cur">0</span> / 100 XP</span>
       </div>
       <div class="teen-xp-track"><div class="teen-xp-fill" id="teen-xp-fill" style="width:0%"></div></div>
     </div>
-    <a href="personagens.html?voltar=teen" class="teen-hero-btn">🦸 Escolher meu herói</a>
+    <a href="personagens.html?voltar=teen" class="teen-hero-btn"><i data-lucide="shield"></i> Escolher meu herói</a>
   </div>
 </section>
 
@@ -441,7 +442,7 @@
 
   <!-- MINI PC -->
   <section id="teen-pc" class="teen-section">
-    <h2 class="teen-section-title">💻 Mini PC</h2>
+    <h2 class="teen-section-title"><i data-lucide="monitor"></i> Mini PC</h2>
     <div class="mini-pc">
       <!-- Top bar -->
       <div class="pc-topbar">
@@ -449,23 +450,23 @@
         <div class="pc-dot pc-dot-yell"></div>
         <div class="pc-dot pc-dot-green"></div>
         <div class="pc-url-bar" onclick="document.getElementById('pc-tab-youtube').click()">
-          <span>🔒</span>
+          <span><i data-lucide="lock"></i></span>
           <span>menteamiga.app</span>
         </div>
         <div class="pc-apps">
           <button class="pc-app-btn" title="Siga no Instagram @_menteamiga_" aria-label="Siga no Instagram" onclick="window.open('https://www.instagram.com/_menteamiga_?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==','_blank','noopener')"><svg viewBox="0 0 24 24" width="16" height="16" fill="#fff" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></button>
-          <button class="pc-app-btn" title="Chat IA"  onclick="window.location.href='../frontend/ia.html'">🤖</button>
-          <button class="pc-app-btn" title="Estudar"  onclick="window.location.href='../pages/biblioteca-mente-amiga.html'">📚</button>
+          <button class="pc-app-btn" title="Chat IA"  onclick="window.location.href='../frontend/ia.html'"><i data-lucide="bot"></i></button>
+          <button class="pc-app-btn" title="Estudar"  onclick="window.location.href='../pages/biblioteca-mente-amiga.html'"><i data-lucide="book-open"></i></button>
         </div>
       </div>
 
       <!-- Tabs -->
       <div class="pc-tabs" role="tablist">
-        <div class="pc-tab active" role="tab" id="pc-tab-youtube">▶️ YouTube</div>
-        <div class="pc-tab" role="tab" id="pc-tab-chat"    onclick="window.location.href='../frontend/ia.html'">🤖 IA Amiga</div>
-        <div class="pc-tab" role="tab" id="pc-tab-jogos"   onclick="window.location.href='../pages/jogos.html'">🎮 Jogos</div>
-        <div class="pc-tab" role="tab" id="pc-tab-estudo"  onclick="window.location.href='../pages/biblioteca-mente-amiga.html'">📚 Estudar</div>
-        <div class="pc-tab" role="tab" id="pc-tab-rotina"  onclick="window.location.href='../pages/rotina.html?perfil=jovem'">📅 Rotina</div>
+        <div class="pc-tab active" role="tab" id="pc-tab-youtube"><i data-lucide="play"></i> YouTube</div>
+        <div class="pc-tab" role="tab" id="pc-tab-chat"    onclick="window.location.href='../frontend/ia.html'"><i data-lucide="bot"></i> IA Amiga</div>
+        <div class="pc-tab" role="tab" id="pc-tab-jogos"   onclick="window.location.href='../pages/jogos.html'"><i data-lucide="gamepad-2"></i> Jogos</div>
+        <div class="pc-tab" role="tab" id="pc-tab-estudo"  onclick="window.location.href='../pages/biblioteca-mente-amiga.html'"><i data-lucide="book-open"></i> Estudar</div>
+        <div class="pc-tab" role="tab" id="pc-tab-rotina"  onclick="window.location.href='../pages/rotina.html?perfil=jovem'"><i data-lucide="calendar"></i> Rotina</div>
       </div>
 
       <!-- YouTube Panel -->
@@ -508,22 +509,22 @@
             <span class="tgc-xp">+15 XP</span>
           </a>
           <a href="../jogos/foco.html" class="teen-game-card">
-            <span class="tgc-icon">🎯</span>
+            <span class="tgc-icon"><i data-lucide="target"></i></span>
             <span class="tgc-name">Foco</span>
             <span class="tgc-xp">+12 XP</span>
           </a>
           <a href="../jogos/corrida.html" class="teen-game-card">
-            <span class="tgc-icon">🏎️</span>
+            <span class="tgc-icon"><i data-lucide="car"></i></span>
             <span class="tgc-name">Corrida</span>
             <span class="tgc-xp">+20 XP</span>
           </a>
           <a href="../jogos/cores.html" class="teen-game-card">
-            <span class="tgc-icon">🎨</span>
+            <span class="tgc-icon"><i data-lucide="palette"></i></span>
             <span class="tgc-name">Cores</span>
             <span class="tgc-xp">+10 XP</span>
           </a>
           <a href="../jogos/respiracao-guiada.html" class="teen-game-card">
-            <span class="tgc-icon">🫧</span>
+            <span class="tgc-icon"><i data-lucide="droplets"></i></span>
             <span class="tgc-name">Respiração</span>
             <span class="tgc-xp">+5 XP</span>
           </a>
@@ -533,7 +534,7 @@
             <span class="tgc-xp">+8 XP</span>
           </a>
           <a href="../jogos/fala.html" class="teen-game-card">
-            <span class="tgc-icon">🗣️</span>
+            <span class="tgc-icon"><i data-lucide="megaphone"></i></span>
             <span class="tgc-name">Fala Comigo</span>
             <span class="tgc-xp">+16 XP</span>
           </a>
@@ -544,15 +545,15 @@
 
   <!-- JOGOS -->
   <section id="teen-jogos" class="teen-section">
-    <h2 class="teen-section-title">🎮 Jogos</h2>
+    <h2 class="teen-section-title"><i data-lucide="gamepad-2"></i> Jogos</h2>
     <div class="teen-games-grid">
       <a href="../jogos/memorianeon.html" class="teen-game-card"><span class="tgc-icon">🃏</span><span class="tgc-name">Memória</span><span class="tgc-xp">+15 XP</span></a>
-      <a href="../jogos/foco.html" class="teen-game-card"><span class="tgc-icon">🎯</span><span class="tgc-name">Foco</span><span class="tgc-xp">+12 XP</span></a>
-      <a href="../jogos/corrida.html" class="teen-game-card"><span class="tgc-icon">🏎️</span><span class="tgc-name">Corrida</span><span class="tgc-xp">+20 XP</span></a>
-      <a href="../jogos/cores.html" class="teen-game-card"><span class="tgc-icon">🎨</span><span class="tgc-name">Cores</span><span class="tgc-xp">+10 XP</span></a>
-      <a href="../jogos/respiracao-guiada.html" class="teen-game-card"><span class="tgc-icon">🫧</span><span class="tgc-name">Respiração</span><span class="tgc-xp">+5 XP</span></a>
+      <a href="../jogos/foco.html" class="teen-game-card"><span class="tgc-icon"><i data-lucide="target"></i></span><span class="tgc-name">Foco</span><span class="tgc-xp">+12 XP</span></a>
+      <a href="../jogos/corrida.html" class="teen-game-card"><span class="tgc-icon"><i data-lucide="car"></i></span><span class="tgc-name">Corrida</span><span class="tgc-xp">+20 XP</span></a>
+      <a href="../jogos/cores.html" class="teen-game-card"><span class="tgc-icon"><i data-lucide="palette"></i></span><span class="tgc-name">Cores</span><span class="tgc-xp">+10 XP</span></a>
+      <a href="../jogos/respiracao-guiada.html" class="teen-game-card"><span class="tgc-icon"><i data-lucide="droplets"></i></span><span class="tgc-name">Respiração</span><span class="tgc-xp">+5 XP</span></a>
       <a href="../jogos/colorir.html" class="teen-game-card"><span class="tgc-icon">🖍️</span><span class="tgc-name">Colorir</span><span class="tgc-xp">+8 XP</span></a>
-      <a href="../jogos/fala.html" class="teen-game-card"><span class="tgc-icon">🗣️</span><span class="tgc-name">Fala Comigo</span><span class="tgc-xp">+16 XP</span></a>
+      <a href="../jogos/fala.html" class="teen-game-card"><span class="tgc-icon"><i data-lucide="megaphone"></i></span><span class="tgc-name">Fala Comigo</span><span class="tgc-xp">+16 XP</span></a>
     </div>
   </section>
 
@@ -939,5 +940,8 @@
   </script>
 
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>

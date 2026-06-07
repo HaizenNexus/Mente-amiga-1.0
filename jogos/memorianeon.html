@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Memória Amiga</title>
+    <link rel="stylesheet" href="../css/enhance.css" />
     <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
   </head>
   
@@ -507,7 +508,7 @@
   <div class="grid" id="card-grid"></div>
 
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="restartGame()">🔄 Jogar Novamente</button>
+    <button class="btn btn-primary" onclick="restartGame()"><i data-lucide="refresh-cw"></i> Jogar Novamente</button>
     <button class="btn btn-secondary" onclick="showInfo()">ℹ️ Info</button>
   </div>
 </div>
@@ -515,7 +516,7 @@
 <div class="victory-overlay" id="victory-overlay">
   <div class="particles" id="particles"></div>
   <div class="victory-card">
-    <div class="victory-emoji">🏆</div>
+    <div class="victory-emoji"><i data-lucide="trophy"></i></div>
     <div class="victory-title">VOCÊ VENCEU!</div>
     <div class="victory-sub">Todos os pares encontrados</div>
     <div class="victory-stats">
@@ -535,7 +536,7 @@
     <div class="xp-gain" id="v-xp">+0 XP</div>
     <div class="xp-label">Experiência Ganha</div>
     <div style="display:flex;gap:10px;">
-      <button class="btn btn-primary" style="font-size:12px;" onclick="closeVictory();restartGame()">🔄 Jogar Novamente</button>
+      <button class="btn btn-primary" style="font-size:12px;" onclick="closeVictory();restartGame()"><i data-lucide="refresh-cw"></i> Jogar Novamente</button>
       <button class="btn btn-secondary" style="font-size:12px;" onclick="closeVictory()">✓ Fechar</button>
     </div>
   </div>
@@ -822,5 +823,8 @@ function spawnParticles() {
 
   <script src="../js/progress.js"></script>
   <script src="../js/nav.js"></script>
+  <!-- Ícones Lucide + refino -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="../js/enhance.js"></script>
   </body>
 </html>

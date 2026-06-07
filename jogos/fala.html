@@ -6,6 +6,7 @@
 <title>Fala Comigo</title>
 <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/enhance.css" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -321,7 +322,7 @@
       <div class="brand-sub">FONÉTICA & COMUNICAÇÃO</div>
     </div>
     <div class="header-controls">
-      <div class="record-pill" id="recordPill" title="Seu recorde de XP">🏆 <span id="recordVal">0</span></div>
+      <div class="record-pill" id="recordPill" title="Seu recorde de XP"><i data-lucide="trophy"></i> <span id="recordVal">0</span></div>
       <select class="voice-sel" id="voiceSel" title="Escolher a voz" aria-label="Escolher a voz"></select>
       <button class="icon-btn active" id="soundBtn" title="Sons do app">🔊</button>
     </div>
@@ -1029,5 +1030,8 @@
 </script>
 <script src="../js/progress.js"></script>
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>

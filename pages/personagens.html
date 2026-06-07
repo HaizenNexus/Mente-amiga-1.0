@@ -6,6 +6,7 @@
   <title>Mente Amiga — Personagens 🦸</title>
   <link rel="shortcut icon" href="assets/favicon/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../css/main.css"/>
+  <link rel="stylesheet" href="../css/enhance.css" />
   <style>
     .page-hero { padding:90px 2rem 3rem;background:var(--bg-secondary);text-align:center; }
     .chars-tabs { display:flex;justify-content:center;gap:1rem;margin:0 0 2.5rem;flex-wrap:wrap; }
@@ -73,9 +74,9 @@
 <body>
 
 <nav class="navbar" role="navigation">
-  <a class="nav-logo" href="../index.html"><span style="font-size:2rem;line-height:1">🧠</span><span class="nav-logo-text">Mente Amiga</span></a>
+  <a class="nav-logo" href="../index.html"><span style="font-size:2rem;line-height:1"><i data-lucide="brain"></i></span><span class="nav-logo-text">Mente Amiga</span></a>
   <div class="nav-actions">
-    <button class="btn-theme" id="btn-theme">🌙</button>
+    <button class="btn-theme" id="btn-theme"><i data-lucide="moon"></i></button>
     <button onclick="history.back()" class="ma-btn-voltar">← Voltar</button>
     <button class="hamburger"><span></span><span></span><span></span></button>
   </div>
@@ -88,8 +89,8 @@
 
   <div class="chars-tabs">
     <button class="char-tab-btn active-kids" onclick="showPanel('crianca',this)">🧒 Crianças</button>
-    <button class="char-tab-btn" onclick="showPanel('adolescente',this)">💙 Adolescentes</button>
-    <button class="char-tab-btn" onclick="showPanel('heroi',this)">💚 Heróis</button>
+    <button class="char-tab-btn" onclick="showPanel('adolescente',this)"><i data-lucide="heart"></i> Adolescentes</button>
+    <button class="char-tab-btn" onclick="showPanel('heroi',this)"><i data-lucide="heart"></i> Heróis</button>
   </div>
 </div>
 
@@ -230,7 +231,7 @@
 
   <!-- Banner após seleção -->
   <div id="selected-banner" style="display:none;margin-top:2rem;padding:1.5rem;background:var(--c-teal-light);border:2px solid var(--c-teal);border-radius:var(--r-lg);text-align:center">
-    <div style="font-size:2rem;margin-bottom:0.5rem">🎉</div>
+    <div style="font-size:2rem;margin-bottom:0.5rem"><i data-lucide="party-popper"></i></div>
     <h3 style="font-family:var(--font-display);margin-bottom:0.5rem">Personagem selecionado!</h3>
     <p id="selected-msg" style="color:var(--text-secondary);margin-bottom:1rem">Incrível escolha!</p>
     <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
@@ -243,7 +244,7 @@
 <footer class="footer" role="contentinfo">
   <div class="footer-bottom" style="max-width:1000px;margin:0 auto;padding:1.5rem 0 0">
     <p class="footer-copy">© Direitos autorais — <strong>Mente Amiga - Desenvolvido por Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
-    <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
+    <p class="footer-made">Feito com <span class="heart"><i data-lucide="heart"></i></span> para quem merece o melhor</p>
   </div>
 </footer>
 
@@ -309,5 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>

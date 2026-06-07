@@ -6,6 +6,7 @@
 <title>Rotina📆</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../css/main.css"/>
+<link rel="stylesheet" href="../css/enhance.css" />
 <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -287,27 +288,27 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
 
   <!-- MODE TOGGLE -->
   <div class="mode-toggle">
-    <button class="mode-btn active-child" id="btn-child" onclick="setMode('child')">🙋 Eu</button>
-    <button class="mode-btn" id="btn-parent" onclick="setMode('parent')">👨‍👩‍👧 Pais</button>
+    <button class="mode-btn active-child" id="btn-child" onclick="setMode('child')"><i data-lucide="hand"></i> Eu</button>
+    <button class="mode-btn" id="btn-parent" onclick="setMode('parent')"><i data-lucide="users"></i> Pais</button>
   </div>
 
   <!-- DATE BAR -->
   <div class="date-bar">
-    <span class="date-text">📅 Hoje</span>
+    <span class="date-text"><i data-lucide="calendar"></i> Hoje</span>
     <span class="date-day" id="date-display">—</span>
   </div>
 
   <!-- ===== CHILD VIEW ===== -->
   <div id="child-view">
     <div class="mood-bar">
-      <div class="mood-item highlight"><span>☀️</span>Hoje</div>
+      <div class="mood-item highlight"><span><i data-lucide="sun"></i></span>Hoje</div>
       <div class="mood-item green"><span id="m-done">0</span>feitas</div>
       <div class="mood-item blue"><span id="m-left">0</span>faltam</div>
     </div>
 
     <div class="progress-section">
       <div class="progress-header">
-        <span class="progress-label">⚡ Progresso do dia</span>
+        <span class="progress-label"><i data-lucide="zap"></i> Progresso do dia</span>
         <span class="progress-count" id="prog-text">0 / 0</span>
       </div>
       <div class="progress-bar-bg">
@@ -317,7 +318,7 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
     </div>
 
     <div class="tasks-section">
-      <div class="tasks-title">📋 Tarefas de hoje</div>
+      <div class="tasks-title"><i data-lucide="clipboard-list"></i> Tarefas de hoje</div>
       <div id="child-task-list"></div>
     </div>
   </div>
@@ -327,7 +328,7 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
 
     <div class="progress-section">
       <div class="progress-header">
-        <span class="progress-label">📊 Visão geral dos pais</span>
+        <span class="progress-label"><i data-lucide="bar-chart-3"></i> Visão geral dos pais</span>
         <span class="progress-count" id="parent-prog-text">0 / 0</span>
       </div>
       <div class="progress-bar-bg">
@@ -341,7 +342,7 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
       <div class="summary-top">
         <div class="streak-badge">
           <span class="streak-num" id="streak-num">0</span>
-          <span class="streak-lbl">🔥 dias</span>
+          <span class="streak-lbl"><i data-lucide="flame"></i> dias</span>
         </div>
         <div class="summary-name-wrap">
           <label class="summary-name-lbl">Nome de quem segue a rotina</label>
@@ -349,19 +350,19 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
                  placeholder="Nome" onchange="updateChildName(this.value)" />
         </div>
       </div>
-      <div class="pending-title">⏳ O que falta hoje</div>
+      <div class="pending-title"><i data-lucide="clock"></i> O que falta hoje</div>
       <div class="pending-list" id="pending-list"></div>
     </div>
 
     <!-- HISTORY (últimos 7 dias) -->
     <div class="history-card">
-      <div class="history-title">📈 Últimos 7 dias</div>
+      <div class="history-title"><i data-lucide="trending-up"></i> Últimos 7 dias</div>
       <div class="history-list" id="history-list"></div>
     </div>
 
     <!-- ADD FORM -->
     <div class="add-section" id="add-section">
-      <div class="add-title">✨ <span id="form-title">Criar nova tarefa</span></div>
+      <div class="add-title"><i data-lucide="sparkles"></i> <span id="form-title">Criar nova tarefa</span></div>
 
       <div class="form-row">
         <label class="form-label">Ícone da tarefa</label>
@@ -414,7 +415,7 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
     <!-- TASKS LIST (PARENT) -->
     <div class="section-divider" style="margin-top:20px;">
       <div class="divider-line"></div>
-      <div class="divider-label">📋 Tarefas criadas</div>
+      <div class="divider-label"><i data-lucide="clipboard-list"></i> Tarefas criadas</div>
       <div class="divider-line"></div>
     </div>
     <div class="tasks-section" style="margin-top:14px;">
@@ -423,7 +424,7 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.
 
     <!-- ACTIVITY LOG -->
     <div class="activity-section" id="activity-section" style="display:none">
-      <div class="activity-title">🔔 Atividade recente</div>
+      <div class="activity-title"><i data-lucide="bell"></i> Atividade recente</div>
       <div id="activity-log"></div>
     </div>
 
@@ -982,5 +983,8 @@ function esc(str) {
 })();
 </script>
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>

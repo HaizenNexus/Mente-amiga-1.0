@@ -7,6 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>"/>
   <link rel="stylesheet" href="../css/main.css"/>
   <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../css/enhance.css" />
   <style>
     /* ─── Hero de progresso ─── */
     .prog-hero {
@@ -217,15 +218,15 @@
 
 <nav class="navbar" role="navigation">
   <a class="nav-logo" href="../index.html">
-    <span style="font-size:2rem;line-height:1">🧠</span>
+    <span style="font-size:2rem;line-height:1"><i data-lucide="brain"></i></span>
     <span class="nav-logo-text">Mente Amiga</span>
   </a>
   <div style="display:flex;align-items:center;gap:8px;background:var(--c-yellow-light);border-radius:999px;padding:6px 14px;border:1px solid rgba(255,214,0,.35)">
-    <span>🏆</span>
+    <span><i data-lucide="trophy"></i></span>
     <span style="font-size:.82rem;font-weight:700;color:#B8860B">Minhas Conquistas</span>
   </div>
   <div class="nav-actions">
-    <button class="btn-theme" id="btn-theme">🌙</button>
+    <button class="btn-theme" id="btn-theme"><i data-lucide="moon"></i></button>
     <button onclick="history.back()" class="ma-btn-voltar">← Voltar</button>
     <button class="hamburger"><span></span><span></span><span></span></button>
   </div>
@@ -256,22 +257,22 @@
   <!-- STATS -->
   <div class="stats-grid">
     <div class="stat-card sc-purple reveal">
-      <div class="stat-card-icon">⭐</div>
+      <div class="stat-card-icon"><i data-lucide="star"></i></div>
       <div class="stat-card-val" id="stat-xp-total">0</div>
       <div class="stat-card-label">XP Total</div>
     </div>
     <div class="stat-card sc-orange reveal reveal-delay-1">
-      <div class="stat-card-icon">🎮</div>
+      <div class="stat-card-icon"><i data-lucide="gamepad-2"></i></div>
       <div class="stat-card-val" id="stat-jogos">0</div>
       <div class="stat-card-label">Jogos Jogados</div>
     </div>
     <div class="stat-card sc-teal reveal reveal-delay-2">
-      <div class="stat-card-icon">🔥</div>
+      <div class="stat-card-icon"><i data-lucide="flame"></i></div>
       <div class="stat-card-val" id="stat-streak">0</div>
       <div class="stat-card-label">Dias Seguidos</div>
     </div>
     <div class="stat-card sc-pink reveal reveal-delay-3">
-      <div class="stat-card-icon">🏅</div>
+      <div class="stat-card-icon"><i data-lucide="medal"></i></div>
       <div class="stat-card-val" id="stat-medals-count">0</div>
       <div class="stat-card-label">Medalhas</div>
     </div>
@@ -279,19 +280,19 @@
 
   <!-- MEDALHAS -->
   <div class="section-box reveal">
-    <div class="section-box-title">🏅 Minhas Medalhas</div>
+    <div class="section-box-title"><i data-lucide="medal"></i> Minhas Medalhas</div>
     <div class="medals-showcase" id="medals-showcase"></div>
   </div>
 
   <!-- PRÓXIMAS CONQUISTAS -->
   <div class="section-box reveal">
-    <div class="section-box-title">🎯 Próximas Conquistas</div>
+    <div class="section-box-title"><i data-lucide="target"></i> Próximas Conquistas</div>
     <div class="next-medals" id="next-medals"></div>
   </div>
 
   <!-- CALENDÁRIO DE ROTINA -->
   <div class="section-box reveal">
-    <div class="section-box-title">📅 Rotina — Últimos 14 Dias</div>
+    <div class="section-box-title"><i data-lucide="calendar"></i> Rotina — Últimos 14 Dias</div>
     <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:.75rem">
       🟢 Completo &nbsp; ⬜ Pendente &nbsp; 🟣 Hoje
     </p>
@@ -300,20 +301,20 @@
 
   <!-- HISTÓRICO DE JOGOS -->
   <div class="section-box reveal">
-    <div class="section-box-title">🎮 Histórico de Atividades</div>
+    <div class="section-box-title"><i data-lucide="gamepad-2"></i> Histórico de Atividades</div>
     <div class="games-history" id="games-history"></div>
   </div>
 
   <!-- BOTÕES DE AÇÃO -->
   <div class="share-strip">
     <button class="btn btn-primary" onclick="compartilharProgresso()">
-      📤 Compartilhar Progresso
+      <i data-lucide="upload"></i> Compartilhar Progresso
     </button>
     <button class="btn btn-secondary" onclick="resetarProgresso()">
-      🔄 Reiniciar Progresso
+      <i data-lucide="refresh-cw"></i> Reiniciar Progresso
     </button>
     <a href="jogos.html" class="btn btn-kids">
-      🎮 Jogar Mais!
+      <i data-lucide="gamepad-2"></i> Jogar Mais!
     </a>
   </div>
 
@@ -323,7 +324,7 @@
 <footer class="footer" role="contentinfo">
   <div class="footer-bottom" style="max-width:900px;margin:0 auto;padding:1.5rem 0 0">
     <p class="footer-copy">© Direitos autorais — <strong>Mente Amiga - Desenvolvido por Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
-    <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
+    <p class="footer-made">Feito com <span class="heart"><i data-lucide="heart"></i></span> para quem merece o melhor</p>
   </div>
 </footer>
 
@@ -540,5 +541,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>

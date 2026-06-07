@@ -160,15 +160,24 @@
     return e;
   }
 
+  /* Renderiza ícones Lucide se já disponíveis. É best-effort: o nav.js
+     roda ANTES do Lucide carregar, então normalmente não faz nada aqui —
+     quem efetivamente desenha os <i data-lucide> das barras é o enhance.js
+     (carregado após o Lucide). Esta chamada só ajuda caso o Lucide já esteja
+     presente, e é segura quando não está. */
+  function renderIcons() {
+    try { if (window.lucide && window.lucide.createIcons) window.lucide.createIcons(); } catch (e) {}
+  }
+
   /* 5) Barra inferior — 4 itens (a Luna fica no botão flutuante? Não:
         a Luna agora é acessada pelo botão "Voltar"/menu das páginas). */
   function buildBottomNav() {
     var items = [
-      { key: 'home',     icon: '🏠', label: 'Início',    href: homeHref() },
-      { key: 'jogos',    icon: '🎮', label: 'Jogos',     href: ROOT + 'pages/jogos.html' },
-      { key: 'imprimir', icon: '🖨️', label: 'Imprimir',  href: ROOT + 'pages/imprimir.html' },
-      { key: 'rotina',   icon: '📅', label: 'Rotina',    href: ROOT + 'pages/rotina.html' },
-      { key: 'prog',     icon: '🏆', label: 'Progresso', href: ROOT + 'pages/progresso.html' }
+      { key: 'home',     icon: 'home',       label: 'Início',    href: homeHref() },
+      { key: 'jogos',    icon: 'gamepad-2',  label: 'Jogos',     href: ROOT + 'pages/jogos.html' },
+      { key: 'imprimir', icon: 'printer',    label: 'Imprimir',  href: ROOT + 'pages/imprimir.html' },
+      { key: 'rotina',   icon: 'calendar',   label: 'Rotina',    href: ROOT + 'pages/rotina.html' },
+      { key: 'prog',     icon: 'trophy',     label: 'Progresso', href: ROOT + 'pages/progresso.html' }
     ];
     var activeMap = {
       'dashboard-crianca.html': 'home',
@@ -188,12 +197,13 @@
       a.href = it.href;
       a.setAttribute('aria-label', it.label);
       if (it.key === activeKey) a.setAttribute('aria-current', 'page');
-      a.innerHTML = '<span class="ma-bn-icon" aria-hidden="true">' + it.icon +
-                    '</span><span>' + it.label + '</span>';
+      a.innerHTML = '<span class="ma-bn-icon" aria-hidden="true"><i data-lucide="' + it.icon +
+                    '"></i></span><span>' + it.label + '</span>';
       nav.appendChild(a);
     });
     document.body.appendChild(nav);
     document.body.classList.add('ma-has-bottomnav');
+    renderIcons();
   }
 
   /* 6) Barra superior dos jogos (escape garantido).
@@ -203,21 +213,29 @@
     var logo = el('a', 'ma-gb-logo');
     logo.href = homeHref();
     logo.title = 'Ir para o meu painel';
-    logo.innerHTML = '<span aria-hidden="true">🧠</span><span>Mente Amiga</span>';
+    logo.innerHTML = '<span aria-hidden="true"><i data-lucide="brain"></i></span><span>Mente Amiga</span>';
 
     var back = el('a', 'ma-btn-voltar');
     back.href = ROOT + 'pages/jogos.html';
     back.title = 'Voltar para a lista de jogos';
-    back.innerHTML = '<span aria-hidden="true">←</span><span>Voltar</span>';
+    back.innerHTML = '<span aria-hidden="true"><i data-lucide="arrow-left"></i></span><span>Voltar</span>';
 
     bar.appendChild(logo);
     bar.appendChild(back);
     document.body.appendChild(bar);
     document.body.classList.add('ma-has-gamebar');
+    renderIcons();
   }
 
   /* 7) Inicialização — decide o que cada tipo de página recebe. */
   function main() {
+    /* A camada de refino (enhance.css) precisa das variáveis de cor.
+       Se a página NÃO carrega o main.css, marca .ma-standalone no <html>
+       para o enhance.css fornecer um fallback dessas variáveis. */
+    if (!document.querySelector('link[href*="main.css"]')) {
+      document.documentElement.classList.add('ma-standalone');
+    }
+
     /* define a paleta de cores da página (usada pelo botão Voltar) */
     document.documentElement.style.setProperty('--ma-rgb-grad', pageGradient());
     injectCSS();

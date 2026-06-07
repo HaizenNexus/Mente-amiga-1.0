@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../css/main.css"/>
   <!-- Estilos próprios desta página -->
   <link rel="stylesheet" href="../css/sobre.css"/>
+  <link rel="stylesheet" href="../css/enhance.css" />
 </head>
 <body>
 <!-- Luzes coloridas flutuando no fundo (puramente decorativo) -->
@@ -39,17 +40,17 @@
 
 <!-- Menu lateral do celular (abre pelo hamburger — controlado pelo app.js) -->
 <div class="nav-drawer" role="navigation" aria-label="Menu mobile">
-  <a href="../index.html">🏠 Início</a>
-  <a href="personagens.html">🦸 Personagens</a>
-  <a href="jogos.html">🎮 Jogos</a>
-  <a href="biblioteca-mente-amiga.html">📚 Biblioteca</a>
-  <a href="sobre.html">💜 Sobre</a>
+  <a href="../index.html"><i data-lucide="home"></i> Início</a>
+  <a href="personagens.html"><i data-lucide="shield"></i> Personagens</a>
+  <a href="jogos.html"><i data-lucide="gamepad-2"></i> Jogos</a>
+  <a href="biblioteca-mente-amiga.html"><i data-lucide="book-open"></i> Biblioteca</a>
+  <a href="sobre.html"><i data-lucide="heart"></i> Sobre</a>
 </div>
 
 <!-- ═══════════════════════ HERO ═══════════════════════ -->
 <header class="about-hero">
-  <span class="about-badge">✨ Quem faz acontecer</span>
-  <div class="about-emoji">💜</div>
+  <span class="about-badge"><i data-lucide="sparkles"></i> Quem faz acontecer</span>
+  <div class="about-emoji"><i data-lucide="heart"></i></div>
   <h1>Sobre o <span class="text-gradient">Mente Amiga</span></h1>
   <p>
     O Mente Amiga nasceu para ser um espaço seguro, colorido e cheio de carinho,
@@ -63,15 +64,15 @@
 <div class="about-tabs" role="tablist" aria-label="Seções da página Sobre">
   <button class="about-tab" id="tab-equipe" role="tab" aria-selected="true"
           aria-controls="panel-equipe" type="button">
-    <span class="tab-emoji" aria-hidden="true">💜</span> Nossa Equipe
+    <span class="tab-emoji" aria-hidden="true"><i data-lucide="heart"></i></span> Nossa Equipe
   </button>
   <button class="about-tab" id="tab-colab" role="tab" aria-selected="false"
           aria-controls="panel-colab" type="button" tabindex="-1">
-    <span class="tab-emoji" aria-hidden="true">🤝</span> <span class="tab-text-long">Quem nos&nbsp;</span>Ajudou
+    <span class="tab-emoji" aria-hidden="true"><i data-lucide="handshake"></i></span> <span class="tab-text-long">Quem nos&nbsp;</span>Ajudou
   </button>
   <button class="about-tab" id="tab-info" role="tab" aria-selected="false"
           aria-controls="panel-info" type="button" tabindex="-1">
-    <span class="tab-emoji" aria-hidden="true">🧠</span> TEA e TDAH
+    <span class="tab-emoji" aria-hidden="true"><i data-lucide="brain"></i></span> TEA e TDAH
   </button>
 </div>
 
@@ -82,7 +83,7 @@
   <section class="tab-panel" id="panel-equipe" role="tabpanel" aria-labelledby="tab-equipe">
 
   <h2 class="team-title">Nossa <span style="background:var(--grad-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Equipe</span></h2>
-  <p class="team-subtitle">As mentes (amigas!) por trás do projeto 🌟</p>
+  <p class="team-subtitle">As mentes (amigas!) por trás do projeto <i data-lucide="star"></i></p>
 
   <div class="team-grid">
 
@@ -146,7 +147,7 @@
   <section class="tab-panel" id="panel-colab" role="tabpanel" aria-labelledby="tab-colab" hidden>
 
     <h2 class="team-title">Quem nos <span style="background:var(--grad-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Ajudou</span></h2>
-    <p class="team-subtitle">Pessoas que apoiaram, incentivaram e fizeram parte dessa jornada 🤝</p>
+    <p class="team-subtitle">Pessoas que apoiaram, incentivaram e fizeram parte dessa jornada <i data-lucide="handshake"></i></p>
 
     <div class="team-grid">
 
@@ -188,14 +189,14 @@
   <section class="tab-panel" id="panel-info" role="tabpanel" aria-labelledby="tab-info" hidden>
 
     <h2 class="team-title">Sobre <span style="background:var(--grad-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">TEA e TDAH</span></h2>
-    <p class="team-subtitle">Informações reais e importantes para famílias e educadores 🧠</p>
+    <p class="team-subtitle">Informações reais e importantes para famílias e educadores <i data-lucide="brain"></i></p>
 
     <div class="info-grid">
 
       <!-- ✏️ BLOCO 1 — O que é TEA -->
       <article class="info-card m-purple">
         <div class="info-card-head">
-          <span class="info-card-icon" aria-hidden="true">🧩</span>
+          <span class="info-card-icon" aria-hidden="true"><i data-lucide="puzzle"></i></span>
           <h3 class="info-card-title">O que é o TEA?</h3>
         </div>
         <div class="info-card-body">
@@ -206,7 +207,7 @@
       <!-- ✏️ BLOCO 2 — O que é TDAH -->
       <article class="info-card m-blue">
         <div class="info-card-head">
-          <span class="info-card-icon" aria-hidden="true">⚡</span>
+          <span class="info-card-icon" aria-hidden="true"><i data-lucide="zap"></i></span>
           <h3 class="info-card-title">O que é o TDAH?</h3>
         </div>
         <div class="info-card-body">
@@ -217,7 +218,7 @@
       <!-- ✏️ BLOCO 3 — Sinais comuns -->
       <article class="info-card m-teal">
         <div class="info-card-head">
-          <span class="info-card-icon" aria-hidden="true">🔎</span>
+          <span class="info-card-icon" aria-hidden="true"><i data-lucide="search"></i></span>
           <h3 class="info-card-title">Sinais comuns</h3>
         </div>
         <div class="info-card-body">
@@ -232,7 +233,7 @@
       <!-- ✏️ BLOCO 4 — Como apoiar -->
       <article class="info-card m-pink">
         <div class="info-card-head">
-          <span class="info-card-icon" aria-hidden="true">💜</span>
+          <span class="info-card-icon" aria-hidden="true"><i data-lucide="heart"></i></span>
           <h3 class="info-card-title">Como apoiar</h3>
         </div>
         <div class="info-card-body">
@@ -243,7 +244,7 @@
       <!-- ✏️ BLOCO 5 — Largura inteira (opcional): mitos x verdades, etc. -->
       <article class="info-card m-orange is-wide">
         <div class="info-card-head">
-          <span class="info-card-icon" aria-hidden="true">📌</span>
+          <span class="info-card-icon" aria-hidden="true"><i data-lucide="pin"></i></span>
           <h3 class="info-card-title">Mitos e verdades</h3>
         </div>
         <div class="info-card-body">
@@ -254,7 +255,7 @@
     </div>
 
     <!-- Aviso importante (pode editar o texto) -->
-    <p class="info-note">⚠️ As informações aqui têm caráter educativo e <strong>não substituem</strong> a avaliação de profissionais de saúde. Em caso de dúvidas, procure um médico ou psicólogo.</p>
+    <p class="info-note"><i data-lucide="alert-triangle"></i> As informações aqui têm caráter educativo e <strong>não substituem</strong> a avaliação de profissionais de saúde. Em caso de dúvidas, procure um médico ou psicólogo.</p>
 
   </section><!-- /ABA 3 -->
 
@@ -264,7 +265,7 @@
 <footer class="footer" role="contentinfo">
   <div class="footer-bottom" style="max-width:1000px;margin:0 auto;padding:1.5rem 0 0">
     <p class="footer-copy">© Direitos autorais — <strong>Mente Amiga - Desenvolvido por Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
-    <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
+    <p class="footer-made">Feito com <span class="heart"><i data-lucide="heart"></i></span> para quem merece o melhor</p>
   </div>
 </footer>
 
@@ -275,5 +276,8 @@
 <!-- Scripts próprios desta página: fotos, abas, fundo e "ler mais" -->
 <script src="../js/sobre.js"></script>
 <script src="../js/nav.js"></script>
+<!-- Ícones Lucide + refino -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../js/enhance.js"></script>
 </body>
 </html>
