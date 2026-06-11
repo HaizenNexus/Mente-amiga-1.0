@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Espaço dos Adolescentes</title>
 <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧑</text></svg>"/>
   <link rel="stylesheet" href="../css/main.css"/>
   <link rel="stylesheet" href="../css/enhance.css" />
   <link rel="shortcut icon" href="../assets/favicon/favicon.ico" type="image/x-icon">
@@ -14,7 +13,11 @@
     .teen-hero {
       min-height: 300px;
       padding: 100px 2rem 2.5rem;
-      background: linear-gradient(145deg, #0D1428 0%, #1A1A3E 50%, #0D2818 100%);
+      background:
+        radial-gradient(55% 90% at 8% 0%, rgba(157,123,234,.28), transparent 60%),
+        radial-gradient(50% 80% at 95% 5%, rgba(55,214,190,.20), transparent 60%),
+        radial-gradient(45% 70% at 60% 100%, rgba(255,95,168,.16), transparent 60%),
+        linear-gradient(145deg, #15102E 0%, #0D0A1E 60%);
       position: relative;
       overflow: hidden;
       display: flex; align-items: center; justify-content: center;
@@ -323,18 +326,34 @@
     /* Games teen */
     .teen-games-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding:1rem; }
     .teen-game-card {
-      border-radius:var(--r-md);
-      padding:1.25rem;
+      border-radius:var(--r-lg);
+      padding:1.4rem 1rem;
       text-decoration:none;
-      display:flex;flex-direction:column;gap:6px;
-      border:1px solid var(--border);
-      background:var(--grad-card);
+      display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;
+      border:1px solid rgba(255,255,255,.09);
+      background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+      backdrop-filter:blur(10px);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 8px 26px rgba(0,0,0,.4);
       transition:all var(--t-slow);
     }
-    .teen-game-card:hover { transform:translateY(-4px);box-shadow:var(--shadow-md); }
-    .tgc-icon { font-size:1.75rem; }
-    .tgc-name { font-size:0.875rem;font-weight:700;color:var(--text-primary); }
-    .tgc-xp { font-size:0.75rem;font-weight:700;color:var(--c-purple); }
+    .teen-game-card:hover { transform:translateY(-6px) scale(1.02);border-color:rgba(157,123,234,.45);box-shadow:0 20px 46px rgba(157,123,234,.22); }
+    .tgc-icon {
+      width:60px;height:60px;border-radius:18px;display:grid;place-items:center;
+      font-size:1.85rem;color:#fff;margin-bottom:2px;
+      background:linear-gradient(135deg,#A98BEF,#7C5CBF);
+      box-shadow:0 8px 22px rgba(124,92,191,.4);
+    }
+    .tgc-icon i, .tgc-icon svg { width:30px;height:30px; }
+    .tgc-name { font-size:0.95rem;font-weight:700;color:var(--text-primary);font-family:var(--font-display); }
+    .tgc-xp { font-size:0.72rem;font-weight:800;color:#B197F0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);padding:3px 12px;border-radius:999px; }
+    /* cores variadas por posição (vibe galáxia) */
+    .teen-game-card:nth-child(7n+1) .tgc-icon{background:linear-gradient(135deg,#A98BEF,#7C5CBF);box-shadow:0 8px 22px rgba(124,92,191,.4)}
+    .teen-game-card:nth-child(7n+2) .tgc-icon{background:linear-gradient(135deg,#6FB6F7,#4A90D9);box-shadow:0 8px 22px rgba(74,144,217,.4)}
+    .teen-game-card:nth-child(7n+3) .tgc-icon{background:linear-gradient(135deg,#FF7FBB,#E91E8C);box-shadow:0 8px 22px rgba(233,30,140,.4)}
+    .teen-game-card:nth-child(7n+4) .tgc-icon{background:linear-gradient(135deg,#FFB36B,#FF8C42);box-shadow:0 8px 22px rgba(255,140,66,.4)}
+    .teen-game-card:nth-child(7n+5) .tgc-icon{background:linear-gradient(135deg,#4FE0CB,#2BB5A0);box-shadow:0 8px 22px rgba(43,181,160,.4)}
+    .teen-game-card:nth-child(7n+6) .tgc-icon{background:linear-gradient(135deg,#74E29C,#4CAF50);box-shadow:0 8px 22px rgba(76,175,80,.4)}
+    .teen-game-card:nth-child(7n+7) .tgc-icon{background:linear-gradient(135deg,#9D7BEA,#5BA8F5);box-shadow:0 8px 22px rgba(157,123,234,.4)}
 
     /* Seção wrapper */
     .teen-section { margin-top:2.5rem; }
@@ -395,7 +414,7 @@
     <span class="nav-logo-text">Mente Amiga</span>
   </a>
   <div style="display:flex;align-items:center;gap:8px;background:rgba(74,144,217,0.15);border:1px solid rgba(74,144,217,0.25);border-radius:999px;padding:6px 14px">
-    <span id="nav-hero-icon">🦸</span>
+    <span id="nav-hero-icon" style="display:inline-flex;align-items:center;color:var(--c-purple)"><i data-lucide="shield"></i></span>
     <span id="nav-hero-name" style="font-size:0.8rem;font-weight:700;color:#90C0F0">Meu Herói</span>
   </div>
   <div class="nav-actions">

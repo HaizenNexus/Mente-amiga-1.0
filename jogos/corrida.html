@@ -271,8 +271,8 @@ const SCENES = {
 
 /* ── Perfis ── */
 const PROFILES = {
-  crianca:     { label:'Criança',     emoji:'👦', lives:5, baseSpeed:2.2, showHint:true },
-  adolescente: { label:'Adolescente', emoji:'🧑', lives:4, baseSpeed:2.8, showHint:false }
+  crianca:     { label:'Criança',     emoji:'<i data-lucide="smile"></i>', lives:5, baseSpeed:2.2, showHint:true },
+  adolescente: { label:'Adolescente', emoji:'<i data-lucide="user-round"></i>', lives:4, baseSpeed:2.8, showHint:false }
 };
 
 /* ── Banco de palavras (sílabas) por categoria + perfil ── */
@@ -1255,6 +1255,7 @@ function showMenu(){
     '<div class="ov-hi" id="menu-hi"></div>'+
     '<button class="btn" id="startBtn">▶ Começar</button>';
   ov.style.display='flex';
+  if(window.lucide&&window.lucide.createIcons)window.lucide.createIcons();
   ov.querySelectorAll('.cat-canvas').forEach(cv=>{
     const g=cv.getContext('2d'); g.clearRect(0,0,46,46); drawChar(cv.dataset.catid,23,29,0.56,g);
   });

@@ -2,7 +2,7 @@
    MENTE AMIGA — Sistema de Design Principal
    CEO: Pedro Henrique © 2026
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap');
 
 
 html, body {
@@ -73,25 +73,51 @@ html, body {
   --t-normal: 0.25s ease;
   --t-slow:   0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Fonte */
-  --font-main:    'Nunito', sans-serif;
-  --font-display: 'Baloo 2', sans-serif;
+  /* Fonte — Nocturne: Sora (títulos) + Plus Jakarta Sans (corpo) */
+  --font-main:    'Plus Jakarta Sans', 'Nunito', sans-serif;
+  --font-display: 'Sora', 'Baloo 2', sans-serif;
 }
 
 /* ─── Modo Escuro ─── */
 [data-theme="dark"] {
-  --bg-primary:    #0F0A1E;
-  --bg-secondary:  #1A1230;
-  --bg-tertiary:   #231849;
-  --text-primary:  #F0EEFF;
-  --text-secondary:#C4B8F0;
-  --text-muted:    #7B6FA8;
-  --border:        rgba(155,125,212,0.20);
-  --border-strong: rgba(155,125,212,0.35);
-  --grad-card:     linear-gradient(145deg, #1A1230 0%, #231849 100%);
-  --shadow-sm:     0 2px 8px rgba(0,0,0,0.4);
-  --shadow-md:     0 4px 20px rgba(0,0,0,0.5);
-  --shadow-lg:     0 8px 40px rgba(0,0,0,0.6);
+  /* ─── NOCTURNE — tema escuro premium (padrão do app) ─── */
+  /* Acentos mais vibrantes/luminosos para brilhar no fundo profundo */
+  --c-purple:      #9D7BEA;
+  --c-purple-light:#241B45;
+  --c-purple-mid:  #B197F0;
+  --c-blue:        #5BA8F5;
+  --c-blue-light:  #122742;
+  --c-teal:        #37D6BE;
+  --c-teal-light:  #0C2E2A;
+  --c-green:       #56D98A;
+  --c-green-light: #0E2A1A;
+  --c-orange:      #FFA45B;
+  --c-orange-light:#2E1E10;
+  --c-pink:        #FF5FA8;
+  --c-pink-light:  #2E1022;
+  --c-yellow:      #FFD95B;
+  --c-yellow-light:#2E2810;
+  --c-red:         #FF6B6B;
+  --c-red-light:   #2E1212;
+
+  --bg-primary:    #15102B;
+  --bg-secondary:  #0D0A1E;
+  --bg-tertiary:   #1C1640;
+  --text-primary:  #F4F1FF;
+  --text-secondary:#B7AED4;
+  --text-muted:    #7E76A6;
+  --border:        rgba(255,255,255,0.09);
+  --border-strong: rgba(255,255,255,0.18);
+
+  --grad-hero:     linear-gradient(120deg, #9D7BEA 0%, #5BA8F5 50%, #37D6BE 100%);
+  --grad-card:     linear-gradient(145deg, #181230 0%, #120E26 100%);
+  --grad-teen:     linear-gradient(135deg, #5BA8F5 0%, #9D7BEA 50%, #FF5FA8 100%);
+  --grad-kids:     linear-gradient(135deg, #FFA45B 0%, #FFD95B 50%, #56D98A 100%);
+
+  --shadow-sm:     0 2px 10px rgba(0,0,0,0.5);
+  --shadow-md:     0 6px 26px rgba(0,0,0,0.55);
+  --shadow-lg:     0 14px 50px rgba(0,0,0,0.6);
+  --shadow-xl:     0 24px 70px rgba(0,0,0,0.7);
 }
 
 /* ─── Base HTML ─── */

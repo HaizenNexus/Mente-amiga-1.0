@@ -242,7 +242,7 @@
 
   <!-- CARD DE NÍVEL -->
   <div class="level-card" id="level-card">
-    <div class="level-char" id="level-char">🧒</div>
+    <div class="level-char" id="level-char"><i data-lucide="user-round"></i></div>
     <div class="level-badge" id="level-badge">1</div>
     <div class="level-info">
       <div class="level-title" id="level-title">Explorador Iniciante</div>
@@ -357,11 +357,25 @@ function renderProgresso() {
   const streak   = prog.streak || 0;
   const medals   = prog.medals || [];
   const xpInLvl  = xp % 100;
-  const charIcon = CHAR_MAP[prog.character] || '🧒';
   const lvlName  = LEVEL_NAMES[Math.min(level, LEVEL_NAMES.length-1)] || 'Herói';
 
-  // Nível card
-  document.getElementById('level-char').textContent   = charIcon;
+  // Nível card — mostra a FOTO do personagem (reserva: ícone, sem emoji)
+  (function () {
+    const el = document.getElementById('level-char');
+    if (!el) return;
+    if (prog.character) {
+      el.textContent = '';
+      const img = document.createElement('img');
+      img.src = '../assets/personagens/' + prog.character + '.webp';
+      img.alt = '';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block';
+      img.onerror = () => { img.remove(); el.innerHTML = '<i data-lucide="user-round"></i>'; if (window.lucide) lucide.createIcons(); };
+      el.appendChild(img);
+    } else {
+      el.innerHTML = '<i data-lucide="user-round"></i>';
+      if (window.lucide) lucide.createIcons();
+    }
+  })();
   document.getElementById('level-badge').textContent  = level;
   document.getElementById('level-title').textContent  = lvlName;
   document.getElementById('level-sub').textContent    = level >= 10

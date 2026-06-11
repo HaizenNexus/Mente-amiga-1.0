@@ -10,7 +10,9 @@ const ThemeManager = {
   key: 'ma-theme',
 
   init() {
-    const saved = localStorage.getItem(this.key) || 'light';
+    // Nocturne é o visual padrão do app (escuro premium). Quem preferir
+    // claro pode alternar no botão de tema — a escolha fica salva.
+    const saved = localStorage.getItem(this.key) || 'dark';
     this.apply(saved);
     document.querySelector('#btn-theme')?.addEventListener('click', () => this.toggle());
   },

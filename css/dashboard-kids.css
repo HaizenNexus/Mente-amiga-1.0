@@ -261,3 +261,102 @@
   .games-grid { grid-template-columns: 1fr 1fr; }
   .edu-grid   { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ============================================================
+   NOCTURNE WOW — elevação premium do painel infantil
+   (fica por último para sobrescrever as regras acima)
+   ============================================================ */
+
+/* Brilho ambiente no fundo do painel (vibe galáxia, sem pesar) */
+[data-theme="dark"] body[data-page="kids-dashboard"] {
+  background:
+    radial-gradient(38% 26% at 86% 16%, rgba(91,168,245,.07), transparent 60%),
+    radial-gradient(42% 32% at 8% 55%, rgba(157,123,234,.08), transparent 60%),
+    radial-gradient(40% 30% at 60% 100%, rgba(55,214,190,.06), transparent 60%),
+    var(--bg-secondary);
+  background-attachment: fixed;
+}
+
+/* Hero coerente com o Nocturne (deep purple + glows) */
+[data-theme="dark"] .kids-hero {
+  background:
+    radial-gradient(60% 85% at 12% 0%, rgba(157,123,234,.20), transparent 60%),
+    radial-gradient(55% 80% at 95% 6%, rgba(55,214,190,.15), transparent 60%),
+    linear-gradient(145deg, #150F2E 0%, #0D0A1E 62%);
+}
+[data-theme="dark"] .kids-bubble { opacity:.4; filter: blur(34px); }
+[data-theme="dark"] .b1 { background:#9D7BEA } [data-theme="dark"] .b2 { background:#5BA8F5 }
+[data-theme="dark"] .b3 { background:#37D6BE } [data-theme="dark"] .b4 { background:#FF5FA8 }
+
+[data-theme="dark"] .kids-welcome-card,
+[data-theme="dark"] .xp-bar-container,
+[data-theme="dark"] .medals-row {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), var(--shadow-md);
+}
+
+/* Títulos de seção com marcador em gradiente */
+main h2[id] {
+  position: relative;
+  letter-spacing: -0.02em;
+}
+
+/* ─── Ícone do jogo agora é um CHIP com gradiente + glow ─── */
+.game-card-icon {
+  width: 64px; height: 64px;
+  border-radius: 20px;
+  display: grid; place-items: center;
+  font-size: 2rem; line-height: 1;
+  margin-bottom: 6px;
+  background: rgba(124,92,191,.14);
+  color: #fff;
+  animation: iconBounce 3s ease infinite;
+}
+.game-card-icon i, .game-card-icon svg { width: 32px; height: 32px; }
+.gc-orange .game-card-icon { background:linear-gradient(135deg,#FFB36B,#FF8C42); box-shadow:0 8px 22px rgba(255,140,66,.40); }
+.gc-purple .game-card-icon { background:linear-gradient(135deg,#A98BEF,#7C5CBF); box-shadow:0 8px 22px rgba(124,92,191,.40); }
+.gc-teal   .game-card-icon { background:linear-gradient(135deg,#4FE0CB,#2BB5A0); box-shadow:0 8px 22px rgba(43,181,160,.40); }
+.gc-blue   .game-card-icon { background:linear-gradient(135deg,#6FB6F7,#4A90D9); box-shadow:0 8px 22px rgba(74,144,217,.40); }
+.gc-pink   .game-card-icon { background:linear-gradient(135deg,#FF7FBB,#E91E8C); box-shadow:0 8px 22px rgba(233,30,140,.40); }
+.gc-green  .game-card-icon { background:linear-gradient(135deg,#74E29C,#4CAF50); box-shadow:0 8px 22px rgba(76,175,80,.40); }
+
+/* ─── Cards de jogo: vidro colorido (muito mais vivo no escuro) ─── */
+[data-theme="dark"] .game-card {
+  backdrop-filter: blur(10px);
+  border-width: 1px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 8px 26px rgba(0,0,0,.4);
+}
+[data-theme="dark"] .gc-orange { background:linear-gradient(160deg, rgba(255,164,91,.16), rgba(255,164,91,.03)); border-color:rgba(255,164,91,.30); }
+[data-theme="dark"] .gc-purple { background:linear-gradient(160deg, rgba(157,123,234,.16), rgba(157,123,234,.03)); border-color:rgba(157,123,234,.30); }
+[data-theme="dark"] .gc-teal   { background:linear-gradient(160deg, rgba(55,214,190,.15), rgba(55,214,190,.03)); border-color:rgba(55,214,190,.28); }
+[data-theme="dark"] .gc-blue   { background:linear-gradient(160deg, rgba(91,168,245,.15), rgba(91,168,245,.03)); border-color:rgba(91,168,245,.28); }
+[data-theme="dark"] .gc-pink   { background:linear-gradient(160deg, rgba(255,95,168,.16), rgba(255,95,168,.03)); border-color:rgba(255,95,168,.30); }
+[data-theme="dark"] .gc-green  { background:linear-gradient(160deg, rgba(86,217,138,.15), rgba(86,217,138,.03)); border-color:rgba(86,217,138,.28); }
+
+/* Hover com brilho na cor do card */
+[data-theme="dark"] .gc-orange:hover { box-shadow:0 20px 46px rgba(255,140,66,.26); border-color:rgba(255,164,91,.55); }
+[data-theme="dark"] .gc-purple:hover { box-shadow:0 20px 46px rgba(157,123,234,.28); border-color:rgba(157,123,234,.55); }
+[data-theme="dark"] .gc-teal:hover   { box-shadow:0 20px 46px rgba(55,214,190,.24); border-color:rgba(55,214,190,.5); }
+[data-theme="dark"] .gc-blue:hover   { box-shadow:0 20px 46px rgba(91,168,245,.24); border-color:rgba(91,168,245,.5); }
+[data-theme="dark"] .gc-pink:hover   { box-shadow:0 20px 46px rgba(255,95,168,.26); border-color:rgba(255,95,168,.55); }
+[data-theme="dark"] .gc-green:hover  { box-shadow:0 20px 46px rgba(86,217,138,.24); border-color:rgba(86,217,138,.5); }
+
+.game-card-xp {
+  background: rgba(255,255,255,.08);
+  color: var(--c-purple-mid, #B197F0);
+  border: 1px solid rgba(255,255,255,.08);
+}
+[data-theme="dark"] .game-card-xp { background: rgba(255,255,255,.07); }
+
+/* ─── Matérias: ícone colorido + hover com glow ─── */
+.edu-card { background: var(--grad-card); }
+.edu-icon { color: var(--edu-color); }
+.edu-icon i, .edu-icon svg { width: 26px; height: 26px; }
+[data-theme="dark"] .edu-card { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.09); }
+[data-theme="dark"] .edu-card:hover {
+  background: color-mix(in srgb, var(--edu-color) 18%, transparent);
+  border-color: var(--edu-color);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--edu-color) 28%, transparent);
+}
+[data-theme="dark"] .edu-name { color: var(--text-primary); }

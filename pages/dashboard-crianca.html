@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Espaço das Crianças 🧒</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧒</text></svg>"/>
+  <title>Espaço das Crianças</title>
   <link rel="stylesheet" href="../css/main.css"/>
   <link rel="stylesheet" href="../css/dashboard-kids.css"/>
   <link rel="stylesheet" href="../css/enhance.css" />
@@ -20,7 +19,7 @@
   </a>
 
   <div style="display:flex;align-items:center;gap:12px;background:var(--c-orange-light);border-radius:120px;padding:6px 16px">
-    <span id="nav-char-icon" style="font-size:1.5rem">🧒</span>
+    <span id="nav-char-icon" style="font-size:1.5rem;color:var(--c-orange);display:inline-flex;align-items:center"><i data-lucide="smile"></i></span>
     <span id="nav-char-name" style="font-size:0.875rem;font-weight:700;color:#B05B00">Meu Personagem</span>
   </div>
 
@@ -55,7 +54,7 @@
   </div>
   <div class="kids-hero-content">
     <div class="kids-welcome-card" id="welcome-card">
-      <div class="kids-avatar" id="kids-avatar">🧒</div>
+      <div class="kids-avatar" id="kids-avatar" style="color:#fff"><i data-lucide="smile"></i></div>
       <div>
         <h2 id="kids-greeting">Olá, aventureiro(a)! <i data-lucide="hand"></i></h2>
         <p style="color:var(--text-secondary)">O que vamos fazer hoje?</p>
@@ -225,7 +224,7 @@
       <div id="char-preview" style="background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;display:flex;align-items:center;gap:1.5rem;transition:all 0.3s"
            onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-md)'"
            onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-        <div id="char-avatar-big" style="width:80px;height:80px;border-radius:var(--r-md);background:var(--c-purple-light);display:flex;align-items:center;justify-content:center;font-size:3rem;border:2px solid var(--border)">🧒</div>
+        <div id="char-avatar-big" style="width:80px;height:80px;border-radius:var(--r-md);background:var(--c-purple-light);display:flex;align-items:center;justify-content:center;font-size:3rem;border:2px solid var(--border);color:var(--c-purple)"><i data-lucide="user-round"></i></div>
         <div>
           <h3 id="char-name-big" style="font-family:var(--font-display);margin-bottom:4px">Escolha seu personagem!</h3>
           <p style="font-size:0.9rem;color:var(--text-secondary)">Jogue com um personagem especial que representa você.</p>
@@ -243,7 +242,7 @@
 <footer class="footer" role="contentinfo">
   <div class="footer-bottom" style="max-width:1100px;margin:0 auto;padding:1.5rem 0 0">
     <p class="footer-copy">© Direitos autorais — <strong>Mente Amiga - Desenvolvido por Pedro Henrique</strong>. 2026. Todos os direitos reservados.</p>
-    <p class="footer-made">Feito com <span class="heart">❤️</span> para quem merece o melhor</p>
+    <p class="footer-made">Feito com <span class="heart"><i data-lucide="heart"></i></span> para quem merece o melhor</p>
   </div>
 </footer>
 
