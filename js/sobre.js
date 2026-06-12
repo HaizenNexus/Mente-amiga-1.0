@@ -161,17 +161,18 @@
       btn.type = 'button';
       btn.className = 'read-more';
       btn.setAttribute('aria-expanded', 'false');
-      btn.innerHTML = 'Ler mais <span aria-hidden="true">▾</span>';
+      btn.innerHTML = '<span class="rm-label">Ler mais</span><i data-lucide="chevron-down" class="rm-ico" aria-hidden="true"></i>';
       bio.insertAdjacentElement('afterend', btn);
 
       btn.addEventListener('click', () => {
         const aberto = bio.classList.toggle('is-expanded');
+        btn.classList.toggle('is-open', aberto);
         btn.setAttribute('aria-expanded', aberto ? 'true' : 'false');
-        btn.innerHTML = aberto
-          ? 'Ler menos <span aria-hidden="true">▴</span>'
-          : 'Ler mais <span aria-hidden="true">▾</span>';
+        btn.querySelector('.rm-label').textContent = aberto ? 'Ler menos' : 'Ler mais';
       });
     });
+    // desenha os chevrons recém-criados (o Lucide já rodou antes destes botões existirem)
+    if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
   }
 
   /* ============================================================

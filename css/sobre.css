@@ -250,17 +250,31 @@
 }
 /* botão "Ler mais / Ler menos" — o JS só o cria quando o texto é longo */
 .read-more {
-  margin-top: 0.85rem;
-  display: inline-flex; align-items: center; gap: 6px;
-  background: transparent;
-  border: 1.5px solid var(--mc, var(--c-purple));
+  margin-top: 1rem;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--mc-soft, var(--c-purple-light));
+  border: none;
   color: var(--mc, var(--c-purple));
   font-family: var(--font-main);
-  font-weight: 700; font-size: 0.72rem; letter-spacing: 0.02em;
-  padding: 6px 16px; border-radius: var(--r-full);
-  cursor: pointer; transition: all var(--t-fast);
+  font-weight: 800; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 9px 18px; border-radius: var(--r-full);
+  cursor: pointer;
+  transition: background .22s ease, color .22s ease, box-shadow .28s ease, transform .15s ease;
 }
-.read-more:hover { background: var(--mc, var(--c-purple)); color: #fff; transform: translateY(-1px); }
+[data-theme="dark"] .read-more { background: rgba(255,255,255,0.07); }
+.read-more:hover {
+  background: var(--mc, var(--c-purple));
+  color: #fff;
+  box-shadow: 0 8px 20px -6px var(--mc, var(--c-purple));
+  transform: translateY(-2px);
+}
+.read-more:active { transform: translateY(0) scale(.97); }
+.read-more .rm-ico {
+  width: 15px; height: 15px;
+  transition: transform .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.read-more.is-open .rm-ico { transform: rotate(180deg); }
+.read-more:focus-visible { outline: 2px solid var(--mc, var(--c-purple)); outline-offset: 2px; }
 
 /* ---- Paletas por card (cada pessoa ganha uma cor do app) ---- */
 .m-purple { --mc: var(--c-purple); --mc-soft: var(--c-purple-light); --mc-text: #5B3FA0; }

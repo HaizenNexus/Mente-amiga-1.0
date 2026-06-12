@@ -116,11 +116,14 @@ h1, h2, h3, .hero-title, .game-display-title, .section-title {
 /* ============================================================
    PAGE TRANSITION — fade-in suave ao carregar a página
    ============================================================ */
+/* IMPORTANTE: animar só a opacidade. Um transform retido no <body>
+   (animation-fill-mode: both) cria um "containing block" e quebra o
+   position:fixed de descendentes (barra inferior, banners, etc.). */
 @keyframes pageFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
-body.page-enter { animation: pageFadeIn 0.55s ease both; }
+body.page-enter { animation: pageFadeIn 0.5s ease both; }
 
 /* ============================================================
    NAVBAR — glassmorphism refinado

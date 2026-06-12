@@ -193,69 +193,105 @@
 
     <div class="info-grid">
 
-      <!-- ✏️ BLOCO 1 — O que é TEA -->
+      <!-- BLOCO 1 — O que é TEA -->
       <article class="info-card m-purple">
         <div class="info-card-head">
           <span class="info-card-icon" aria-hidden="true"><i data-lucide="puzzle"></i></span>
           <h3 class="info-card-title">O que é o TEA?</h3>
         </div>
         <div class="info-card-body">
-          <p>Cole aqui o texto sobre o Transtorno do Espectro Autista (TEA).</p>
+          <p>O <strong>Transtorno do Espectro Autista (TEA)</strong> é uma condição do neurodesenvolvimento que influencia a forma como uma pessoa se comunica, interage socialmente e percebe o mundo ao seu redor. Cada pessoa autista é única, possuindo habilidades, desafios e características próprias.</p>
         </div>
       </article>
 
-      <!-- ✏️ BLOCO 2 — O que é TDAH -->
+      <!-- BLOCO 2 — O que é TDAH -->
       <article class="info-card m-blue">
         <div class="info-card-head">
           <span class="info-card-icon" aria-hidden="true"><i data-lucide="zap"></i></span>
           <h3 class="info-card-title">O que é o TDAH?</h3>
         </div>
         <div class="info-card-body">
-          <p>Cole aqui o texto sobre o Transtorno do Déficit de Atenção com Hiperatividade (TDAH).</p>
+          <p>O <strong>Transtorno do Déficit de Atenção com Hiperatividade (TDAH)</strong> é uma condição que afeta a atenção, a organização, o controle dos impulsos e, em alguns casos, o nível de atividade física. Com apoio adequado, pessoas com TDAH podem desenvolver todo o seu potencial e alcançar grandes conquistas.</p>
         </div>
       </article>
 
-      <!-- ✏️ BLOCO 3 — Sinais comuns -->
-      <article class="info-card m-teal">
+      <!-- BLOCO 3 — Sinais comuns -->
+      <article class="info-card m-teal is-wide">
         <div class="info-card-head">
           <span class="info-card-icon" aria-hidden="true"><i data-lucide="search"></i></span>
           <h3 class="info-card-title">Sinais comuns</h3>
         </div>
-        <div class="info-card-body">
-          <p>Cole aqui os sinais. Exemplo de lista:</p>
-          <ul>
-            <li>Item de exemplo 1</li>
-            <li>Item de exemplo 2</li>
-          </ul>
+        <div class="info-card-body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem 2rem">
+          <div>
+            <p style="font-weight:700;color:var(--c-purple);margin-bottom:.2rem"><i data-lucide="puzzle" style="vertical-align:-.15em"></i> TEA</p>
+            <ul>
+              <li>Dificuldade na comunicação social</li>
+              <li>Sensibilidade a sons, luzes ou texturas</li>
+              <li>Interesse intenso por assuntos específicos</li>
+              <li>Preferência por rotinas previsíveis</li>
+            </ul>
+          </div>
+          <div>
+            <p style="font-weight:700;color:var(--c-orange);margin-bottom:.2rem"><i data-lucide="zap" style="vertical-align:-.15em"></i> TDAH</p>
+            <ul>
+              <li>Dificuldade para manter o foco</li>
+              <li>Esquecimentos frequentes</li>
+              <li>Impulsividade</li>
+              <li>Inquietação física ou mental</li>
+            </ul>
+          </div>
         </div>
       </article>
 
-      <!-- ✏️ BLOCO 4 — Como apoiar -->
-      <article class="info-card m-pink">
+      <!-- BLOCO 4 — Como apoiar -->
+      <article class="info-card m-pink is-wide">
         <div class="info-card-head">
           <span class="info-card-icon" aria-hidden="true"><i data-lucide="heart"></i></span>
           <h3 class="info-card-title">Como apoiar</h3>
         </div>
         <div class="info-card-body">
-          <p>Cole aqui dicas de como apoiar crianças e adolescentes.</p>
+          <ul style="columns:2;column-gap:2rem">
+            <li>Pratique a escuta sem julgamentos.</li>
+            <li>Respeite as diferenças e necessidades individuais.</li>
+            <li>Estabeleça rotinas claras e organizadas.</li>
+            <li>Utilize linguagem simples e objetiva.</li>
+            <li>Incentive habilidades e interesses pessoais.</li>
+            <li>Busque apoio profissional quando necessário.</li>
+            <li>Demonstre paciência, acolhimento e compreensão.</li>
+          </ul>
         </div>
       </article>
 
-      <!-- ✏️ BLOCO 5 — Largura inteira (opcional): mitos x verdades, etc. -->
+      <!-- BLOCO 5 — Mitos e Verdades (largura inteira) -->
       <article class="info-card m-orange is-wide">
         <div class="info-card-head">
-          <span class="info-card-icon" aria-hidden="true"><i data-lucide="pin"></i></span>
-          <h3 class="info-card-title">Mitos e verdades</h3>
+          <span class="info-card-icon" aria-hidden="true"><i data-lucide="scale"></i></span>
+          <h3 class="info-card-title">Mitos e Verdades</h3>
         </div>
-        <div class="info-card-body">
-          <p>Este bloco ocupa a linha inteira (classe <strong>is-wide</strong>). Cole aqui mitos x verdades ou qualquer conteúdo mais longo.</p>
+        <div class="info-card-body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem 2rem">
+          <div>
+            <p style="margin-bottom:.25rem"><i data-lucide="x-circle" style="color:var(--c-red);vertical-align:-.15em"></i> <strong>Mito:</strong> Autismo é uma doença.</p>
+            <p><i data-lucide="check-circle-2" style="color:var(--c-green);vertical-align:-.15em"></i> <strong>Verdade:</strong> O TEA é uma condição do neurodesenvolvimento.</p>
+          </div>
+          <div>
+            <p style="margin-bottom:.25rem"><i data-lucide="x-circle" style="color:var(--c-red);vertical-align:-.15em"></i> <strong>Mito:</strong> Pessoas com TDAH são preguiçosas.</p>
+            <p><i data-lucide="check-circle-2" style="color:var(--c-green);vertical-align:-.15em"></i> <strong>Verdade:</strong> Elas enfrentam desafios relacionados à atenção e organização.</p>
+          </div>
+          <div>
+            <p style="margin-bottom:.25rem"><i data-lucide="x-circle" style="color:var(--c-red);vertical-align:-.15em"></i> <strong>Mito:</strong> Pessoas autistas não demonstram afeto.</p>
+            <p><i data-lucide="check-circle-2" style="color:var(--c-green);vertical-align:-.15em"></i> <strong>Verdade:</strong> Elas sentem emoções e criam vínculos, mas podem expressá-los de maneiras diferentes.</p>
+          </div>
+          <div>
+            <p style="margin-bottom:.25rem"><i data-lucide="x-circle" style="color:var(--c-red);vertical-align:-.15em"></i> <strong>Mito:</strong> TDAH desaparece automaticamente na vida adulta.</p>
+            <p><i data-lucide="check-circle-2" style="color:var(--c-green);vertical-align:-.15em"></i> <strong>Verdade:</strong> Os sintomas podem continuar, mas podem ser melhor administrados com estratégias adequadas.</p>
+          </div>
         </div>
       </article>
 
     </div>
 
-    <!-- Aviso importante (pode editar o texto) -->
-    <p class="info-note"><i data-lucide="alert-triangle"></i> As informações aqui têm caráter educativo e <strong>não substituem</strong> a avaliação de profissionais de saúde. Em caso de dúvidas, procure um médico ou psicólogo.</p>
+    <!-- Aviso importante -->
+    <p class="info-note"><i data-lucide="alert-triangle"></i> As informações apresentadas possuem caráter educativo e <strong>não substituem</strong> diagnóstico, avaliação ou acompanhamento profissional. Em caso de dúvidas, procure um médico, psicólogo ou outro profissional especializado.</p>
 
   </section><!-- /ABA 3 -->
 
